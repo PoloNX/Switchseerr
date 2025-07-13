@@ -1,0 +1,47 @@
+<brls:Box
+    width="auto"
+    height="auto"
+    alignItems="center"
+    justifyContent="center">
+
+    <brls:Box
+        width="60%"
+        height="auto"
+        axis="column"
+        alignItems="stretch"
+        paddingTop="50px"
+        paddingBottom="50px"
+        paddingLeft="75px"
+        paddingRight="75px">
+
+        <brls:Image
+            id="server/image"
+            width="100%"
+            height="auto"
+            marginBottom="30px"/>
+
+        <brls:Header
+            width="auto"
+            height="auto"
+            title="add a server"
+            marginBottom="0px" />
+            
+        <brls:Box
+            width="100%"
+            height="auto"
+            axis="column"
+            marginBottom="30px">
+
+            <brls:InputCell
+                id="server/url"
+                marginBottom="10px"/>
+
+            <brls:Button
+                
+                id="server/connect" />
+
+        </brls:Box>
+
+
+    </brls:Box>
+</brls:Box>

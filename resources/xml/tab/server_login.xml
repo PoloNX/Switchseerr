@@ -1,0 +1,34 @@
+<brls:Box
+    alignItems="center"
+    justifyContent="center">
+
+    <brls:Box
+        width="50%"
+        axis="column"
+        alignItems="stretch">
+
+        <brls:Image
+            id="server/image"
+            width="100%"
+            height="auto"
+            marginBottom="30px"/>
+
+        <brls:Header
+            id="server/signin_to"/>
+        
+        <brls:InputCell
+            id="server/user"/>
+
+        <brls:InputCell
+            id="server/password"
+            type="password"/>
+        
+        <brls:Button
+            id="server/signin"
+            text="signin"
+            marginTop="15"/>
+
+
+    </brls:Box>
+
+</brls:Box>

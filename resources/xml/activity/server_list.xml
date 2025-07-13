@@ -1,0 +1,101 @@
+<brls:AppletFrame
+    id="server/frame"
+    iconInterpolation="linear"
+    headerHidden="true"
+    footerHidden="false">
+
+    <brls:Box
+        axis="column"
+        width="100%"
+        height="100%">
+
+        
+        <brls:Box
+            axis="row"
+            paddingLeft="@style/brls/tab_frame/content_padding_sides"
+            paddingRight="@style/brls/tab_frame/content_padding_sides"
+            paddingTop="@style/brls/tab_frame/content_padding_top_bottom"
+            paddingBottom="@style/brls/tab_frame/content_padding_top_bottom">
+
+            <brls:Box
+                wireframe="false"
+                width="420"
+                axis="column"
+                paddingRight="@style/brls/sidebar/padding_right"
+                lineRight="1">
+
+                <brls:Header
+                    width="auto"
+                    height="auto"
+                    title="Servers"
+                    marginBottom="0px" />
+
+                <brls:Button
+                    id="btn/server/add"
+                    style="primary"
+                    margin="15"
+                    focusable="true"
+                    text="new server" />
+
+                <brls:ScrollingFrame
+                    grow="1">
+                    <brls:Box
+                        axis="column"
+                        id="server/sidebar"
+                        paddingRight="20" />
+
+                </brls:ScrollingFrame>
+            </brls:Box>
+
+            <brls:Box
+                wireframe="false"
+                paddingLeft="35"
+                axis="column"
+                id="server/detail"
+                grow="1">
+
+                <brls:Header
+                    height="40"
+                    title="server detail" />
+
+                <brls:Box
+                    width="100%"
+                    axis="column">
+
+                    <brls:DetailCell
+                        title="url"
+                        id="selector/server/urls" />
+
+                    <brls:DetailCell
+                        title="version"
+                        focusable="false"
+                        id="server/version" />
+
+                </brls:Box>
+
+                <brls:Box
+                    width="100%"
+                    height="auto"
+                    marginTop="20px"
+                    marginBottom="20px">
+
+                    <brls:Button
+                        id="btn/server/signin"
+                        style="primary"
+                        grow="1.0"
+                        text="signin" />
+                </brls:Box>
+
+                <RecyclingGrid
+                    paddingRight="20"
+                    grow="1"
+                    height="50%"
+                    spanCount="3"
+                    wireframe="false"
+                    id="user/recycler" />
+
+            </brls:Box>
+
+        </brls:Box>
+    </brls:Box>
+</brls:AppletFrame>

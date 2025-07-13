@@ -1,0 +1,18 @@
+<brls:AppletFrame
+    id="main/applet_frame"
+    iconInterpolation="linear"/>
+
+    <brls:TabFrame
+        icon="@res/img/jellyseerr/small_logo.png">
+
+        <brls:Tab
+            label="Discover">
+            <brls:Label
+                text="Welcome to SwitchSeerr! Please select a server from the sidebar to get started."
+                margin="20" />
+        </brls:Tab>
+
+
+    </brls:TabFrame>
+
+</brls:AppletFrame>
