@@ -4,6 +4,9 @@
 #include "http/HttpClient.hpp"
 #include "utils/Config.hpp"
 #include "view/RecyclingGrid.hpp"
+#include "view/RecyclingVideo.hpp"
+#include "view/HRecycling.hpp"
+#include "tab/DiscoverTab.hpp"
 
 #include <borealis.hpp>
 
@@ -27,6 +30,8 @@ int main() {
     brls::Application::setGlobalQuit(false);
 
     brls::Application::registerXMLView("RecyclingGrid", RecyclingGrid::create);
+    brls::Application::registerXMLView("RecyclingVideo", RecyclingVideo::create);
+    brls::Application::registerXMLView("HRecyclerFrame", HRecyclerFrame::create);
 
     brls::Theme::getLightTheme().addColor("color/grey_1", nvgRGB(245, 246, 247));
     brls::Theme::getDarkTheme().addColor("color/grey_1", nvgRGB(51, 52, 53));
@@ -38,6 +43,7 @@ int main() {
     brls::Application::getPlatform()->setThemeVariant(brls::ThemeVariant::DARK);
 
     auto httpClient = new HttpClient();
+
     auto serverList = new ServerList(*httpClient);
 
     brls::Application::pushActivity(serverList);

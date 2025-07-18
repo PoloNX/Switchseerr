@@ -11,6 +11,7 @@ public:
     AuthService(HttpClient& client, const std::string& serverUrl);
 
     bool login(const std::string& username, const std::string& password);
+    bool loginWithApiKey(const std::string& apiKey);
 
     void setToken(const std::string& token);
 

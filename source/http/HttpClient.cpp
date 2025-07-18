@@ -17,6 +17,11 @@ HttpClient::HttpClient() {
 
 std::string HttpClient::get(const std::string& url, curl_slist* customHeaders, bool verbose) {
     brls::Logger::debug("HttpClient: GET request to {}", url);
+    if (customHeaders) {
+        brls::Logger::debug("HttpClient: Custom headers provided : {}", customHeaders->data);
+    } else {
+        brls::Logger::debug("HttpClient: No custom headers provided");
+    }
     
     if (!curl) {
         throw std::runtime_error("CURL is not initialized");
@@ -101,6 +106,57 @@ HttpClient::~HttpClient() {
     if (headers) {
         curl_slist_free_all(headers);
     }
+}
+
+std::vector<unsigned char> HttpClient::downloadImageToBuffer(const std::string& url, bool verbose) {
+    brls::Logger::debug("HttpClient: Downloading image from {} to buffer", url);
+    
+    if (!curl) {
+        throw std::runtime_error("CURL is not initialized");
+    }
+
+    curl_easy_reset(curl);
+    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
+
+    if (verbose) {
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+    } else {
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
+    }
+
+    curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, "Switchseerr/1.0");
+
+    std::vector<unsigned char> buffer;
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeBufferCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &buffer);
+
+    auto res = curl_easy_perform(curl);
+
+    if (res != CURLE_OK) {
+        brls::Logger::error("CURL image download failed: {}", std::string(curl_easy_strerror(res)));
+        return std::vector<unsigned char>(); // Retourne un buffer vide en cas d'erreur
+    } else {
+        long response_code;
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+        if (response_code != 200) {
+            brls::Logger::error("CURL image download returned non-200 status code: {}", std::to_string(response_code));
+            return std::vector<unsigned char>(); // Retourne un buffer vide en cas d'erreur
+        }
+    }
+
+    brls::Logger::debug("Image downloaded successfully to buffer, size: {} bytes", buffer.size());
+    return buffer;
+}
+
+// ...existing code...
+
+size_t HttpClient::writeBufferCallback(void* contents, size_t size, size_t nmemb, std::vector<unsigned char>* buffer) {
+    size_t totalSize = size * nmemb;
+    unsigned char* data = static_cast<unsigned char*>(contents);
+    buffer->insert(buffer->end(), data, data + totalSize);
+    return totalSize;
 }
 
 size_t HttpClient::writeCallback(void* contents, size_t size, size_t nmemb, std::string* buffer) {

@@ -68,6 +68,57 @@ bool AuthService::login(const std::string& username, const std::string& password
     return false;
 }
 
+bool AuthService::loginWithApiKey(const std::string& apiKey) {
+    brls::Logger::debug("AuthService: Attempting login with API key");
+
+    if (apiKey.empty()) {
+        brls::Logger::error("AuthService: API key is empty");
+        return false;
+    }
+
+    // Prepare headers for API key authentication
+    struct curl_slist* headers = nullptr;
+    std::string apiKeyHeader = "X-Api-Key: " + apiKey;
+    headers = curl_slist_append(headers, apiKeyHeader.c_str());
+    headers = curl_slist_append(headers, "accept: application/json");
+
+    try {
+        // Authenticate using API key
+        const std::string response = client.get(fmt::format("{}/api/v1/auth/me", serverUrl), headers);
+        const auto loginData = nlohmann::json::parse(response);
+        
+        if (!loginData.contains("id")) {
+            brls::Logger::error("AuthService: Login response missing user ID");
+            return false;
+        }
+
+        // Login successful, extract user info
+        const int userId = loginData["id"].get<int>();
+        brls::Logger::debug("AuthService: Login successful with API key, user ID: {}", userId);
+
+        // Create and save user profile
+        const AppUser user = {
+            .id = std::to_string(userId),
+            .name = loginData["displayName"].get<std::string>(),
+            .api_key = apiKey,
+            .server_url = serverUrl
+        };
+        currentUser = user;
+        Config::instance().addUser(user, serverUrl);
+
+        this->setToken(apiKey);
+        return true;
+
+    } catch (const nlohmann::json::parse_error& e) {
+        brls::Logger::error("AuthService: JSON parsing failed: {}", e.what());
+    } catch (const nlohmann::json::type_error& e) {
+        brls::Logger::error("AuthService: JSON type error: {}", e.what());
+    } catch (const std::exception& e) {
+        brls::Logger::error("AuthService: Login with API key failed: {}", e.what());
+    }
+    return false;
+}
+
 void AuthService::setToken(const std::string& token) {
     authToken = token;
 }

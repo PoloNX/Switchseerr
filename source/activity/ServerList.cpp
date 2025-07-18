@@ -2,13 +2,15 @@
 #include "tab/ServerAdd.hpp"
 #include "tab/ServerLogin.hpp"
 #include "view/RecyclingGrid.hpp"
+#include "auth/AuthService.hpp"
+#include "activity/MainActivity.hpp"
 
 ServerCell::ServerCell(const AppServer& server) {
     this->inflateFromXMLRes("xml/view/server_cell.xml");
 
     this->setFocusSound(brls::SOUND_FOCUS_SIDEBAR);
     this->registerAction(
-        "ok", brls::BUTTON_A, [](View* view) {
+        "ok", brls::BUTTON_A, [](brls::View* view) {
             brls::Application::onControllerButtonPressed(brls::BUTTON_NAV_RIGHT, false);
             return true;
         }, false, false, brls::SOUND_CLICK_SIDEBAR
@@ -74,7 +76,20 @@ public:
 
         brls::async([this, index]() {
             auto& u = this->list.at(index);
-
+            AuthService authService(this->parent->getHttpClient(), u.server_url);
+            if (authService.loginWithApiKey(u.api_key)) {
+                brls::sync([this, u, authService]() mutable {
+                    brls::Logger::info("ServerUserDataSource: User {} logged in successfully with API key {}", u.name, u.api_key);
+                    Config::instance().addUser(u, this->parent->getUrl());
+                    brls::Application::unblockInputs();
+                    brls::Application::pushActivity(new MainActivity(this->parent->getHttpClient(), authService));
+                });
+            } else {
+                brls::sync([this, u]() {
+                    brls::Application::unblockInputs();
+                });
+                brls::Logger::error("ServerUserDataSource: Failed to log in user {} with API key {}", u.name, u.api_key);
+            }
         });
     }
 

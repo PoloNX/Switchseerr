@@ -1,0 +1,31 @@
+<brls:Box
+    width="auto"
+    height="auto">
+
+    <brls:ScrollingFrame
+        width="auto"
+        height="auto"
+        grow="1.0">
+
+        <brls:Box
+            axis="column"
+            paddingLeft="@style/main/content_padding_sides"
+            paddingRight="@style/main/content_padding_sides"
+            paddingTop="@style/main/content_padding_top_bottom"
+            paddingBottom="@style/main/content_padding_top_bottom"
+            id="discover/latest">
+
+            <!-- <RecyclingVideo
+                nextPage="auto"
+                resume="true"
+                pageSize="6"
+                frameHeight="235"
+                itemWidth="325"
+                id="discover/latest"
+                title="@i18n/main/home/resume" /> -->
+
+        </brls:Box>
+
+    </brls:ScrollingFrame>
+
+</brls:Box>

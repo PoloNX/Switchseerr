@@ -16,6 +16,10 @@ public:
     void onUser(const std::string& id);
     std::string getUrl();
 
+    HttpClient& getHttpClient() {
+        return this->httpClient;
+    }
+
     void willAppear(bool resetState = false) override;
     void onContentAvailable() override;
 private:

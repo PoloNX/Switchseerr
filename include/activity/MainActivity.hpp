@@ -18,5 +18,6 @@ private:
     HttpClient& httpClient;
     AuthService& authService;
 
+    BRLS_BIND(brls::TabFrame, tabFrame, "main/tab_frame");
     BRLS_BIND(brls::AppletFrame, appletFrame, "main/applet_frame");
 };

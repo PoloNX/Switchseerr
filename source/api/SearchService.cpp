@@ -1,19 +1,7 @@
 #include "api/SearchService.hpp"
+#include "utils/utils.hpp"
 #include <nlohmann/json.hpp>
 #include <iostream>
-
-template<typename T>
-T get_or_default(const nlohmann::json& j, const std::string& key, const T& defaultValue) {
-    if (j.contains(key) && !j[key].is_null()) {
-        try {
-            return j.at(key).get<T>();
-        } catch (...) {
-            // Si mauvais type ou autre problème, on tombe ici
-            return defaultValue;
-        }
-    }
-    return defaultValue;
-}
 
 using json = nlohmann::json;
 

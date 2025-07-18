@@ -56,7 +56,7 @@ bool ServerLogin::onSignin() {
         //UserService UserService(this->httpClient, authService);
 
         brls::Application::clear();
-        //brls::Application::pushActivity(new MainActivity(this->httpClient, UserService), brls::TransitionAnimation::FADE);
+        brls::Application::pushActivity(new MainActivity(this->httpClient, authService), brls::TransitionAnimation::FADE);
 
         return true;
     }

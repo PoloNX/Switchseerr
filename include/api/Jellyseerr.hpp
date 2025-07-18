@@ -1,6 +1,10 @@
 #pragma once
 
 #include <nlohmann/json.hpp>
+#include <variant>
+
+#include "models/MediaItem.hpp"
+#include "http/HttpClient.hpp"
 
 namespace jellyseerr {
 
@@ -8,4 +12,6 @@ namespace jellyseerr {
         std::string version;
     };
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(PublicSystemInfo, version);
+
+    std::vector<MediaItem> getLatestMedias(HttpClient& httpClient, const std::string& url, const std::string& apiKey, size_t pageSize = 10);
 };

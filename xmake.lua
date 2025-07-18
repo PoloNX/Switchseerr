@@ -3,7 +3,6 @@ add_repositories("zeromake-repo https://github.com/zeromake/xrepo.git")
 
 add_requires("libcurl", "nlohmann_json", "fmt", "borealis")
 
-
 set_plat("linux")
 
 add_rules("mode.debug", "mode.release")
