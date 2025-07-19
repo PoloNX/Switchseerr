@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <cstring>
+#include <algorithm>
 #include <iostream>
 #include <borealis/core/logger.hpp>
 
@@ -170,7 +171,7 @@ size_t HttpClient::readCallback(void* contents, size_t size, size_t nmemb, std::
     if (buffer->empty()) {
         return 0; // No more data to read
     }
-    size_t bytesToCopy = std::min(totalSize, buffer->size());
+    size_t bytesToCopy = (std::min)(totalSize, buffer->size());
     memcpy(contents, buffer->c_str(), bytesToCopy);
     buffer->erase(0, bytesToCopy);
     return bytesToCopy;

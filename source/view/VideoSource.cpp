@@ -30,7 +30,6 @@ RecyclingGridItem* VideoDataSource::cellForRow(RecyclingView* recycler, size_t i
         cell->labelExt->setText(item.releaseDate);
     }
 
-    brls::Logger::debug("VideoDataSource, original image height: {}", cell->picture->getOriginalImageHeight());
 
     //Picture downloading
     if (!item.posterPath.empty()) {

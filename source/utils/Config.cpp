@@ -5,6 +5,10 @@
 #include <borealis.hpp>
 #include <fstream>
 
+#if defined(_WIN32)
+#include <shlobj.h>
+#endif
+
 namespace fs = std::filesystem;
 
 bool Config::init() {
@@ -46,6 +50,12 @@ std::string Config::configDir() {
     char* config_home = getenv("XDG_CONFIG_HOME");
     if (config_home) return fmt::format("{}/{}", config_home, "switchseerr");
     return fmt::format("{}/.config/switchseerr", getenv("HOME"));
+#elif _WIN32
+    WCHAR wpath[MAX_PATH];
+    std::vector<char> lpath(MAX_PATH);
+    SHGetSpecialFolderPathW(0, wpath, CSIDL_LOCAL_APPDATA, false);
+    WideCharToMultiByte(CP_UTF8, 0, wpath, std::wcslen(wpath), lpath.data(), lpath.size(), nullptr, nullptr);
+    return fmt::format("{}\\{}", lpath.data(), "switchseerr");
 #endif
 }
 
