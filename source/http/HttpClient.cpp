@@ -14,7 +14,6 @@ HttpClient::HttpClient() {
     }
 
     // Optimisations pour des connexions plus rapides
-    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
     curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
     curl_easy_setopt(curl, CURLOPT_TCP_KEEPIDLE, 120L);
     curl_easy_setopt(curl, CURLOPT_TCP_KEEPINTVL, 60L);
@@ -36,7 +35,6 @@ std::string HttpClient::get(const std::string& url, curl_slist* customHeaders, b
     }
 
     curl_easy_reset(curl);
-    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
 
     if (verbose) {
         curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
