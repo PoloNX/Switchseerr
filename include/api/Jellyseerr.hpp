@@ -13,5 +13,5 @@ namespace jellyseerr {
     };
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(PublicSystemInfo, version);
 
-    std::vector<MediaItem> getLatestMedias(HttpClient& httpClient, const std::string& url, const std::string& apiKey, size_t pageSize = 10);
+    std::vector<MediaItem> getMedias(HttpClient& httpClient, const std::string& url, const std::string& apiKey, DiscoverType type,size_t pageSize = 10);
 };

@@ -2,9 +2,8 @@
 
 #include <borealis.hpp>
 
-#include "view/RecyclingVideo.hpp"
-
-class RecyclingVideo;
+#include "auth/AuthService.hpp"
+#include "http/HttpClient.hpp"
 
 class DiscoverTab : public brls::Box {
 public:
@@ -16,8 +15,5 @@ private:
     HttpClient& httpClient;
     AuthService& authService;
 
-    RecyclingVideo* latestMedias;
-
     BRLS_BIND(brls::Box, boxLatest, "discover/latest");
-    //BRLS_BIND(RecyclingVideo, latestMedias, "discover/latest");
 };

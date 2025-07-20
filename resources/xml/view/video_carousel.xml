@@ -1,0 +1,26 @@
+<brls:Box   
+    width="auto"
+    height="395"
+    axis="column">
+
+    <brls:Header
+        id="carousel/header"
+        height="40"/>
+
+    <brls:HScrollingFrame
+        width="auto"
+        height="auto"
+        grow="1.0"
+        id="carousel/scroller">
+
+        <brls:Box
+            width="auto"
+            height="auto"
+            id="carousel/box"
+            axis="row">
+
+        </brls:Box>
+
+    </brls:HScrollingFrame>
+    
+</brls:Box>

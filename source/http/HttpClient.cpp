@@ -13,7 +13,14 @@ HttpClient::HttpClient() {
         throw std::runtime_error("Failed to initialize CURL");
     }
 
+    // Optimisations pour des connexions plus rapides
     curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
+    curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
+    curl_easy_setopt(curl, CURLOPT_TCP_KEEPIDLE, 120L);
+    curl_easy_setopt(curl, CURLOPT_TCP_KEEPINTVL, 60L);
+    curl_easy_setopt(curl, CURLOPT_MAXCONNECTS, 10L); // Pool de connexions
+    curl_easy_setopt(curl, CURLOPT_FORBID_REUSE, 0L); // Réutiliser les connexions
+    curl_easy_setopt(curl, CURLOPT_FRESH_CONNECT, 0L);
 }
 
 std::string HttpClient::get(const std::string& url, curl_slist* customHeaders, bool verbose) {

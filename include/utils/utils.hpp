@@ -4,6 +4,8 @@
 #include <string>
 #include <borealis/core/logger.hpp>
 
+#include <chrono>
+
 template<typename T>
 T get_or_default(const nlohmann::json& j, const std::string& key, const T& defaultValue) {
     if (j.contains(key) && !j[key].is_null()) {
@@ -16,3 +18,5 @@ T get_or_default(const nlohmann::json& j, const std::string& key, const T& defau
     }
     return defaultValue;
 }
+//Return date under the format YYYY-MM-DD
+std::string get_date_string();

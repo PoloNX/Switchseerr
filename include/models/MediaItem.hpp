@@ -3,6 +3,16 @@
 #include <string>
 #include "MediaSearchResult.hpp"
 
+enum class DiscoverType {
+    RecentlyAdded,
+    RecentlyRequested,
+    Trending,
+    PopularMovies,
+    FutureMovies,
+    PopularTvShows,
+    FutureTvShows
+};
+
 struct MediaItem {
     int id;
     MediaType type;

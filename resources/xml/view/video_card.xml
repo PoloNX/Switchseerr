@@ -1,20 +1,22 @@
 <brls:Box
     highlightCornerRadius="8"
     axis="column"
-    width="auto"
     height="auto">
     <brls:Box
         id="video/card/pic_box"
         axis="row"
-        grow="1">
+        grow="1"
+        height="300"
+        wireframe="false"
+        marginTop="5">
         <brls:Image
             id="video/card/picture"
             backgroundColor="@theme/color/grey_1"
             scalingType="fill"
-            width="100%"
-            height="100%"
+            width="200"
+            height="300"
             image="@res/img/video-card-bg.png"
-            cornerRadius="4" />
+            cornerRadius="8" />
 
         <brls:Box
             positionBottom="0"
@@ -38,17 +40,34 @@
         </brls:Box>
 
         <brls:Box
-            wireframe="false"
+            positionTop="0"
             positionType="absolute"
-            positionBottom="0"
-            visibility="gone"
+            paddingLeft="10"
+            paddingRight="10"
             width="100%"
-            height="2"
-            backgroundColor="#353535">
-            <brls:Rectangle
-                id="video/card/progress"
-                height="2"
-                width="50%" />
+            height="10%"
+            alignItems="center"
+            wireframe="false">
+
+                <brls:Rectangle
+                    id="video/card/type/rectangle"
+                    width="50"
+                    height="20"/>
+                
+                <brls:Box
+                    positionTop="5"
+                    positionLeft="10"
+                    positionType="absolute"
+                    wireframe="false"
+                    justifyContent="center"
+                    width="50"
+                    height="20">
+                    <brls:Label
+                        id="video/card/type/label"
+                        fontSize="13"/>
+                </brls:Box>
+
+
         </brls:Box>
 
     </brls:Box>
@@ -57,7 +76,8 @@
         axis="column"
         height="50"
         justifyContent="spaceEvenly"
-        alignItems="center">
+        alignItems="center"
+        width="200">
         <brls:Label
             wireframe="false"
             id="video/card/label/title"
