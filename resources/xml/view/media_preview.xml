@@ -1,0 +1,150 @@
+           
+<brls:Box
+    height="100%"
+    width="100%">
+
+    <brls:ScrollingFrame
+        width="auto"
+        height="auto"
+        grow="1.0" >
+    
+        <brls:Box
+            height="100%"
+            width="100%"
+            axis="column"
+            paddingLeft="30"
+            paddingRight="30">
+
+                <!-- Head Content (Image, title, status, duration) -->
+
+            <brls:Box
+                width="100%"
+                height="auto"
+                axis="row"
+                marginTop="20">
+
+                <brls:Image
+                    id="preview/video/picture"
+                    backgroundColor="@theme/color/grey_1"
+                    scalingType="fill"
+                    width="200"
+                    height="300"
+                    image="@res/img/video-card-bg.png"
+                    cornerRadius="8"/>
+
+                <brls:Box
+                    width="50%"
+                    axis="column"
+                    justifyContent="flexEnd"
+                    marginLeft="20">
+
+                    <brls:Label
+                        id="preview/video/status"
+                        text="Disponible"
+                        fontSize="12"
+                        marginTop="5"
+                        marginBottom="5"/>
+
+                    <brls:Label
+                        id="preview/video/title"
+                        text="Si tu tends l'oreille (1995)"
+                        fontSize="30"
+                        marginTop="5"
+                        marginBottom="5"/>
+
+                    <brls:Box
+                        axis="row"
+                        alignItems="flexStart"
+                        marginTop="5"
+                        marginBottom="5">
+
+                        <brls:Label
+                            id="preview/video/duration"
+                            text="110 minutes"
+                            fontSize="12"/>
+
+                        <brls:Label
+                            id="preview/video/genre"
+                            text="Animation, Drame, Familial"
+                            fontSize="12"
+                            marginLeft="10"/>
+
+                    </brls:Box>
+
+                </brls:Box>
+
+                <brls:Box
+                    axis="row"
+                    width="auto"
+                    justifyContent="flexEnd"
+                    alignItems="flexEnd">
+
+                    <brls:Button
+                        id="preview/video/favorite"
+                        text="Favorite"
+                        marginLeft="10"/>
+
+                    <brls:Button
+                        id="preview/video/request"
+                        text="Request"
+                        marginLeft="10"/>
+
+                    <brls:Button
+                        id="preview/video/report"
+                        text="Report"
+                        marginLeft="10"/>
+                </brls:Box>
+            </brls:Box>
+
+            <!-- Description Content (Description, Trailer, Cast) -->
+            <brls:Box
+                width="100%"
+                height="auto"
+                axis="row"
+                marginTop="50">
+
+                <!-- Description -->
+                <brls:Box
+                    width="75%"
+                    height="auto"
+                    axis="column">
+
+                    <brls:Label
+                        text="Résumé"
+                        fontSize="20"
+                        marginBottom="5"/>
+
+                    <brls:Label
+                        text="
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pretium ipsum lectus, at finibus leo egestas vel. Nullam porttitor dui a neque blandit vulputate. Nam ullamcorper suscipit eros eu aliquet. Nulla accumsan est mauris, ac luctus urna laoreet at. Donec consequat ante rhoncus, rutrum metus quis, sollicitudin lectus. In sit amet lectus sit amet nunc luctus convallis in egestas est. Praesent euismod congue nisl. Aenean non blandit turpis, ut suscipit quam. Integer quis malesuada sem. Integer pretium lacus et tempus suscipit. Fusce ac tortor nulla. Nulla urna ante, aliquam sodales enim vel, efficitur maximus nunc. Quisque ut ultrices erat, ut consectetur nibh. Donec sapien dui, lobortis nec fermentum at, euismod placerat nisl.
+
+Aliquam eget gravida turpis, quis venenatis purus. Praesent dignissim mauris at velit ultricies, sollicitudin molestie ligula volutpat. Cras gravida ante purus, eget pellentesque tellus dictum sed. Pellentesque bibendum odio odio, scelerisque finibus nibh elementum non. Nullam ipsum ex, dignissim et sapien sed, condimentum faucibus urna. Duis volutpat justo in placerat auctor. Pellentesque aliquam, orci vel fringilla luctus, leo mauris aliquet lectus, porta volutpat mi mauris a odio. In imperdiet vulputate justo in tincidunt. Aliquam consequat, ipsum eget fringilla hendrerit, erat justo placerat nisl, at euismod odio neque non justo. Suspendisse potenti. Maecenas dapibus malesuada massa, ac aliquet arcu consectetur at. Nam sed pellentesque lectus, eu dapibus dolor. Mauris sodales, urna sit amet rhoncus faucibus, quam justo vestibulum nisi, et pellentesque nibh dolor et magna. Suspendisse facilisis lacus turpis, tincidunt mattis odio viverra eu. Nunc eros lacus, sodales interdum efficitur et, placerat ultricies magna. Mauris et felis massa.
+
+Phasellus dictum, sapien eu blandit placerat, nibh libero feugiat augue, sed vulputate augue eros id quam. In bibendum enim non odio dignissim sollicitudin. In iaculis sollicitudin sapien, ac euismod leo pharetra vel. Suspendisse interdum maximus odio, in luctus massa rhoncus a. Nulla scelerisque porttitor sollicitudin. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque faucibus commodo mauris ut volutpat. Cras ac leo ex. Cras et orci maximus, gravida arcu eget, tempor libero. Quisque ut est mollis, hendrerit lacus id, malesuada tellus. Maecenas non lorem luctus, tincidunt augue eu, ultrices est. Nullam luctus, ligula ut tincidunt euismod, magna nulla pharetra orci, a blandit purus tellus a nisi. Quisque venenatis quam dui, id imperdiet urna finibus et.
+
+Ut luctus in mauris at aliquam. Sed quis dui congue, finibus mauris nec, bibendum quam. Aenean id tortor at mi euismod scelerisque. Nulla pretium purus nec accumsan aliquam. Integer sit amet faucibus lacus. Etiam nec maximus neque. Nam rhoncus turpis ut nisi gravida, at dictum augue mattis. Sed dapibus pharetra tortor, ut tincidunt arcu pharetra non. Proin eget diam hendrerit dolor consequat ultrices eu ut urna. Vivamus pretium feugiat ante. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus at ornare elit, id fermentum orci. In metus purus, pretium vitae diam ut, laoreet faucibus ligula. Nullam sodales imperdiet convallis. Nullam fermentum gravida enim, ac dapibus lorem mattis ut.
+
+Donec condimentum ultrices nulla, in hendrerit velit maximus at. Integer vitae erat pulvinar, scelerisque quam auctor, gravida velit. Donec at diam posuere, finibus lectus id, ultrices nulla. Praesent ut lectus non erat ullamcorper mattis ac vel purus. Nunc tempor turpis id blandit viverra. Donec at consectetur tortor. Aliquam ut pretium massa. Phasellus id finibus ante. Morbi id ipsum lectus. Cras non efficitur libero.
+
+Cras eu venenatis lacus, eleifend faucibus ante. Mauris id laoreet mauris. Cras erat lacus, suscipit sit amet luctus in, ullamcorper eget ligula. Ut egestas metus vel egestas pellentesque. Nunc congue odio ut sapien euismod viverra. In nec tristique lacus. Integer tristique porta dolor, in faucibus felis efficitur nec. Praesent finibus nisi interdum turpis facilisis rhoncus. Vestibulum non tellus urna. Nam ut lobortis mauris, et fermentum risus. Duis consequat, nulla sit amet interdum porttitor, lorem elit elementum turpis, luctus lobortis turpis augue a nisi. Aliquam interdum id libero eu tincidunt. Mauris id gravida metus.
+
+Vestibulum tempor purus euismod malesuada porttitor. Maecenas ut eros at ante molestie venenatis. Cras facilisis egestas lacus. Nam quis risus maximus, convallis est quis, ornare eros. Sed faucibus est in ligula ullamcorper, ac porttitor lacus dictum. Phasellus elementum id sapien vitae sollicitudin. Suspendisse erat sapien, egestas eu pharetra tempus, condimentum quis ligula. Vestibulum fringilla est erat, sit amet ultrices nisi tincidunt a. Praesent eleifend molestie sem. Curabitur semper pulvinar condimentum. Phasellus maximus dolor eu dapibus iaculis.
+
+Mauris id sagittis sapien. Fusce sed nisi vitae eros hendrerit aliquet eu vel mauris. Cras turpis massa, consectetur eu lectus sit amet, congue pretium tortor. Donec id massa ac magna iaculis molestie. Suspendisse iaculis tempus nisl auctor venenatis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aenean eu consequat augue. Suspendisse potenti. Integer ultricies magna vitae risus condimentum, ac ultricies nulla lacinia. Integer semper, massa at lacinia imperdiet, lacus est pharetra risus, vitae vulputate libero felis quis turpis. Cras sit amet ipsum augue. Quisque posuere, velit et semper gravida, diam risus placerat odio, pharetra suscipit purus nisi vitae velit. Aenean at ultrices elit. Suspendisse imperdiet massa eu diam dapibus, sit amet pretium nibh tincidunt. Etiam id ex rhoncus, tristique risus vitae, aliquet tellus.
+
+Vestibulum lobortis ut ante non facilisis. Integer in tortor eget ipsum tempus interdum. Integer ex velit, sagittis vitae viverra vitae, interdum in turpis. Nam lobortis quis tortor et aliquam. Maecenas venenatis nec lorem vel hendrerit. Maecenas egestas purus sit amet eros commodo, sit amet varius nunc interdum. Suspendisse potenti. Curabitur porta nibh bibendum turpis sollicitudin, et fringilla lectus blandit. Ut libero ipsum, hendrerit ut imperdiet sed, vulputate a leo. Vestibulum semper felis vehicula justo molestie fermentum. Duis facilisis diam ut dui bibendum, a aliquam ante pretium.
+
+Aenean tortor enim, ullamcorper id dignissim volutpat, ultrices quis metus. Duis maximus ante et mattis elementum. Aliquam ac lectus ligula. Curabitur ex diam, tincidunt sed massa dapibus, condimentum imperdiet mauris. Nunc accumsan sem id volutpat convallis. Nullam a blandit eros, id posuere dolor. Aenean pharetra sapien sit amet dignissim eleifend. Praesent ipsum lectus, convallis lacinia aliquam id, ullamcorper ac diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur nec odio sed erat consectetur ultricies. Suspendisse potenti. "
+                        singleLine="false"
+                        fontSize="12"
+                        marginTop="5"/>
+
+                </brls:Box>
+
+            </brls:Box>
+
+
+        </brls:Box>
+    </brls:ScrollingFrame>
+</brls:Box>

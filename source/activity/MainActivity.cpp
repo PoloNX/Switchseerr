@@ -11,6 +11,7 @@ MainActivity::MainActivity(HttpClient& httpClient, AuthService& authService)
 void MainActivity::onContentAvailable() {
     brls::Logger::debug("MainActivity: content available");
     
+    tabFrame->setSidebarWidth(300);
     tabFrame->addTab("Discover", [this]() {
         return new DiscoverTab(httpClient, authService);
     });

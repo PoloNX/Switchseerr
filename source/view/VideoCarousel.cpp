@@ -1,6 +1,7 @@
 #include "view/VideoCarousel.hpp"
 #include "view/VideoCard.hpp"
 #include "api/Jellyseerr.hpp"
+#include "view/MediaPreview.hpp"
 
 static std::mutex downloadMutex;
 
@@ -51,7 +52,7 @@ void VideoCarousel::doRequest() {
                 break;
         }
 
-        for (const auto& item : items) {
+        for (auto& item : items) {
             brls::sync([this, item]() {
                 auto videoCard = new VideoCardCell();
                 videoCard->labelTitle->setText(item.title);
@@ -75,12 +76,8 @@ void VideoCarousel::doRequest() {
                     brls::async([this, item, videoCard]() {
                         brls::Logger::debug("VideoCarousel, Downloading image for item ID: {}", item.title);
                         
-                        std::vector<unsigned char> imageBuffer;
-                        {
-                            std::lock_guard<std::mutex> lock(downloadMutex);
-                            imageBuffer = this->httpClient.downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w300_and_h450_face{}", item.posterPath));
-                        }
-                        
+                        std::vector<unsigned char> imageBuffer = this->httpClient.downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w300_and_h450_face{}", item.posterPath));
+
                         if(!imageBuffer.empty()) {
                             brls::sync([videoCard, item, imageBuffer = std::move(imageBuffer)] {
                                 brls::Logger::debug("VideoCarousel, Image downloaded successfully for item ID: {}", item.id);
@@ -92,6 +89,16 @@ void VideoCarousel::doRequest() {
                     });
                 }
                 videoCard->setMargins(0, 10, 0, 10);
+
+                videoCard->registerClickAction([this, item](brls::View* view) mutable {
+                    brls::Logger::debug("VideoCarousel: Item clicked with ID: {}", item.id);
+                    auto mediaPreview = new MediaPreview(httpClient, authService, item);
+                    getAppletFrame()->present(mediaPreview);
+                    getAppletFrame()->setHeaderVisibility(brls::Visibility::GONE);
+                    brls::Application::giveFocus(mediaPreview);
+                    return true;
+                });
+
                 this->carouselBox->addView(videoCard);
             });
             

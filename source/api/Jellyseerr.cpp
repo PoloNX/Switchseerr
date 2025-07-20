@@ -162,7 +162,7 @@ namespace jellyseerr {
             std::string requestUrl;
             switch(type) {
                 case DiscoverType::RecentlyAdded: {
-                    requestUrl = fmt::format("{}/api/v1/media?filter=allavailable&take=20&skip=0&sort=added", url);
+                    requestUrl = fmt::format("{}/api/v1/media?filter=allavailable&take=20&sort=mediaAdded", url);
                     break;
                 }
                 case DiscoverType::Trending: {
