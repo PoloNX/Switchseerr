@@ -8,7 +8,7 @@
 namespace jellyseerr {
     // Fonction helper pour faire une requête de détails pour un seul média
     std::optional<MediaItem> fetchMediaDetails(const std::string& url, const std::string& apiKey, 
-                                             int tmdbId, MediaType type) {
+                                             int tmdbId, MediaType type, int status) {
         HttpClient httpClient; // Instance locale pour thread safety
         
         std::string detailsUrl;
@@ -45,6 +45,13 @@ namespace jellyseerr {
                 mediaItem.title = get_or_default<std::string>(detailsData, "name", "");
                 mediaItem.firstAirDate = get_or_default<std::string>(detailsData, "firstAirDate", "");
             }
+            
+            if (status >= static_cast<int>(MediaStatus::Unknown) && status <= static_cast<int>(MediaStatus::Available)) {
+                mediaItem.status = static_cast<MediaStatus>(status);
+            } else {
+                mediaItem.status = MediaStatus::Unknown;
+            }
+
             mediaItem.voteAverage = get_or_default<double>(detailsData, "voteAverage", 0.0);
             
             return mediaItem;
@@ -85,9 +92,11 @@ namespace jellyseerr {
                 continue;
             }
 
+            int status = get_or_default<int>(item, "status", static_cast<int>(MediaStatus::Unknown));
+
             // Lancer la requête en parallèle
             futures.push_back(
-                std::async(std::launch::async, fetchMediaDetails, url, apiKey, tmdbId, type)
+                std::async(std::launch::async, fetchMediaDetails, url, apiKey, tmdbId, type, status)
             );
         }
 
@@ -137,6 +146,18 @@ namespace jellyseerr {
                         mediaItem.releaseDate = get_or_default<std::string>(item, "releaseDate", "");
                     } else if(mediaItem.type == MediaType::Tv) {
                         mediaItem.firstAirDate = get_or_default<std::string>(item, "firstAirDate", "");
+                    }
+
+                    auto mediaInfo = get_or_default<nlohmann::json>(item, "mediaInfo", nlohmann::json::object());
+                    if (mediaInfo.contains("status")) {
+                        int status = mediaInfo["status"].get<int>();
+                        if (status >= static_cast<int>(MediaStatus::Unknown) && status <= static_cast<int>(MediaStatus::Available)) {
+                            mediaItem.status = static_cast<MediaStatus>(status);
+                        } else {
+                            mediaItem.status = MediaStatus::Unknown;
+                        }
+                    } else {
+                        mediaItem.status = MediaStatus::Unknown;
                     }
 
                     mediaItem.voteAverage = get_or_default<double>(item, "voteAverage", 0.0);
@@ -199,10 +220,6 @@ namespace jellyseerr {
                 medias = parseRecentlyAddedResponse(httpClient, url, apiKey, mediasData);
             } else {
                 medias = parseDiscoverResponse(mediasData);
-            }
-
-            for (auto& media : medias) {
-                brls::Logger::debug("Jellyseerr : Media ID: {}, Title: {}, Type: {}", media.id, media.title, static_cast<int>(media.type));
             }
 
             return medias;

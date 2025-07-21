@@ -13,9 +13,20 @@ enum class DiscoverType {
     FutureTvShows
 };
 
+enum class MediaStatus {
+    Unknown = 1,
+    Pending,
+    Processing,
+    PartiallyAvailable,
+    Available,
+    Blacklisted,
+    Deleted
+};
+
 struct MediaItem {
     int id;
     MediaType type;
+    MediaStatus status;
     std::string title;     
     std::string overview;
     std::string posterPath;

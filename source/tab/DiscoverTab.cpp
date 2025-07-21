@@ -5,10 +5,7 @@
 DiscoverTab::DiscoverTab(HttpClient& httpClient, AuthService& authService) : httpClient(httpClient), authService(authService) {
     brls::Logger::debug("DiscoverTab: Initializing DiscoverTab");
     this->inflateFromXMLRes("xml/tab/discover.xml"); 
-}
 
-void DiscoverTab::willAppear(bool resetState) {
-    brls::Logger::debug("DiscoverTab: willAppear called with resetState={}", resetState);
     
     auto recentlyAdded = new VideoCarousel(httpClient, authService, DiscoverType::RecentlyAdded);
     auto trendingMedias = new VideoCarousel(httpClient, authService, DiscoverType::Trending);
@@ -23,6 +20,10 @@ void DiscoverTab::willAppear(bool resetState) {
     this->boxLatest->addView(popularTvShows);
     this->boxLatest->addView(futureMovies);
     this->boxLatest->addView(futureTvShows);
+}
+
+void DiscoverTab::willAppear(bool resetState) {
+
 }
 
 // brls::View* DiscoverTab::create() {

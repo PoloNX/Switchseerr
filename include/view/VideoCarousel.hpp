@@ -18,7 +18,6 @@ private:
     HttpClient& httpClient;
     AuthService& authService;
     std::string title;
-    std::vector<MediaItem> items;
 
     BRLS_BIND(brls::Header, header, "carousel/header");
     BRLS_BIND(brls::HScrollingFrame, scrollingFrame, "carousel/scroller");

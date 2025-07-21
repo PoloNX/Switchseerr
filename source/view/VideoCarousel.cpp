@@ -25,6 +25,13 @@ void VideoCarousel::doRequest() {
     std::string apiKey = authService.getToken().value_or("");
 
     brls::async([this, serverUrl = std::move(serverUrl), apiKey = std::move(apiKey)]() {
+        if (this == nullptr) {
+            brls::Logger::error("VideoCarousel: Carousel is null, cannot proceed with request");
+            return;
+        }
+
+        std::vector<MediaItem> items;
+
         switch(type) {
             case DiscoverType::RecentlyAdded:
                 this->header->setTitle("Recently Added");
@@ -53,6 +60,10 @@ void VideoCarousel::doRequest() {
         }
 
         for (auto& item : items) {
+            if (this == nullptr) {
+                brls::Logger::error("VideoCarousel: Carousel is null, cannot add video card");
+                return;
+            }
             brls::sync([this, item]() {
                 auto videoCard = new VideoCardCell();
                 videoCard->labelTitle->setText(item.title);
@@ -72,7 +83,7 @@ void VideoCarousel::doRequest() {
 
                 videoCard->setVisibility(brls::Visibility::VISIBLE);
 
-                if (!item.posterPath.empty()) {
+                /*if (!item.posterPath.empty()) {
                     brls::async([this, item, videoCard]() {
                         brls::Logger::debug("VideoCarousel, Downloading image for item ID: {}", item.title);
                         
@@ -81,13 +92,15 @@ void VideoCarousel::doRequest() {
                         if(!imageBuffer.empty()) {
                             brls::sync([videoCard, item, imageBuffer = std::move(imageBuffer)] {
                                 brls::Logger::debug("VideoCarousel, Image downloaded successfully for item ID: {}", item.id);
-                                videoCard->picture->setImageFromMem(imageBuffer.data(), imageBuffer.size());
+                                if (videoCard->picture) {
+                                    videoCard->picture->setImageFromMem(imageBuffer.data(), imageBuffer.size());
+                                }
                             });
                         } else {
                             brls::Logger::error("VideoCarousel, Failed to download image for item ID: {}", item.id);
                         }
                     });
-                }
+                }*/
                 videoCard->setMargins(0, 10, 0, 10);
 
                 videoCard->registerClickAction([this, item](brls::View* view) mutable {
@@ -98,8 +111,16 @@ void VideoCarousel::doRequest() {
                     brls::Application::giveFocus(mediaPreview);
                     return true;
                 });
-
-                this->carouselBox->addView(videoCard);
+                
+                if (this->carouselBox == nullptr) {
+                    brls::Logger::error("VideoCarousel: carouselBox is null, cannot add video card");
+                    return;
+                }
+                try {
+                    this->carouselBox->addView(videoCard);
+                } catch (const std::exception& e) {
+                    brls::Logger::error("VideoCarousel: Exception lors de l'ajout de la carte vidéo : {}", e.what());
+                }
             });
             
         }
