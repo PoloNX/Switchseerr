@@ -83,7 +83,7 @@ void VideoCarousel::doRequest() {
 
                 videoCard->setVisibility(brls::Visibility::VISIBLE);
 
-                /*if (!item.posterPath.empty()) {
+                if (!item.posterPath.empty()) {
                     brls::async([this, item, videoCard]() {
                         brls::Logger::debug("VideoCarousel, Downloading image for item ID: {}", item.title);
                         
@@ -100,7 +100,7 @@ void VideoCarousel::doRequest() {
                             brls::Logger::error("VideoCarousel, Failed to download image for item ID: {}", item.id);
                         }
                     });
-                }*/
+                }
                 videoCard->setMargins(0, 10, 0, 10);
 
                 videoCard->registerClickAction([this, item](brls::View* view) mutable {
