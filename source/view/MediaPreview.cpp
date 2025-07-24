@@ -1,6 +1,7 @@
 #include "view/MediaPreview.hpp"
+#include "utils/ThreadPool.hpp"
 
-MediaPreview::MediaPreview(HttpClient& httpClient, AuthService& authService, MediaItem& mediaItem) : httpClient(httpClient), authService(authService), mediaItem(mediaItem) {
+MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, AuthService& authService, MediaItem& mediaItem) : httpClient(httpClient), authService(authService), mediaItem(mediaItem) {
     brls::Logger::debug("MediaPreview: create");
     this->inflateFromXMLRes("xml/view/media_preview.xml");
 
@@ -10,6 +11,8 @@ MediaPreview::MediaPreview(HttpClient& httpClient, AuthService& authService, Med
         this->dismiss();
         return true;
     });
+
+    this->scroller->setFocusable(true);
 
     this->titleLabel->setText(mediaItem.title);
     this->overviewLabel->setText(mediaItem.overview);
@@ -36,46 +39,40 @@ MediaPreview::MediaPreview(HttpClient& httpClient, AuthService& authService, Med
         default:
             this->statusLabel->setText("Unknown Status");
     }
-
-    if (!mediaItem.posterPath.empty()) {
-        brls::async([this, mediaItem]() {
-            brls::Logger::debug("VideoCarousel, Downloading image for item ID: {}", mediaItem.title);
-            
-            std::vector<unsigned char> imageBuffer = this->httpClient.downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w300_and_h450_face{}", mediaItem.posterPath));
-
-            if(!imageBuffer.empty()) {
-                brls::sync([this, mediaItem, imageBuffer = std::move(imageBuffer)] {
-                    brls::Logger::debug("VideoCarousel, Image downloaded successfully for item ID: {}", mediaItem.id);
-                    this->posterImage->setImageFromMem(imageBuffer.data(), imageBuffer.size());
-                });
-            } else {
-                brls::Logger::error("VideoCarousel, Failed to download image for item ID: {}", mediaItem.id);
-            }
-        });
-    }
-
     
-    if (!mediaItem.backdropPath.empty()) {
-        brls::async([this, mediaItem]() {
-            brls::Logger::debug("VideoCarousel, Downloading image for item ID: {}", mediaItem.title);
+    downloadPosterImage();
+    downloadBackdropImage();
+}
 
-            std::vector<unsigned char> imageBuffer = this->httpClient.downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w1280_and_h720_face{}", mediaItem.backdropPath));
+void MediaPreview::downloadPosterImage() {
+    auto& threadPool = ThreadPool::instance();
+    ASYNC_RETAIN
+    threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
+        std::vector<unsigned char> imageBuffer = client->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w300_and_h450_face{}", mediaItem.posterPath), true);
+        if(!imageBuffer.empty()) { 
+            brls::sync([ASYNC_TOKEN, imageBuffer = std::move(imageBuffer)] {
+                ASYNC_RELEASE
+                this->posterImage->setImageFromMem(imageBuffer.data(), imageBuffer.size());
+            });
+        } else {
+            brls::Logger::error("MediaPreview, Failed to download poster image for item ID: {}", mediaItem.id);
+        }
+    });
+}
 
-            if(!imageBuffer.empty()) {
-                brls::sync([this, mediaItem, imageBuffer = std::move(imageBuffer)] {
-                    brls::Logger::debug("VideoCarousel, Image downloaded successfully for item ID: {}", mediaItem.id);
-                    if (this->backdropImage) {
-                        this->backdropImage->setImageFromMem(imageBuffer.data(), imageBuffer.size());
-                    }
-                });
-            } else {
-                brls::Logger::error("VideoCarousel, Failed to download image for item ID: {}", mediaItem.id);
-            }
-        });
-    }
+void MediaPreview::downloadBackdropImage() {
+    auto& threadPool = ThreadPool::instance();
 
-
-
-    // Initialize the MediaPreview components here
-    // For example, you might want to set up UI elements to display mediaItem details
+    ASYNC_RETAIN
+    threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
+        std::vector<unsigned char> imageBuffer = httpClient->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w1280_and_h720_face{}", mediaItem.backdropPath), true);
+        if(!imageBuffer.empty()) { 
+            brls::sync([ASYNC_TOKEN, imageBuffer = std::move(imageBuffer)] {
+                ASYNC_RELEASE
+                this->backdropImage->setImageFromMem(imageBuffer.data(), imageBuffer.size());
+            });
+        } else {
+            brls::Logger::error("MediaPreview, Failed to download backdrop image for item ID: {}", mediaItem.id);
+        }
+    });
 }

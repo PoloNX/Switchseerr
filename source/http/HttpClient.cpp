@@ -13,13 +13,7 @@ HttpClient::HttpClient() {
         throw std::runtime_error("Failed to initialize CURL");
     }
 
-    // Optimisations pour des connexions plus rapides
-    curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
-    curl_easy_setopt(curl, CURLOPT_TCP_KEEPIDLE, 120L);
-    curl_easy_setopt(curl, CURLOPT_TCP_KEEPINTVL, 60L);
-    curl_easy_setopt(curl, CURLOPT_MAXCONNECTS, 10L); // Pool de connexions
-    curl_easy_setopt(curl, CURLOPT_FORBID_REUSE, 0L); // Réutiliser les connexions
-    curl_easy_setopt(curl, CURLOPT_FRESH_CONNECT, 0L);
+    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
 }
 
 std::string HttpClient::get(const std::string& url, curl_slist* customHeaders, bool verbose) {
@@ -35,6 +29,7 @@ std::string HttpClient::get(const std::string& url, curl_slist* customHeaders, b
     }
 
     curl_easy_reset(curl);
+    curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
 
     if (verbose) {
         curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
@@ -70,11 +65,20 @@ std::string HttpClient::get(const std::string& url, curl_slist* customHeaders, b
     return response;
 }
 
-std::string HttpClient::post(const std::string& url, const std::string& data) {
+std::string HttpClient::post(const std::string& url, const std::string& data, bool verbose) {
     if (!curl) {
         throw std::runtime_error("CURL is not initialized");
     }
     
+    // Réinitialiser seulement les options GET si elles étaient définies
+    curl_easy_setopt(curl, CURLOPT_HTTPGET, 0L);
+    
+    if (verbose) {
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+    } else {
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 0L);
+    }
+
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
     curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, data.size());
@@ -106,6 +110,7 @@ std::string HttpClient::post(const std::string& url, const std::string& data) {
 }
 
 HttpClient::~HttpClient() {
+    brls::Logger::debug("HttpClient: Cleaning up CURL resources");
     if (curl) {
         curl_easy_cleanup(curl);
     }
@@ -120,7 +125,7 @@ std::vector<unsigned char> HttpClient::downloadImageToBuffer(const std::string& 
     if (!curl) {
         throw std::runtime_error("CURL is not initialized");
     }
-
+    
     curl_easy_reset(curl);
     curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
 
@@ -156,13 +161,27 @@ std::vector<unsigned char> HttpClient::downloadImageToBuffer(const std::string& 
     return buffer;
 }
 
-// ...existing code...
-
 size_t HttpClient::writeBufferCallback(void* contents, size_t size, size_t nmemb, std::vector<unsigned char>* buffer) {
+    if (!buffer || !contents) {
+        return 0;
+    }
+
     size_t totalSize = size * nmemb;
+    if (totalSize == 0) {
+        return 0; 
+    }
+
     unsigned char* data = static_cast<unsigned char*>(contents);
-    buffer->insert(buffer->end(), data, data + totalSize);
-    return totalSize;
+
+    try {
+        buffer->reserve(buffer->size() + totalSize);
+        buffer->insert(buffer->end(), data, data + totalSize);
+        return totalSize;
+    }
+    catch (const std::exception& e) {
+        brls::Logger::error("Error in writeBufferCallback: {}", e.what());
+        return 0;
+    }
 }
 
 size_t HttpClient::writeCallback(void* contents, size_t size, size_t nmemb, std::string* buffer) {

@@ -2,13 +2,14 @@
 
 #include <string>
 #include <optional>
+#include <memory>
 
 #include "utils/Config.hpp"
 #include "http/HttpClient.hpp"
 
 class AuthService {
 public:
-    AuthService(HttpClient& client, const std::string& serverUrl);
+    AuthService(std::shared_ptr<HttpClient> client, const std::string& serverUrl);
 
     bool login(const std::string& username, const std::string& password);
     bool loginWithApiKey(const std::string& apiKey);
@@ -26,7 +27,7 @@ public:
     void logout();
 
 private:
-    HttpClient& client;
+    std::shared_ptr<HttpClient> client;
     std::string serverUrl;
     std::optional<std::string> authToken;
     AppUser currentUser;

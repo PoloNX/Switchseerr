@@ -1,12 +1,13 @@
 #pragma once
 
 #include <borealis.hpp>
+#include <memory>
 
 #include "http/HttpClient.hpp"
 
 class ServerLogin : public brls::Box {
 public:
-    ServerLogin(HttpClient& httpClient, const std::string& serverUrl, const std::string& user = "");
+    ServerLogin(std::shared_ptr<HttpClient> httpClient, const std::string& serverUrl, const std::string& user = "");
     ~ServerLogin();
 
     bool onSignin();
@@ -18,5 +19,5 @@ private:
     BRLS_BIND(brls::Image, imageServer, "server/image");
     
     std::string url;
-    HttpClient& httpClient;
+    std::shared_ptr<HttpClient> httpClient;
 };

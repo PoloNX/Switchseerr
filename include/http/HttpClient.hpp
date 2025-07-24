@@ -11,7 +11,7 @@ public:
 
     std::string get(const std::string& url, struct curl_slist* headers = nullptr, bool versbose = false);
 
-    std::string post(const std::string& url, const std::string& data);
+    std::string post(const std::string& url, const std::string& data, bool verbose = false);
 
     std::vector<unsigned char> downloadImageToBuffer(const std::string& url, bool verbose = false);
 

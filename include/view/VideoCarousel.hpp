@@ -3,21 +3,31 @@
 #include "http/HttpClient.hpp"
 #include "auth/AuthService.hpp"
 #include "models/MediaItem.hpp"
+#include "view/VideoCard.hpp"
 
 #include <borealis.hpp>
+#include <memory>
 
 class VideoCarousel : public brls::Box {
 public:
-    VideoCarousel(HttpClient& httpClient, AuthService& authService, DiscoverType type);
+    VideoCarousel(std::shared_ptr<HttpClient> httpClient, AuthService& authService, DiscoverType type);
     ~VideoCarousel();
     
-private:
     void doRequest();
 
+private:
     DiscoverType type;
-    HttpClient& httpClient;
+    std::shared_ptr<HttpClient> httpClient;
     AuthService& authService;
     std::string title;
+
+    void configureHeaderTitle();
+    void createAndAddVideoCard(MediaItem& item);
+    void setupVideoCardContent(VideoCardCell* videoCard, const MediaItem& item);
+    void setupVideoCardStyling(VideoCardCell* videoCard, const MediaItem& item);
+    void setupVideoCardInteractions(VideoCardCell* videoCard, MediaItem& item);
+    void loadVideoCardImage(VideoCardCell* videoCard, const MediaItem& item);
+    void addVideoCardToCarousel(VideoCardCell* videoCard);
 
     BRLS_BIND(brls::Header, header, "carousel/header");
     BRLS_BIND(brls::HScrollingFrame, scrollingFrame, "carousel/scroller");

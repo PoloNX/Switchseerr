@@ -5,7 +5,7 @@
 
 #include <nlohmann/json.hpp>
 
-ServerAdd::ServerAdd(HttpClient& httpClient) : httpClient(httpClient) {
+ServerAdd::ServerAdd(std::shared_ptr<HttpClient> httpClient) : httpClient(httpClient) {
     this->inflateFromXMLRes("xml/tab/server_add.xml");
     brls::Logger::debug("ServerAdd: create");
 
@@ -43,7 +43,7 @@ bool ServerAdd::onConnect() {
 
 
     brls::Logger::info("ServerAdd: connecting to server {}", baseUrl);
-    std::string response = httpClient.get(fmt::format("{}/api/v1/status", baseUrl));
+    std::string response = httpClient->get(fmt::format("{}/api/v1/status", baseUrl));
     brls::Logger::debug("ServerAdd: response: {}", response.c_str());
 
     nlohmann::json jsonResponse;

@@ -4,7 +4,7 @@
 
 #include <nlohmann/json.hpp>
 
-ServerLogin::ServerLogin(HttpClient& httpClient, const std::string& serverUrl, const std::string& user) : httpClient(httpClient), url(serverUrl) {
+ServerLogin::ServerLogin(std::shared_ptr<HttpClient> httpClient, const std::string& serverUrl, const std::string& user) : httpClient(httpClient), url(serverUrl) {
     this->inflateFromXMLRes("xml/tab/server_login.xml");
     brls::Logger::debug("ServerLogin: create");
 

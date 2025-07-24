@@ -76,13 +76,15 @@ public:
 
         brls::async([this, index]() {
             auto& u = this->list.at(index);
-            AuthService authService(this->parent->getHttpClient(), u.server_url);
+            std::shared_ptr<HttpClient> client = this->parent->getHttpClient();
+            AuthService authService(client, u.server_url);
             if (authService.loginWithApiKey(u.api_key)) {
-                brls::sync([this, u, authService]() mutable {
+                brls::sync([this, u, authService = std::move(authService), client]() mutable {
                     brls::Logger::info("ServerUserDataSource: User {} logged in successfully with API key {}", u.name, u.api_key);
                     Config::instance().addUser(u, this->parent->getUrl());
                     brls::Application::unblockInputs();
-                    brls::Application::pushActivity(new MainActivity(this->parent->getHttpClient(), authService));
+                    brls::Application::clear();
+                    brls::Application::pushActivity(new MainActivity(client, authService));
                 });
             } else {
                 brls::sync([this, u]() {
@@ -101,7 +103,7 @@ private:
 };
 
 
-ServerList::ServerList(HttpClient& httpClient) : httpClient(httpClient) {
+ServerList::ServerList(std::shared_ptr<HttpClient> httpClient) : httpClient(httpClient) {
     brls::Logger::debug("ServerList: create");
 }   
 

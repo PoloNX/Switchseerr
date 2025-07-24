@@ -1,31 +1,35 @@
 #include "tab/DiscoverTab.hpp"
 #include "view/HRecycling.hpp"
 #include "view/VideoCarousel.hpp"
+#include "utils/ThreadPool.hpp"
 
-DiscoverTab::DiscoverTab(HttpClient& httpClient, AuthService& authService) : httpClient(httpClient), authService(authService) {
+DiscoverTab::DiscoverTab(std::shared_ptr<HttpClient> httpClient, AuthService& authService) : httpClient(httpClient), authService(authService) {
     brls::Logger::debug("DiscoverTab: Initializing DiscoverTab");
     this->inflateFromXMLRes("xml/tab/discover.xml"); 
 
+    // Définir les types de carousels à créer
+    std::vector<DiscoverType> carouselTypes = {
+        DiscoverType::RecentlyAdded,
+        DiscoverType::Trending,
+        DiscoverType::PopularMovies,
+        DiscoverType::PopularTvShows,
+        DiscoverType::FutureMovies,
+        DiscoverType::FutureTvShows
+    };
+
+    // Créer tous les carousels sans faire leurs requêtes
+    std::vector<VideoCarousel*> carousels;
+    for (const auto& type : carouselTypes) {
+        auto carousel = new VideoCarousel(httpClient, authService, type);
+        carousels.push_back(carousel);
+        this->boxLatest->addView(carousel);
+    }
     
-    auto recentlyAdded = new VideoCarousel(httpClient, authService, DiscoverType::RecentlyAdded);
-    auto trendingMedias = new VideoCarousel(httpClient, authService, DiscoverType::Trending);
-    auto popularMovies = new VideoCarousel(httpClient, authService, DiscoverType::PopularMovies);
-    auto popularTvShows = new VideoCarousel(httpClient, authService, DiscoverType::PopularTvShows);
-    auto futureMovies = new VideoCarousel(httpClient, authService, DiscoverType::FutureMovies);
-    auto futureTvShows = new VideoCarousel(httpClient, authService, DiscoverType::FutureTvShows);
-    
-    this->boxLatest->addView(recentlyAdded);
-    this->boxLatest->addView(trendingMedias);
-    this->boxLatest->addView(popularMovies);
-    this->boxLatest->addView(popularTvShows);
-    this->boxLatest->addView(futureMovies);
-    this->boxLatest->addView(futureTvShows);
+    for (auto* carousel : carousels) {
+        carousel->doRequest();
+    }
 }
 
-void DiscoverTab::willAppear(bool resetState) {
-
+DiscoverTab::~DiscoverTab() {
+    brls::Logger::debug("DiscoverTab: Destroying DiscoverTab");
 }
-
-// brls::View* DiscoverTab::create() {
-//     return new DiscoverTab();
-// }

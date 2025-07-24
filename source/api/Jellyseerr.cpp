@@ -1,5 +1,6 @@
 #include "api/Jellyseerr.hpp"
 #include "utils/utils.hpp"
+#include "utils/ThreadPool.hpp"
 
 #include <borealis.hpp>
 #include <future>
@@ -8,8 +9,7 @@
 namespace jellyseerr {
     // Fonction helper pour faire une requête de détails pour un seul média
     std::optional<MediaItem> fetchMediaDetails(const std::string& url, const std::string& apiKey, 
-                                             int tmdbId, MediaType type, int status) {
-        HttpClient httpClient; // Instance locale pour thread safety
+                                             int tmdbId, MediaType type, int status, std::shared_ptr<HttpClient> httpClient) {
         
         std::string detailsUrl;
         if (type == MediaType::Movie) {
@@ -22,7 +22,7 @@ namespace jellyseerr {
         headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
 
         try {
-            std::string detailsResponse = httpClient.get(detailsUrl, headers, false);
+            std::string detailsResponse = httpClient->get(detailsUrl, headers, false);
             curl_slist_free_all(headers);
 
             if (detailsResponse.empty()) {
@@ -62,14 +62,17 @@ namespace jellyseerr {
         }
     }
 
-    std::vector<MediaItem> parseRecentlyAddedResponse(HttpClient& httpClient, const std::string& url, const std::string& apiKey, const nlohmann::json& response) {
+    std::vector<MediaItem> parseRecentlyAddedResponse(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, const nlohmann::json& response) {
         std::vector<MediaItem> medias;
         if (!response.contains("results") || !response["results"].is_array()) {
             return medias;
         }
 
-        // Préparer les tâches pour les requêtes parallèles
+        // Utiliser des shared_ptr pour les promises pour éviter les problèmes de capture
+        std::vector<std::shared_ptr<std::promise<std::optional<MediaItem>>>> promises;
         std::vector<std::future<std::optional<MediaItem>>> futures;
+        
+        auto& threadPool = ThreadPool::instance();
         
         for (const auto& item : response["results"]) {
             if (!item.contains("mediaType")) {
@@ -94,10 +97,21 @@ namespace jellyseerr {
 
             int status = get_or_default<int>(item, "status", static_cast<int>(MediaStatus::Unknown));
 
-            // Lancer la requête en parallèle
-            futures.push_back(
-                std::async(std::launch::async, fetchMediaDetails, url, apiKey, tmdbId, type, status)
-            );
+            // Créer une promise/future pour cette tâche
+            auto promise = std::make_shared<std::promise<std::optional<MediaItem>>>();
+            promises.push_back(promise);
+            futures.push_back(promise->get_future());
+            
+            // Soumettre la tâche à la ThreadPool
+            threadPool.submit([url, apiKey, tmdbId, type, status, promise](std::shared_ptr<HttpClient> client) {
+                try {
+                    auto result = fetchMediaDetails(url, apiKey, tmdbId, type, status, client);
+                    promise->set_value(result);
+                } catch (const std::exception& e) {
+                    brls::Logger::error("Jellyseerr: Error in ThreadPool task: {}", e.what());
+                    promise->set_value(std::nullopt);
+                }
+            });
         }
 
         // Récupérer les résultats
@@ -108,7 +122,7 @@ namespace jellyseerr {
                     medias.emplace_back(std::move(result.value()));
                 }
             } catch (const std::exception& e) {
-                brls::Logger::error("Jellyseerr: Error in parallel request: {}", e.what());
+                brls::Logger::error("Jellyseerr: Error getting result from future: {}", e.what());
             }
         }
 
@@ -171,7 +185,7 @@ namespace jellyseerr {
         return medias;
     }
 
-    std::vector<MediaItem> getMedias(HttpClient& httpClient, const std::string& url, const std::string& apiKey, DiscoverType type, size_t pageSize) {
+    std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, DiscoverType type, size_t pageSize) {
         brls::Logger::debug("Jellyseerr, Fetching latest medias from {} with API key", url);
 
         struct curl_slist* headers = nullptr;
@@ -210,7 +224,7 @@ namespace jellyseerr {
                 }
             }        
 
-            const std::string response = httpClient.get(requestUrl, headers);
+            const std::string response = httpClient->get(requestUrl, headers);
             curl_slist_free_all(headers);
             //brls::Logger::debug("Jellyseerr : Response: {}", nlohmann::json::parse(response).dump(4));
             const auto mediasData = nlohmann::json::parse(response);

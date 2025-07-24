@@ -1,18 +1,18 @@
 #pragma once
 
 #include <borealis.hpp>
+#include <memory>
 
 #include "auth/AuthService.hpp"
 #include "http/HttpClient.hpp"
 
 class DiscoverTab : public brls::Box {
 public:
-    DiscoverTab(HttpClient& httpClient, AuthService& authService);
-
-    void willAppear(bool resetState = false) override;
+    DiscoverTab(std::shared_ptr<HttpClient> httpClient, AuthService& authService);
+    ~DiscoverTab();
 
 private:
-    HttpClient& httpClient;
+    std::shared_ptr<HttpClient> httpClient;
     AuthService& authService;
 
     BRLS_BIND(brls::Box, boxLatest, "discover/latest");

@@ -6,7 +6,8 @@
     <brls:ScrollingFrame
         width="auto"
         height="auto"
-        grow="1.0" >
+        grow="1.0"
+        id="preview/video/scroller" >
     
         <brls:Box
             height="100%"
@@ -56,14 +57,14 @@
 
                     <brls:Label
                         id="preview/video/status"
-                        text="Disponible"
+                        text="status"
                         fontSize="12"
                         marginTop="5"
                         marginBottom="5"/>
 
                     <brls:Label
                         id="preview/video/title"
-                        text="Si tu tends l'oreille (1995)"
+                        text="Title"
                         fontSize="30"
                         marginTop="5"
                         marginBottom="5"/>
@@ -76,12 +77,12 @@
 
                         <brls:Label
                             id="preview/video/duration"
-                            text="110 minutes"
+                            text="duration"
                             fontSize="12"/>
 
                         <brls:Label
                             id="preview/video/genre"
-                            text="Animation, Drame, Familial"
+                            text="genre"
                             fontSize="12"
                             marginLeft="10"/>
 
@@ -126,12 +127,13 @@
                     axis="column">
 
                     <brls:Label
-                        text="Résumé"
+                        text="Summary"
                         fontSize="20"
                         marginBottom="5"/>
 
                     <brls:Label
                         id="preview/video/overview"
+                        text="This is a brief overview of the video content, providing insights into the plot, characters, and themes."
                         singleLine="false"
                         fontSize="12"
                         marginTop="5"/>

@@ -5,18 +5,19 @@
 #include "view/RecyclingGrid.hpp"
 
 #include <borealis.hpp>
+#include <memory>
 
 class ServerList : public brls::Activity {
 public:
     CONTENT_FROM_XML_RES("activity/server_list.xml");
 
-    ServerList(HttpClient& httpClient);
+    ServerList(std::shared_ptr<HttpClient> httpClient);
     ~ServerList();
 
     void onUser(const std::string& id);
     std::string getUrl();
 
-    HttpClient& getHttpClient() {
+    std::shared_ptr<HttpClient> getHttpClient() {
         return this->httpClient;
     }
 
@@ -24,7 +25,7 @@ public:
     void onContentAvailable() override;
 private:
 
-    HttpClient& httpClient;
+    std::shared_ptr<HttpClient> httpClient;
 
     BRLS_BIND(brls::Button, btnServerAdd, "btn/server/add");
     BRLS_BIND(brls::Box, sidebarServers, "server/sidebar");

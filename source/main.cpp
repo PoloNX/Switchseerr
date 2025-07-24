@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 #include "activity/ServerList.hpp"
 #include "http/HttpClient.hpp"
@@ -6,8 +7,10 @@
 #include "view/RecyclingGrid.hpp"
 #include "view/HRecycling.hpp"
 #include "tab/DiscoverTab.hpp"
+#include "utils/ThreadPool.hpp"
 
 #include <borealis.hpp>
+#include <memory>
 
 int main() {
     brls::Platform::APP_LOCALE_DEFAULT = brls::LOCALE_AUTO;
@@ -40,13 +43,15 @@ int main() {
 
     brls::Application::getPlatform()->setThemeVariant(brls::ThemeVariant::DARK);
 
-    auto httpClient = new HttpClient();
+    auto httpClient = std::make_shared<HttpClient>();
 
-    auto serverList = new ServerList(*httpClient);
+    auto serverList = new ServerList(httpClient);
 
     brls::Application::pushActivity(serverList);
 
     while(brls::Application::mainLoop()) ;
+
+    ThreadPool::instance().stop();
 
     return 0;
 

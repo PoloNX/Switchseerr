@@ -5,7 +5,7 @@
 #include <fmt/format.h>
 #include <borealis.hpp>
 
-AuthService::AuthService(HttpClient& client, const std::string& serverUrl) : client(client), serverUrl(serverUrl) {}
+AuthService::AuthService(std::shared_ptr<HttpClient> client, const std::string& serverUrl) : client(client), serverUrl(serverUrl) {}
 
 bool AuthService::login(const std::string& username, const std::string& password) {
     brls::Logger::debug("AuthService: Attempting login for user: {}", username);
@@ -18,7 +18,7 @@ bool AuthService::login(const std::string& username, const std::string& password
 
     try {
         // Authenticate user
-        const std::string response = client.post(loginUrl, body.dump());
+        const std::string response = client->post(loginUrl, body.dump());
         const auto loginData = nlohmann::json::parse(response);
         
         if (!loginData.contains("id")) {
@@ -32,26 +32,25 @@ bool AuthService::login(const std::string& username, const std::string& password
 
         // Retrieve API key from server settings
         const std::string settingsUrl = fmt::format("{}/api/v1/settings/main", serverUrl);
-        const std::string settingsResponse = client.get(settingsUrl);
+        const std::string settingsResponse = client->get(settingsUrl, nullptr, true);
         const auto settings = nlohmann::json::parse(settingsResponse);
         
-        if (!settings.contains("apiKey")) {
-            brls::Logger::error("AuthService: API key not found in server settings");
-            return false;
-        }
-
-        // Extract and store API key
-        const std::string apiKey = settings["apiKey"].get<std::string>();
-        brls::Logger::debug("AuthService: Retrieved API key: {}", apiKey);
-        this->setToken(apiKey);
-
-        // Create and save user profile
-        const AppUser user = {
+        AppUser user = {
             .id = std::to_string(userId),
             .name = loginData["displayName"].get<std::string>(),
-            .api_key = apiKey,
+            .api_key = "", // API key will be set later if available
             .server_url = serverUrl
         };
+
+        if (settings.contains("apiKey")) {
+            // Extract and store API key
+            const std::string apiKey = settings["apiKey"].get<std::string>();
+            brls::Logger::debug("AuthService: Retrieved API key: {}", apiKey);
+            this->setToken(apiKey);
+            user.api_key = apiKey; // Set API key in user profile
+        }
+
+        // Create and save user profile
         currentUser = user;
         Config::instance().addUser(user, serverUrl);
 
@@ -84,7 +83,7 @@ bool AuthService::loginWithApiKey(const std::string& apiKey) {
 
     try {
         // Authenticate using API key
-        const std::string response = client.get(fmt::format("{}/api/v1/auth/me", serverUrl), headers);
+        const std::string response = client->get(fmt::format("{}/api/v1/auth/me", serverUrl), headers);
         const auto loginData = nlohmann::json::parse(response);
         
         if (!loginData.contains("id")) {
