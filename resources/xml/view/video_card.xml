@@ -51,17 +51,22 @@
 
                 <brls:Rectangle
                     id="video/card/type/rectangle"
-                    width="50"
-                    height="20"/>
-                
-                <brls:Box
+                    width="auto"
+                    height="auto"
+                    positionType="absolute"
                     positionTop="5"
                     positionLeft="10"
+                    wireframe="false"/>
+                
+                <brls:Box
+                    positionTop="8"
+                    positionLeft="15"
                     positionType="absolute"
                     wireframe="false"
                     justifyContent="center"
-                    width="50"
-                    height="20">
+                    width="auto"
+                    height="auto"
+                    id="video/card/type/box">
                     <brls:Label
                         id="video/card/type/label"
                         fontSize="13"/>

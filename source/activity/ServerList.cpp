@@ -84,7 +84,7 @@ public:
                     Config::instance().addUser(u, this->parent->getUrl());
                     brls::Application::unblockInputs();
                     brls::Application::clear();
-                    brls::Application::pushActivity(new MainActivity(client, authService));
+                    brls::Application::pushActivity(new MainActivity(client, authService), brls::TransitionAnimation::NONE);
                 });
             } else {
                 brls::sync([this, u]() {

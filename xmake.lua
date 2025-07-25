@@ -1,6 +1,9 @@
 add_rules("mode.debug", "mode.release")
 set_languages("cxx20")
-add_cxflags("/utf-8")
+
+if is_host("windows") then
+    add_cxflags("/utf-8")
+end
 
 add_repositories("polonx-repo https://github.com/PoloNX/xmake-repo.git")
 add_repositories("zeromake-repo https://github.com/zeromake/xrepo.git")
@@ -9,8 +12,7 @@ add_requires("libcurl", "nlohmann_json", "fmt", "borealis")
 
 add_defines(
     'BRLS_RESOURCES="resources/"',
-    "YG_ENABLE_EVENTS",
-    "NOMINMAX"
+    "YG_ENABLE_EVENTS"
 )
 
 target("Switchseerr")

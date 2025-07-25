@@ -93,16 +93,19 @@ void VideoCarousel::setupVideoCardStyling(VideoCardCell* videoCard, const MediaI
         videoCard->rectType->setColor(nvgRGBA(37, 99, 235, 0.8 * 255));
         videoCard->rectType->setBorderColor(nvgRGBA(59, 130, 246, 255));
     }
+
+    videoCard->rectType->setWidth(videoCard->boxType->getWidth() + 10);
+    videoCard->rectType->setHeight(videoCard->boxType->getHeight() + 6);
 }
 
 void VideoCarousel::setupVideoCardInteractions(VideoCardCell* videoCard, MediaItem& item) {
     videoCard->registerClickAction([this, item](brls::View* view) mutable {
         brls::Logger::debug("VideoCarousel: Item clicked with ID: {}", item.id);
         auto mediaPreview = new MediaPreview(httpClient, authService, item);
-        getAppletFrame()->present(mediaPreview);
+        this->present(mediaPreview);
         getAppletFrame()->setHeaderVisibility(brls::Visibility::GONE);
         return true;
-        });
+    });
 }
 
 void VideoCarousel::loadVideoCardImage(VideoCardCell* videoCard, const MediaItem& item) {

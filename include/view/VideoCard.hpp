@@ -16,6 +16,7 @@ public:
     BRLS_BIND(brls::Label, labelExt, "video/card/label/ext");
     BRLS_BIND(brls::Rectangle, rectType, "video/card/type/rectangle");
     BRLS_BIND(brls::Label, labelType, "video/card/type/label");
+    BRLS_BIND(brls::Box, boxType, "video/card/type/box");
 };
 
 class MediaCardCell : public BaseCardCell {

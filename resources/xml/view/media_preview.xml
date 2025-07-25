@@ -94,9 +94,10 @@
                     axis="row"
                     width="auto"
                     justifyContent="flexEnd"
-                    alignItems="flexEnd">
+                    alignItems="flexEnd"
+                    id="preview/video/actions">
 
-                    <brls:Button
+                    <!-- <brls:Button
                         id="preview/video/favorite"
                         text="Favorite"
                         marginLeft="10"/>
@@ -109,7 +110,7 @@
                     <brls:Button
                         id="preview/video/report"
                         text="Report"
-                        marginLeft="10"/>
+                        marginLeft="10"/> -->
                 </brls:Box>
             </brls:Box>
 

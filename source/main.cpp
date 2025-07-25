@@ -47,7 +47,7 @@ int main() {
 
     auto serverList = new ServerList(httpClient);
 
-    brls::Application::pushActivity(serverList);
+    brls::Application::pushActivity(serverList, brls::TransitionAnimation::NONE);
 
     while(brls::Application::mainLoop()) ;
 

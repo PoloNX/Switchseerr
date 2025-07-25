@@ -44,6 +44,22 @@ MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, AuthService& 
     downloadBackdropImage();
 }
 
+void MediaPreview::willAppear(bool resetState) {
+    brls::Logger::debug("MediaPreview: willAppear called");
+
+    auto requestButton = new brls::Button();
+    requestButton->setText("Request");
+    requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
+    requestButton->registerClickAction([this](brls::View* view) {
+        brls::Logger::debug("MediaPreview: Request button clicked for item ID: {}", mediaItem.id);
+        // Handle request logic here
+        return true;
+    });
+
+    this->actionsBox->addView(requestButton);
+
+}
+
 void MediaPreview::downloadPosterImage() {
     auto& threadPool = ThreadPool::instance();
     ASYNC_RETAIN
@@ -52,7 +68,11 @@ void MediaPreview::downloadPosterImage() {
         if(!imageBuffer.empty()) { 
             brls::sync([ASYNC_TOKEN, imageBuffer = std::move(imageBuffer)] {
                 ASYNC_RELEASE
-                this->posterImage->setImageFromMem(imageBuffer.data(), imageBuffer.size());
+                if (this->posterImage) {
+                    this->posterImage->setImageFromMem(imageBuffer.data(), imageBuffer.size());
+                } else {
+                    brls::Logger::error("MediaPreview, Poster image is null for item ID: {}", mediaItem.id);
+                }
             });
         } else {
             brls::Logger::error("MediaPreview, Failed to download poster image for item ID: {}", mediaItem.id);
@@ -69,6 +89,10 @@ void MediaPreview::downloadBackdropImage() {
         if(!imageBuffer.empty()) { 
             brls::sync([ASYNC_TOKEN, imageBuffer = std::move(imageBuffer)] {
                 ASYNC_RELEASE
+                if (!this->backdropImage) {
+                    brls::Logger::error("MediaPreview: backdropImage is null, cannot set image");
+                    return;
+                }
                 this->backdropImage->setImageFromMem(imageBuffer.data(), imageBuffer.size());
             });
         } else {
