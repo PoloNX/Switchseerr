@@ -1,7 +1,7 @@
 #pragma once
 
 #include "view/RecyclingGrid.hpp"
-
+#include "view/LabelBackground.hpp"
 
 class BaseCardCell : public RecyclingGridItem {
 public:
@@ -14,9 +14,7 @@ public:
     BRLS_BIND(brls::Image, picture, "video/card/picture");
     BRLS_BIND(brls::Label, labelTitle, "video/card/label/title");
     BRLS_BIND(brls::Label, labelExt, "video/card/label/ext");
-    BRLS_BIND(brls::Rectangle, rectType, "video/card/type/rectangle");
-    BRLS_BIND(brls::Label, labelType, "video/card/type/label");
-    BRLS_BIND(brls::Box, boxType, "video/card/type/box");
+    BRLS_BIND(LabelBackground, labelBackground, "video/card/type/background");
 };
 
 class MediaCardCell : public BaseCardCell {

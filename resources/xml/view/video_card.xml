@@ -39,41 +39,14 @@
                 fontSize="16" />
         </brls:Box>
 
-        <brls:Box
-            positionTop="0"
+        <LabelBackground
             positionType="absolute"
-            paddingLeft="10"
-            paddingRight="10"
+            positionTop="0"
+            positionLeft="0"
             width="100%"
             height="10%"
-            alignItems="center"
-            wireframe="false">
-
-                <brls:Rectangle
-                    id="video/card/type/rectangle"
-                    width="auto"
-                    height="auto"
-                    positionType="absolute"
-                    positionTop="5"
-                    positionLeft="10"
-                    wireframe="false"/>
-                
-                <brls:Box
-                    positionTop="8"
-                    positionLeft="15"
-                    positionType="absolute"
-                    wireframe="false"
-                    justifyContent="center"
-                    width="auto"
-                    height="auto"
-                    id="video/card/type/box">
-                    <brls:Label
-                        id="video/card/type/label"
-                        fontSize="13"/>
-                </brls:Box>
-
-
-        </brls:Box>
+            wireframe="true"
+            id="video/card/type/background"/>
 
     </brls:Box>
 

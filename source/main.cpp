@@ -8,6 +8,7 @@
 #include "view/HRecycling.hpp"
 #include "tab/DiscoverTab.hpp"
 #include "utils/ThreadPool.hpp"
+#include "view/LabelBackground.hpp"
 
 #include <borealis.hpp>
 #include <memory>
@@ -33,6 +34,7 @@ int main() {
 
     brls::Application::registerXMLView("RecyclingGrid", RecyclingGrid::create);
     brls::Application::registerXMLView("HRecyclerFrame", HRecyclerFrame::create);
+    brls::Application::registerXMLView("LabelBackground", LabelBackground::create);
 
     brls::Theme::getLightTheme().addColor("color/grey_1", nvgRGB(245, 246, 247));
     brls::Theme::getDarkTheme().addColor("color/grey_1", nvgRGB(51, 52, 53));

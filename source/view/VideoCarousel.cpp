@@ -78,24 +78,17 @@ void VideoCarousel::setupVideoCardContent(VideoCardCell* videoCard, const MediaI
 }
 
 void VideoCarousel::setupVideoCardStyling(VideoCardCell* videoCard, const MediaItem& item) {
-    videoCard->rectType->setCornerRadius(10);
-    videoCard->setBorderThickness(3);
-    videoCard->setVisibility(brls::Visibility::VISIBLE);
-    videoCard->setMargins(0, 10, 0, 10);
+    switch(item.type) {
+        case MediaType::Movie:
+            videoCard->labelBackground->setStyle(LabelBackgroundStyle::Movie);
+            videoCard->labelBackground->setText("Film");
+            break;
+        case MediaType::Tv:
+            videoCard->labelBackground->setStyle(LabelBackgroundStyle::TVShow);
+            videoCard->labelBackground->setText("Série");
+            break;
 
-    if (item.type == MediaType::Tv) {
-        videoCard->labelType->setText("Série");
-        videoCard->rectType->setColor(nvgRGBA(147, 51, 234, 0.8 * 255));
-        videoCard->rectType->setBorderColor(nvgRGBA(147, 51, 234, 255));
     }
-    else {
-        videoCard->labelType->setText("Film");
-        videoCard->rectType->setColor(nvgRGBA(37, 99, 235, 0.8 * 255));
-        videoCard->rectType->setBorderColor(nvgRGBA(59, 130, 246, 255));
-    }
-
-    videoCard->rectType->setWidth(videoCard->boxType->getWidth() + 10);
-    videoCard->rectType->setHeight(videoCard->boxType->getHeight() + 6);
 }
 
 void VideoCarousel::setupVideoCardInteractions(VideoCardCell* videoCard, MediaItem& item) {
