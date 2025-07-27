@@ -3,6 +3,7 @@
 #include "http/HttpClient.hpp"
 #include "auth/AuthService.hpp"
 #include "models/MediaItem.hpp"
+#include "view/LabelBackground.hpp"
 
 #include <borealis.hpp>
 #include <memory>
@@ -24,7 +25,7 @@ private:
     BRLS_BIND(brls::ScrollingFrame, scroller, "preview/video/scroller");
     BRLS_BIND(brls::Image, posterImage, "preview/video/poster");
     BRLS_BIND(brls::Image, backdropImage, "preview/video/backdrop");
-    BRLS_BIND(brls::Label, statusLabel, "preview/video/status");
+    BRLS_BIND(LabelBackground, statusLabel, "preview/video/status");
     BRLS_BIND(brls::Label, titleLabel, "preview/video/title");
     BRLS_BIND(brls::Label, durationLabel, "preview/video/duration");
     BRLS_BIND(brls::Label, genreLabel, "preview/video/genre");

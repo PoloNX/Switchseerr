@@ -28,6 +28,14 @@ DiscoverTab::DiscoverTab(std::shared_ptr<HttpClient> httpClient, AuthService& au
     for (auto* carousel : carousels) {
         carousel->doRequest();
     }
+
+    this->registerAction("Reload", brls::BUTTON_Y, [this, carousels](brls::View* view) {
+        brls::Logger::debug("VideoCarousel: Reload action triggered");
+        for (auto* carousel : carousels) {
+            carousel->doRequest();
+        }
+        return true;
+    });
 }
 
 DiscoverTab::~DiscoverTab() {

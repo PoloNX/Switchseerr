@@ -41,6 +41,22 @@ void LabelBackground::setStyle(LabelBackgroundStyle style) {
             this->backgroundRect->setColor(nvgRGBA(147, 51, 234, 0.8 * 255));
             this->backgroundRect->setBorderColor(nvgRGBA(147, 51, 234, 255));
             break;
+        case LabelBackgroundStyle::Processing:
+            this->backgroundRect->setColor(nvgRGBA(99, 102, 241, 0.8 * 255));
+            this->backgroundRect->setBorderColor(nvgRGBA(99, 102, 241, 255));
+            break;
+        case LabelBackgroundStyle::Deleted:
+            this->backgroundRect->setColor(nvgRGBA(239, 68, 68, 0.8 * 255));
+            this->backgroundRect->setBorderColor(nvgRGBA(239, 68, 68, 255));
+            break;
+        case LabelBackgroundStyle::PartiallyAvailable :
+            this->backgroundRect->setColor(nvgRGBA(34, 197, 94, 0.8 * 255));
+            this->backgroundRect->setBorderColor(nvgRGBA(34, 197, 94, 255));
+            break;
+        case LabelBackgroundStyle::Available:
+            this->backgroundRect->setColor(nvgRGBA(34, 197, 94, 0.8 * 255));
+            this->backgroundRect->setBorderColor(nvgRGBA(34, 197, 94, 255));
+            break;
         default:
             break;
     }

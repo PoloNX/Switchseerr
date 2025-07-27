@@ -11,7 +11,9 @@ VideoCarousel::VideoCarousel(std::shared_ptr<HttpClient> httpClient, AuthService
     this->inflateFromXMLRes("xml/view/video_carousel.xml");
     this->scrollingFrame->setFocusable(true);
     this->setMargins(10, 0, 10, 0);
-    // Ne pas faire la requête immédiatement
+
+    serverUrl = authService.getServerUrl();
+    apiKey = authService.getToken().value_or("");
 }
 
 VideoCarousel::~VideoCarousel() {
@@ -21,11 +23,11 @@ VideoCarousel::~VideoCarousel() {
 void VideoCarousel::doRequest() {
     brls::Logger::debug("VideoCarousel: Requesting data for type {}", static_cast<int>(type));
 
-    std::string serverUrl = authService.getServerUrl();
-    std::string apiKey = authService.getToken().value_or("");
+    // Clean up previous carousel items
+    carouselBox->clearViews();
 
     
-    brls::async([this, serverUrl = std::move(serverUrl), apiKey = std::move(apiKey)]() {
+    brls::async([this]() {
         // Configure le titre et récupère les données
         configureHeaderTitle();
         auto items = jellyseerr::getMedias(httpClient, serverUrl, apiKey, type, 20);
@@ -89,6 +91,8 @@ void VideoCarousel::setupVideoCardStyling(VideoCardCell* videoCard, const MediaI
             break;
 
     }
+    videoCard->setMarginLeft(5);
+    videoCard->setMarginRight(5);
 }
 
 void VideoCarousel::setupVideoCardInteractions(VideoCardCell* videoCard, MediaItem& item) {

@@ -15,7 +15,7 @@
         
         <brls:Box
             positionTop="8"
-            positionLeft="15"
+            positionLeft="16"
             positionType="absolute"
             wireframe="false"
             justifyContent="center"

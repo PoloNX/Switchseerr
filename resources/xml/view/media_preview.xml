@@ -55,12 +55,8 @@
                     justifyContent="flexEnd"
                     marginLeft="20">
 
-                    <brls:Label
-                        id="preview/video/status"
-                        text="status"
-                        fontSize="12"
-                        marginTop="5"
-                        marginBottom="5"/>
+                    <LabelBackground
+                        id="preview/video/status"/>
 
                     <brls:Label
                         id="preview/video/title"
@@ -97,20 +93,6 @@
                     alignItems="flexEnd"
                     id="preview/video/actions">
 
-                    <!-- <brls:Button
-                        id="preview/video/favorite"
-                        text="Favorite"
-                        marginLeft="10"/>
-
-                    <brls:Button
-                        id="preview/video/request"
-                        text="Request"
-                        marginLeft="10"/>
-
-                    <brls:Button
-                        id="preview/video/report"
-                        text="Report"
-                        marginLeft="10"/> -->
                 </brls:Box>
             </brls:Box>
 

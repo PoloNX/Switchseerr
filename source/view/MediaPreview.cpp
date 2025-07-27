@@ -19,25 +19,31 @@ MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, AuthService& 
     
     switch(mediaItem.status) {
         case MediaStatus::Pending:
+            this->statusLabel->setStyle(LabelBackgroundStyle::Pending);
             this->statusLabel->setText("Pending");
             break;
         case MediaStatus::Processing:
+            this->statusLabel->setStyle(LabelBackgroundStyle::Processing);  
             this->statusLabel->setText("Processing");
             break;
         case MediaStatus::PartiallyAvailable:
+            this->statusLabel->setStyle(LabelBackgroundStyle::PartiallyAvailable);
             this->statusLabel->setText("Partially Available");
             break;
         case MediaStatus::Available:
+            this->statusLabel->setStyle(LabelBackgroundStyle::Available);
             this->statusLabel->setText("Available");
             break;
         case MediaStatus::Blacklisted:
+            this->statusLabel->setStyle(LabelBackgroundStyle::Blacklisted);
             this->statusLabel->setText("Blacklisted");
             break;
         case MediaStatus::Deleted:
+            this->statusLabel->setStyle(LabelBackgroundStyle::Deleted);
             this->statusLabel->setText("Deleted");
             break;
         default:
-            this->statusLabel->setText("Unknown Status");
+            this->statusLabel->setVisibility(brls::Visibility::GONE);
     }
     
     downloadPosterImage();
@@ -47,16 +53,16 @@ MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, AuthService& 
 void MediaPreview::willAppear(bool resetState) {
     brls::Logger::debug("MediaPreview: willAppear called");
 
-    auto requestButton = new brls::Button();
-    requestButton->setText("Request");
-    requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
-    requestButton->registerClickAction([this](brls::View* view) {
-        brls::Logger::debug("MediaPreview: Request button clicked for item ID: {}", mediaItem.id);
-        // Handle request logic here
-        return true;
-    });
+    // auto requestButton = new brls::Button();
+    // requestButton->setText("Request");
+    // requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
+    // requestButton->registerClickAction([this](brls::View* view) {
+    //     brls::Logger::debug("MediaPreview: Request button clicked for item ID: {}", mediaItem.id);
+    //     // Handle request logic here
+    //     return true;
+    // });
 
-    this->actionsBox->addView(requestButton);
+    // this->actionsBox->addView(requestButton);
 
 }
 

@@ -20,6 +20,8 @@ private:
     std::shared_ptr<HttpClient> httpClient;
     AuthService& authService;
     std::string title;
+    std::string serverUrl;
+    std::string apiKey;
 
     void configureHeaderTitle();
     void createAndAddVideoCard(MediaItem& item);
