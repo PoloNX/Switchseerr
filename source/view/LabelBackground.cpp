@@ -25,8 +25,8 @@ void LabelBackground::setText(const std::string& text) {
     this->text = text;
     this->textLabel->setText(text);
 
-    this->backgroundRect->setWidth(this->textLabel->getWidth() + 10);
-    this->backgroundRect->setHeight(this->textLabel->getHeight() + 6);
+    this->backgroundRect->setWidth(this->textLabel->getWidth() + 20);
+    this->backgroundRect->setHeight(this->textLabel->getHeight() + 12);
 }
 
 void LabelBackground::setStyle(LabelBackgroundStyle style) {

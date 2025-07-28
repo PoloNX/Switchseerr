@@ -7,8 +7,7 @@
         axis="row"
         grow="1"
         height="300"
-        wireframe="false"
-        marginTop="5">
+        wireframe="false">
         <brls:Image
             id="video/card/picture"
             backgroundColor="@theme/color/grey_1"
@@ -16,12 +15,12 @@
             width="200"
             height="300"
             image="@res/img/video-card-bg.png"
-            cornerRadius="8" />
+            cornerRadius="8"/>
 
         <brls:Box
-            positionBottom="0"
+            positionBottom="5"
             positionType="absolute"
-            background="vertical_linear"
+            background="vertical_linear" 
             paddingLeft="10"
             paddingRight="10"
             width="100%"
@@ -41,8 +40,8 @@
 
         <LabelBackground
             positionType="absolute"
-            positionTop="0"
-            positionLeft="0"
+            positionTop="5"
+            positionLeft="5"
             width="100%"
             height="10%"
             wireframe="false"

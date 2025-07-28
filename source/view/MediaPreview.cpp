@@ -1,5 +1,6 @@
 #include "view/MediaPreview.hpp"
 #include "utils/ThreadPool.hpp"
+#include "view/RequestView.hpp"
 
 MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, AuthService& authService, MediaItem& mediaItem) : httpClient(httpClient), authService(authService), mediaItem(mediaItem) {
     brls::Logger::debug("MediaPreview: create");
@@ -45,6 +46,8 @@ MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, AuthService& 
         default:
             this->statusLabel->setVisibility(brls::Visibility::GONE);
     }
+ 
+    brls::Application::giveFocus(scroller);
     
     downloadPosterImage();
     downloadBackdropImage();
@@ -53,16 +56,16 @@ MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, AuthService& 
 void MediaPreview::willAppear(bool resetState) {
     brls::Logger::debug("MediaPreview: willAppear called");
 
-    // auto requestButton = new brls::Button();
-    // requestButton->setText("Request");
-    // requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
-    // requestButton->registerClickAction([this](brls::View* view) {
-    //     brls::Logger::debug("MediaPreview: Request button clicked for item ID: {}", mediaItem.id);
-    //     // Handle request logic here
-    //     return true;
-    // });
+    auto requestButton = new brls::Button();
+    requestButton->setText("Request");
+    requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
+    requestButton->registerClickAction([this](brls::View* view) {
+        auto requestView = new RequestView(this->mediaItem);
+        brls::Application::pushActivity(new brls::Activity(requestView));
+        return true;
+    });
 
-    // this->actionsBox->addView(requestButton);
+    this->actionsBox->addView(requestButton);
 
 }
 

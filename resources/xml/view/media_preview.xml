@@ -38,7 +38,8 @@
                 width="100%"
                 height="auto"
                 axis="row"
-                marginTop="20">
+                marginTop="20"
+                wireframe="false">
 
                 <brls:Image
                     id="preview/video/poster"
@@ -87,8 +88,9 @@
                 </brls:Box>
 
                 <brls:Box
+                    wireframe="false"
                     axis="row"
-                    width="auto"
+                    width="32%"
                     justifyContent="flexEnd"
                     alignItems="flexEnd"
                     id="preview/video/actions">

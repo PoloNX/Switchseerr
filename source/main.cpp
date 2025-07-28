@@ -36,6 +36,9 @@ int main() {
     brls::Application::registerXMLView("HRecyclerFrame", HRecyclerFrame::create);
     brls::Application::registerXMLView("LabelBackground", LabelBackground::create);
 
+    brls::Theme::getDarkTheme().addColor("color/background_start", nvgRGBA(45, 45, 45, 150));
+    brls::Theme::getDarkTheme().addColor("color/background_end", nvgRGBA(45, 45, 45, 255));
+
     brls::Theme::getLightTheme().addColor("color/grey_1", nvgRGB(245, 246, 247));
     brls::Theme::getDarkTheme().addColor("color/grey_1", nvgRGB(51, 52, 53));
     brls::Theme::getLightTheme().addColor("color/grey_2", nvgRGB(245, 245, 245));

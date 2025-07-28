@@ -9,13 +9,13 @@
             width="auto"
             height="auto"
             positionType="absolute"
-            positionTop="5"
-            positionLeft="10"
+            positionTop="0"
+            positionLeft="0"
             wireframe="false"/>
         
         <brls:Box
-            positionTop="8"
-            positionLeft="16"
+            positionTop="6"
+            positionLeft="11"
             positionType="absolute"
             wireframe="false"
             justifyContent="center"
