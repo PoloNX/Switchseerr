@@ -4,11 +4,11 @@
 
 #include "api/RequestService.hpp"
 
-RequestService::RequestService(HttpClient& httpClient, AuthService& authService)
+RequestService::RequestService(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService)
     : client(httpClient), auth(authService) {}
 
 std::optional<int> RequestService::createRequest(const MovieRequest& request) { 
-    std::string url = fmt::format("{}{}", "http://jellyseerr.cabanaflix.ovh", BASE_REQUEST_URL);
+    std::string url = fmt::format("{}{}", auth->getServerUrl(), BASE_REQUEST_URL);
 
     // Create the JSON to perform the request
     nlohmann::json jsonRequest = {
@@ -27,10 +27,16 @@ std::optional<int> RequestService::createRequest(const MovieRequest& request) {
     // Convert the JSON to a string
     std::string jsonData = jsonRequest.dump();
 
+    struct curl_slist* headers = nullptr;
+    std::string apiKeyHeader = "X-Api-Key: " + auth->getToken().value_or("");
+    headers = curl_slist_append(headers, apiKeyHeader.c_str());
+    headers = curl_slist_append(headers, "accept: application/json");
+    
+
     try {
         // Perform the POST request
-        std::string response = client.post(url, jsonData);
-
+        std::string response = client->post(url, jsonData, headers, false);
+        
         // Parse the response JSON
         nlohmann::json jsonResponse = nlohmann::json::parse(response);
 

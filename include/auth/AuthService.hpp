@@ -24,6 +24,8 @@ public:
 
     void attachAuthHeader(struct curl_slist*& headers) const;
 
+    int getUserId() const { return currentUser.id; }
+
     void logout();
 
 private:

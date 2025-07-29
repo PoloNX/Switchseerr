@@ -17,7 +17,7 @@ bool AuthService::login(const std::string& username, const std::string& password
     };
 
     try {
-        // Authenticate user
+        // Authenticate user with proper headers
         const std::string response = client->post(loginUrl, body.dump());
         const auto loginData = nlohmann::json::parse(response);
         
@@ -36,7 +36,7 @@ bool AuthService::login(const std::string& username, const std::string& password
         const auto settings = nlohmann::json::parse(settingsResponse);
         
         AppUser user = {
-            .id = std::to_string(userId),
+            .id = userId,
             .name = loginData["displayName"].get<std::string>(),
             .api_key = "", // API key will be set later if available
             .server_url = serverUrl
@@ -97,7 +97,7 @@ bool AuthService::loginWithApiKey(const std::string& apiKey) {
 
         // Create and save user profile
         const AppUser user = {
-            .id = std::to_string(userId),
+            .id = userId,
             .name = loginData["displayName"].get<std::string>(),
             .api_key = apiKey,
             .server_url = serverUrl

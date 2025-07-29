@@ -10,7 +10,7 @@
 
 class VideoCarousel : public brls::Box {
 public:
-    VideoCarousel(std::shared_ptr<HttpClient> httpClient, AuthService& authService, DiscoverType type);
+    VideoCarousel(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, DiscoverType type);
     ~VideoCarousel();
     
     void doRequest();
@@ -18,7 +18,7 @@ public:
 private:
     DiscoverType type;
     std::shared_ptr<HttpClient> httpClient;
-    AuthService& authService;
+    std::shared_ptr<AuthService> authService;
     std::string title;
     std::string serverUrl;
     std::string apiKey;

@@ -44,9 +44,10 @@ bool ServerLogin::onSignin() {
     brls::Application::blockInputs();
     this->buttonSignin->setState(brls::ButtonState::DISABLED);
 
-    AuthService authService(this->httpClient, this->url);
-    
-    if (authService.login(user, password)) {
+    //AuthService authService(this->httpClient, this->url);
+    std::shared_ptr<AuthService> authService = std::make_shared<AuthService>(this->httpClient, this->url);
+
+    if (authService->login(user, password)) {
         brls::Logger::debug("ServerLogin: Login successful for user {}", user);
 
         // Optionally, you can navigate to another view or perform further actions here

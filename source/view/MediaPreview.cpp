@@ -2,14 +2,15 @@
 #include "utils/ThreadPool.hpp"
 #include "view/RequestView.hpp"
 
-MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, AuthService& authService, MediaItem& mediaItem) : httpClient(httpClient), authService(authService), mediaItem(mediaItem) {
+MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, MediaItem& mediaItem, brls::View* parentView) : httpClient(httpClient), authService(authService), mediaItem(mediaItem) {
     brls::Logger::debug("MediaPreview: create");
     this->inflateFromXMLRes("xml/view/media_preview.xml");
 
-    this->registerAction("back", brls::BUTTON_B, [this](brls::View* view) {
+    this->registerAction("back", brls::BUTTON_B, [this, parentView](brls::View* view) {
         brls::Logger::debug("MediaPreview: Back action triggered");
         getAppletFrame()->setHeaderVisibility(brls::Visibility::VISIBLE);
         this->dismiss();
+        brls::Application::giveFocus(parentView);
         return true;
     });
 
@@ -60,7 +61,7 @@ void MediaPreview::willAppear(bool resetState) {
     requestButton->setText("Request");
     requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
     requestButton->registerClickAction([this](brls::View* view) {
-        auto requestView = new RequestView(this->mediaItem);
+        auto requestView = new RequestView(this->httpClient, this->mediaItem, this->authService);
         brls::Application::pushActivity(new brls::Activity(requestView));
         return true;
     });
@@ -73,7 +74,7 @@ void MediaPreview::downloadPosterImage() {
     auto& threadPool = ThreadPool::instance();
     ASYNC_RETAIN
     threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
-        std::vector<unsigned char> imageBuffer = client->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w300_and_h450_face{}", mediaItem.posterPath), true);
+        std::vector<unsigned char> imageBuffer = client->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w300_and_h450_face{}", mediaItem.posterPath));
         if(!imageBuffer.empty()) { 
             brls::sync([ASYNC_TOKEN, imageBuffer = std::move(imageBuffer)] {
                 ASYNC_RELEASE
@@ -94,7 +95,7 @@ void MediaPreview::downloadBackdropImage() {
 
     ASYNC_RETAIN
     threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
-        std::vector<unsigned char> imageBuffer = httpClient->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w1280_and_h720_face{}", mediaItem.backdropPath), true);
+        std::vector<unsigned char> imageBuffer = httpClient->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w1280_and_h720_face{}", mediaItem.backdropPath));
         if(!imageBuffer.empty()) { 
             brls::sync([ASYNC_TOKEN, imageBuffer = std::move(imageBuffer)] {
                 ASYNC_RELEASE

@@ -14,15 +14,53 @@ HttpClient::HttpClient() {
     }
 
     curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
+
+    initDefaultHeaders();
+}
+
+HttpClient::~HttpClient() {
+    brls::Logger::debug("HttpClient: Cleaning up CURL resources");
+    if (curl) {
+        curl_easy_cleanup(curl);
+    }
+    if (headers) {
+        curl_slist_free_all(headers);
+    }
+    if (defaultHeaders) {
+        curl_slist_free_all(defaultHeaders);
+    }
+}
+
+void HttpClient::initDefaultHeaders() {
+    // Créer les headers par défaut
+    defaultHeaders = nullptr;
+    defaultHeaders = curl_slist_append(defaultHeaders, "Content-Type: application/json");
+    defaultHeaders = curl_slist_append(defaultHeaders, "Accept: application/json");
+    defaultHeaders = curl_slist_append(defaultHeaders, "User-Agent: Switchseerr/1.0");
+}
+
+curl_slist* HttpClient::mergeHeaders(curl_slist* customHeaders) {
+    curl_slist* mergedHeaders = nullptr;
+    
+    // Copier les headers par défaut
+    curl_slist* current = defaultHeaders;
+    while (current) {
+        mergedHeaders = curl_slist_append(mergedHeaders, current->data);
+        current = current->next;
+    }
+    
+    // Ajouter les headers personnalisés (ils peuvent override les defaults)
+    current = customHeaders;
+    while (current) {
+        mergedHeaders = curl_slist_append(mergedHeaders, current->data);
+        current = current->next;
+    }
+    
+    return mergedHeaders;
 }
 
 std::string HttpClient::get(const std::string& url, curl_slist* customHeaders, bool verbose) {
-    brls::Logger::debug("HttpClient: GET request to {}", url);
-    if (customHeaders) {
-        brls::Logger::debug("HttpClient: Custom headers provided : {}", customHeaders->data);
-    } else {
-        brls::Logger::debug("HttpClient: No custom headers provided");
-    }
+    brls::Logger::info("HttpClient: GET request to {}", url);
     
     if (!curl) {
         throw std::runtime_error("CURL is not initialized");
@@ -40,17 +78,17 @@ std::string HttpClient::get(const std::string& url, curl_slist* customHeaders, b
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
-    if (customHeaders) {
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, customHeaders);
-    }
+    curl_slist* finalHeaders = mergeHeaders(customHeaders);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, finalHeaders);
 
     std::string response;
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, "Switchseerr/1.0");
 
     auto res = curl_easy_perform(curl);
+
+    curl_slist_free_all(finalHeaders);
 
     if (res != CURLE_OK) {
        brls::Logger::error("CURL GET request failed: {}", std::string(curl_easy_strerror(res)));
@@ -65,12 +103,13 @@ std::string HttpClient::get(const std::string& url, curl_slist* customHeaders, b
     return response;
 }
 
-std::string HttpClient::post(const std::string& url, const std::string& data, bool verbose) {
+std::string HttpClient::post(const std::string& url, const std::string& data, curl_slist* customHeaders, bool verbose) {
+    brls::Logger::info("HttpClient: POST request to {}", url);
+    
     if (!curl) {
         throw std::runtime_error("CURL is not initialized");
     }
-    
-    // Réinitialiser seulement les options GET si elles étaient définies
+
     curl_easy_setopt(curl, CURLOPT_HTTPGET, 0L);
     
     if (verbose) {
@@ -83,18 +122,16 @@ std::string HttpClient::post(const std::string& url, const std::string& data, bo
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
     curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, data.size());
     
-    struct curl_slist* headers = nullptr;
-    headers = curl_slist_append(headers, "Content-Type: application/json");
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_slist* finalHeaders = mergeHeaders(customHeaders);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, finalHeaders);
 
     std::string response;
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, "Switchseerr/1.0");
 
     auto res = curl_easy_perform(curl);
 
-    curl_slist_free_all(headers);
+    curl_slist_free_all(finalHeaders);
 
     if (res != CURLE_OK) {
         throw std::runtime_error("CURL POST request failed: " + std::string(curl_easy_strerror(res)));
@@ -107,16 +144,6 @@ std::string HttpClient::post(const std::string& url, const std::string& data, bo
     }
 
     return response;
-}
-
-HttpClient::~HttpClient() {
-    brls::Logger::debug("HttpClient: Cleaning up CURL resources");
-    if (curl) {
-        curl_easy_cleanup(curl);
-    }
-    if (headers) {
-        curl_slist_free_all(headers);
-    }
 }
 
 std::vector<unsigned char> HttpClient::downloadImageToBuffer(const std::string& url, bool verbose) {

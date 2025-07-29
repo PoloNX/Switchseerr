@@ -5,15 +5,15 @@
 
 static std::mutex downloadMutex;
 
-VideoCarousel::VideoCarousel(std::shared_ptr<HttpClient> httpClient, AuthService& authService, DiscoverType type)
+VideoCarousel::VideoCarousel(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, DiscoverType type)
     : httpClient(httpClient), authService(authService), type(type) {
     brls::Logger::debug("VideoCarousel: Creating carousel for type {}", static_cast<int>(type));
     this->inflateFromXMLRes("xml/view/video_carousel.xml");
     this->scrollingFrame->setFocusable(true);
     this->setMargins(10, 0, 10, 0);
 
-    serverUrl = authService.getServerUrl();
-    apiKey = authService.getToken().value_or("");
+    serverUrl = authService->getServerUrl();
+    apiKey = authService->getToken().value_or("");
 }
 
 VideoCarousel::~VideoCarousel() {
@@ -98,7 +98,7 @@ void VideoCarousel::setupVideoCardStyling(VideoCardCell* videoCard, const MediaI
 void VideoCarousel::setupVideoCardInteractions(VideoCardCell* videoCard, MediaItem& item) {
     videoCard->registerClickAction([this, item](brls::View* view) mutable {
         brls::Logger::debug("VideoCarousel: Item clicked with ID: {}", item.id);
-        auto mediaPreview = new MediaPreview(httpClient, authService, item);
+        auto mediaPreview = new MediaPreview(httpClient, authService, item, this);
         this->present(mediaPreview);
         getAppletFrame()->setHeaderVisibility(brls::Visibility::GONE);
         return true;

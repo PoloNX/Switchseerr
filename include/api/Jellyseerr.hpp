@@ -6,6 +6,7 @@
 
 #include "models/MediaItem.hpp"
 #include "http/HttpClient.hpp"
+#include "api/services/radarr.hpp"
 
 namespace jellyseerr {
 
@@ -14,5 +15,7 @@ namespace jellyseerr {
     };
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(PublicSystemInfo, version);
 
+    std::vector<RadarrService> getRadarrServices(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey);
+    std::vector<QualityProfile> getRadarrQualityProfiles(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, int radarrServiceId);
     std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, DiscoverType type,size_t pageSize = 10);
 };

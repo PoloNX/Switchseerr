@@ -10,13 +10,13 @@
 
 class MediaPreview : public brls::Box {
 public:
-    MediaPreview(std::shared_ptr<HttpClient> httpClient, AuthService& authService, MediaItem& mediaItem);
+    MediaPreview(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, MediaItem& mediaItem, brls::View* parentView);
 
     void willAppear(bool resetState = false) override;
 
 private:
     std::shared_ptr<HttpClient> httpClient;
-    AuthService& authService;
+    std::shared_ptr<AuthService> authService;
     MediaItem& mediaItem;
 
     void downloadPosterImage();

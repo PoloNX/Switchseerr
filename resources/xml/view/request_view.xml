@@ -94,7 +94,7 @@
                         title="Request Details"/>
 
                     <brls:DetailCell
-                        id="request/details"
+                        id="request/quality"
                         title="Quality Profile"/>
 
 
@@ -114,7 +114,6 @@
 
                     <brls:Button
                         id="request/button/approve"
-                        style="primary"
                         text="Approve"
                         margin="5"/>
 

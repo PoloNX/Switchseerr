@@ -5,7 +5,7 @@
 #include <borealis/core/singleton.hpp>
 
 struct AppUser {
-    std::string id;
+    int id;
     std::string name;
     std::string api_key;
     std::string server_url;
@@ -40,7 +40,7 @@ public:
     bool addServer(const AppServer& server);
     void addUser(const AppUser& user, const std::string& url);
     bool removeServer(const std::string& url);
-    bool removeUser(const std::string& id);
+    bool removeUser(const int& id);
     const std::string getUserName() const { return this->user->name;} 
     const std::string getUrl() const { return this->server_url; }
     const std::vector<AppServer>& getServers() const { return this->servers; }

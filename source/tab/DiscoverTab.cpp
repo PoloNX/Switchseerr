@@ -3,7 +3,7 @@
 #include "view/VideoCarousel.hpp"
 #include "utils/ThreadPool.hpp"
 
-DiscoverTab::DiscoverTab(std::shared_ptr<HttpClient> httpClient, AuthService& authService) : httpClient(httpClient), authService(authService) {
+DiscoverTab::DiscoverTab(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService) : httpClient(httpClient), authService(authService) {
     brls::Logger::debug("DiscoverTab: Initializing DiscoverTab");
     this->inflateFromXMLRes("xml/tab/discover.xml"); 
 

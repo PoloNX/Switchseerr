@@ -244,4 +244,91 @@ namespace jellyseerr {
         }
     }
 
+    std::vector<RadarrService> getRadarrServices(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey) {
+        brls::Logger::debug("Jellyseerr: Fetching Radarr services from {}", url);
+
+        struct curl_slist* headers = nullptr;
+        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
+        headers = curl_slist_append(headers, "accept: application/json");
+
+        try {
+            std::string response = httpClient->get(fmt::format("{}/api/v1/service/radarr", url), headers);
+            curl_slist_free_all(headers);
+
+            auto servicesData = nlohmann::json::parse(response);
+            
+            brls::Logger::debug("Jellyseerr: Radarr services response: {}", servicesData.dump(4));
+
+            std::vector<RadarrService> services;
+
+            for (const auto& item : servicesData) {
+                RadarrService service;
+                service.id = item["id"].get<int>();
+                service.name = item["name"].get<std::string>();
+                service.is4k = item["is4k"].get<bool>();
+                service.isDefault = item["isDefault"].get<bool>();
+                service.activeDirectory = item["activeDirectory"].get<std::string>();
+                service.activeProfileId = item["activeProfileId"].get<int>();
+
+                services.emplace_back(std::move(service));
+            }
+
+            return services;
+        } catch (const std::exception& e) {
+            brls::Logger::error("Jellyseerr: Error fetching Radarr services: {}", e.what());
+            return {};
+        }
+    }
+
+    std::vector<QualityProfile> getRadarrQualityProfiles(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, int radarrServiceId) {
+        brls::Logger::debug("Jellyseerr: Fetching Radarr quality profiles for service ID {}", radarrServiceId);
+
+        struct curl_slist* headers = nullptr;
+        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
+        headers = curl_slist_append(headers, "accept: application/json");
+
+        try {
+            std::string response = httpClient->get(fmt::format("{}/api/v1/service/radarr/{}", url, radarrServiceId), headers);
+            curl_slist_free_all(headers);
+
+            auto profilesData = nlohmann::json::parse(response);
+            std::vector<QualityProfile> profiles;
+
+            brls::Logger::debug("Jellyseerr: Radarr quality profiles response: {}", profilesData.dump(4));
+
+            RadarrService radarrService;
+            radarrService.id = profilesData["server"]["id"].get<int>();
+            radarrService.name = profilesData["server"]["name"].get<std::string>();
+            radarrService.is4k = profilesData["server"]["is4k"].get<bool>();
+            radarrService.isDefault = profilesData["server"]["isDefault"].get<bool>();
+            radarrService.activeDirectory = profilesData["server"]["activeDirectory"].get<std::string>();
+            radarrService.activeProfileId = profilesData["server"]["activeProfileId"].get<int>();
+
+            for (const auto& item : profilesData["profiles"]) {
+                brls::Logger::debug("Jellyseerr: Processing Radarr quality profile: {}", item.dump(4));
+                QualityProfile profile;
+                profile.radarrService = radarrService;
+                profile.id = item["id"].get<int>();
+                profile.name = item["name"].get<std::string>();
+
+                if(item.contains("rootFolders") && item["rootFolders"].is_array()) {
+                    for (const auto& folder : item["rootFolders"]) {
+                        RootFolder rootFolder;
+                        rootFolder.id = folder["id"].get<int>();
+                        rootFolder.freeSpace = folder["freeSpace"].get<int>();
+                        rootFolder.path = folder["path"].get<std::string>();
+                        profile.rootFolders.push_back(std::move(rootFolder));
+                    }
+                }
+
+                profiles.emplace_back(std::move(profile));
+            }
+
+            return profiles;
+        } catch (const std::exception& e) {
+            brls::Logger::error("Jellyseerr: Error fetching Radarr quality profiles: {}", e.what());
+            return {};
+        }
+    }
+
 };

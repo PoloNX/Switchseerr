@@ -1,7 +1,7 @@
 #include "activity/MainActivity.hpp"
 #include "tab/DiscoverTab.hpp"
 
-MainActivity::MainActivity(std::shared_ptr<HttpClient> httpClient, AuthService& authService)
+MainActivity::MainActivity(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService)
     : httpClient(httpClient), authService(authService) {
     brls::Logger::debug("MainActivity: create");
 }

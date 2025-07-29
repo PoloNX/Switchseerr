@@ -103,7 +103,7 @@ bool Config::removeServer(const std::string& url) {
     return false;
 }
 
-bool Config::removeUser(const std::string& id) {
+bool Config::removeUser(const int& id) {
     for (auto it = this->users.begin(); it != this->users.end(); ++it) {
         if (it->id == id) {
             this->users.erase(it);

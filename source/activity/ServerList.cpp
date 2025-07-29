@@ -77,8 +77,9 @@ public:
         brls::async([this, index]() {
             auto& u = this->list.at(index);
             std::shared_ptr<HttpClient> client = this->parent->getHttpClient();
-            AuthService authService(client, u.server_url);
-            if (authService.loginWithApiKey(u.api_key)) {
+            std::shared_ptr<AuthService> authService = std::make_shared<AuthService>(client, u.server_url);
+
+            if (authService->loginWithApiKey(u.api_key)) {
                 brls::sync([this, u, authService = std::move(authService), client]() mutable {
                     brls::Logger::info("ServerUserDataSource: User {} logged in successfully with API key {}", u.name, u.api_key);
                     Config::instance().addUser(u, this->parent->getUrl());

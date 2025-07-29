@@ -9,7 +9,7 @@
 
 class RequestService {
 public:
-    RequestService(HttpClient& httpClient, AuthService& authService);
+    RequestService(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService);
 
     std::optional<int> createRequest(const MovieRequest& request);
     
@@ -19,8 +19,8 @@ public:
     std::vector<MovieRequest> getAllRequests();
 
 private:
-    HttpClient& client;
-    AuthService& auth;
+    std::shared_ptr<HttpClient> client;
+    std::shared_ptr<AuthService> auth;
     
     static constexpr const char* BASE_REQUEST_URL = "/api/v1/request";
     
