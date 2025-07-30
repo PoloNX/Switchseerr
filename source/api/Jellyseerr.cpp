@@ -331,4 +331,34 @@ namespace jellyseerr {
         }
     }
 
+    std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, MediaType type, size_t pageSize) {
+        brls::Logger::debug("Jellyseerr: Fetching medias from {} with API key", url);
+
+        struct curl_slist* headers = nullptr;
+        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
+        headers = curl_slist_append(headers, "accept: application/json");
+
+        try {
+            std::string requestUrl;
+            if (type == MediaType::Movie) {
+                requestUrl = fmt::format("{}/api/v1/discover/movies?page=1", url);
+            } else if (type == MediaType::Tv) {
+                requestUrl = fmt::format("{}/api/v1/discover/tv?page=1", url);
+            } else {
+                throw std::invalid_argument("Unsupported media type");
+            }
+
+            const std::string response = httpClient->get(requestUrl, headers);
+            curl_slist_free_all(headers);
+            //brls::Logger::debug("Jellyseerr : Response: {}", nlohmann::json::parse(response).dump(4));
+            const auto mediasData = nlohmann::json::parse(response);
+
+            return parseDiscoverResponse(mediasData);
+            
+        } catch (const std::exception& e) {
+            brls::Logger::error("Jellyseerr : error fetching medias: {}", e.what());
+            return {};
+        }
+    }
+
 };

@@ -12,7 +12,8 @@ add_requires("libcurl", "nlohmann_json", "fmt", "borealis")
 
 add_defines(
     'BRLS_RESOURCES="resources/"',
-    "YG_ENABLE_EVENTS"
+    "YG_ENABLE_EVENTS",
+    "NOMINMAX"
 )
 
 target("Switchseerr")

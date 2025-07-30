@@ -1,0 +1,11 @@
+<brls:Box
+        id="movie/content">
+
+    <RecyclingGrid
+        paddingRight="20"
+        grow="1"
+        height="50%"
+        spanCount="3"
+        wireframe="false"
+        id="media/recycler" />
+</brls:Box>
