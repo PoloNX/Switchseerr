@@ -21,7 +21,7 @@ target("Switchseerr")
     add_files("source/**.cpp")
     add_includedirs("include")
 
-    add_packages("libcurl", "nlohmann_json", "fmt", "borealis")
+    add_packages("libcurl", "nlohmann_json", "fmt", "borealis", "lunasvg")
     set_rundir("$(projectdir)")
 
     if is_plat("macosx") then
