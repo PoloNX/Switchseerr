@@ -15,7 +15,8 @@ namespace jellyseerr {
     };
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(PublicSystemInfo, version);
 
-    std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, MediaType type, size_t pageSize = 10);
+    std::vector<MediaItem> searchMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, const std::string& query, size_t page = 1);
+    std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, MediaType type, size_t page = 1);
     std::vector<RadarrService> getRadarrServices(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey);
     std::vector<QualityProfile> getRadarrQualityProfiles(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, int radarrServiceId);
     std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, DiscoverType type,size_t pageSize = 10);

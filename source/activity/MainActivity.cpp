@@ -1,6 +1,8 @@
 #include "activity/MainActivity.hpp"
 #include "tab/DiscoverTab.hpp"
-#include "tab/MovieTab.hpp"
+#include "tab/MediaTab.hpp"
+#include "view/SvgImage.hpp"
+#include "tab/SearchTab.hpp"
 
 MainActivity::MainActivity(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService)
     : httpClient(httpClient), authService(authService) {
@@ -10,16 +12,40 @@ MainActivity::MainActivity(std::shared_ptr<HttpClient> httpClient, std::shared_p
 void MainActivity::onContentAvailable() {
     brls::Logger::debug("MainActivity: content available");
     
-    tabFrame->setSidebarWidth(300);
-    tabFrame->addTab("Discover", [this]() {
-        return new DiscoverTab(httpClient, authService); // Pass httpClient as shared_ptr if DiscoverTab expects it
+    // Créer un onglet Discover
+    auto* discoverTab = new AutoSidebarItem();
+    discoverTab->setTabStyle(AutoTabBarStyle::PLAIN);
+    discoverTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-discover.svg");
+    discoverTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-discover-selected.svg");
+    discoverTab->setFontSize(18);
+    tabFrame->addTab(discoverTab, [this]() -> brls::View* {
+        auto container = new DiscoverTab(httpClient, authService);
+        return container;
     });
 
-    tabFrame->addTab("Movies", [this]() {
-        return new MovieTab(httpClient, authService);
+    auto* movieTab = new AutoSidebarItem();
+    movieTab->setTabStyle(AutoTabBarStyle::PLAIN);
+    movieTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-movie.svg");
+    movieTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-movie-selected.svg");
+    tabFrame->addTab(movieTab, [this]() -> brls::View* {
+        return new MediaTab(httpClient, authService, MediaType::Movie);
     });
 
-    // Additional setup can be done here
+    auto* tvTab = new AutoSidebarItem();
+    tvTab->setTabStyle(AutoTabBarStyle::PLAIN);
+    tvTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-tv.svg");
+    tvTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-tv-selected.svg");
+    tabFrame->addTab(tvTab, [this]() -> brls::View* {
+        return new MediaTab(httpClient, authService, MediaType::Tv);
+    });
+
+    auto* searchTab = new AutoSidebarItem();
+    searchTab->setTabStyle(AutoTabBarStyle::PLAIN);
+    searchTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-search.svg");
+    searchTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-search-selected.svg");
+    tabFrame->addTab(searchTab, [this]() -> brls::View* {
+        return new SearchTab(httpClient, authService);
+    });
 }
 
 MainActivity::~MainActivity() {

@@ -21,3 +21,29 @@ std::string get_date_string() {
 //     }
 //     return defaultValue;
 // }
+
+std::string format_date(const std::string& date) {
+    if (date.length() != 10) {
+        brls::Logger::error("Invalid date format: {}", date);
+        return date; // Return original if format is incorrect
+    }
+    return date.substr(8, 2) + "/" + date.substr(5, 2) + "/" + date.substr(0, 4);
+}
+
+std::string escaped_string(const std::string& str) {
+    std::string escaped;
+    CURL* curl = curl_easy_init();
+    if (curl) {
+        char* escapedStr = curl_easy_escape(curl, str.c_str(), str.length());
+        if (escapedStr) {
+            escaped = std::string(escapedStr);
+            curl_free(escapedStr);
+        } else {
+            brls::Logger::error("Failed to escape string: {}", str);
+        }
+        curl_easy_cleanup(curl);
+    } else {
+        brls::Logger::error("CURL initialization failed");
+    }
+    return escaped;
+}

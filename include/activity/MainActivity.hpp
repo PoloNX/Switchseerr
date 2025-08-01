@@ -3,6 +3,7 @@
 #include <borealis.hpp>
 #include <memory>
 
+#include "view/AutoTabFrame.hpp"
 #include "http/HttpClient.hpp"
 #include "auth/AuthService.hpp"
 
@@ -19,6 +20,7 @@ private:
     std::shared_ptr<HttpClient> httpClient;
     std::shared_ptr<AuthService> authService;
 
-    BRLS_BIND(brls::TabFrame, tabFrame, "main/tab_frame");
+
+    BRLS_BIND(AutoTabFrame, tabFrame, "main/tab_frame");
     BRLS_BIND(brls::AppletFrame, appletFrame, "main/applet_frame");
 };

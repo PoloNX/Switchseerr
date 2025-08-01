@@ -1,13 +1,14 @@
 <brls:Box   
     width="auto"
-    height="395"
+    height="420"
     axis="column">
 
     <brls:Header
         id="carousel/header"
-        height="40"/>
+        height="60"/>
 
     <brls:HScrollingFrame
+        marginTop="10"
         width="auto"
         height="auto"
         grow="1.0"

@@ -55,6 +55,7 @@ void VideoCarousel::configureHeaderTitle() {
 
     if (auto it = titleMap.find(type); it != titleMap.end()) {
         header->setTitle(it->second);
+        header->setTitleSize(20);
     }
 }
 
@@ -76,7 +77,10 @@ void VideoCarousel::createAndAddVideoCard(MediaItem& item) {
 void VideoCarousel::setupVideoCardContent(VideoCardCell* videoCard, const MediaItem& item) {
     videoCard->labelTitle->setText(item.title);
     videoCard->labelExt->setText(item.releaseDate.empty() ? item.firstAirDate : item.releaseDate);
-    videoCard->labelRating->setText(std::to_string(item.voteAverage));
+    // Format the rating to two decimal places
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(2) << item.voteAverage;
+    videoCard->labelRating->setText(ss.str());
 }
 
 void VideoCarousel::setupVideoCardStyling(VideoCardCell* videoCard, const MediaItem& item) {
@@ -110,20 +114,20 @@ void VideoCarousel::loadVideoCardImage(VideoCardCell* videoCard, const MediaItem
 
     auto& threadPool = ThreadPool::instance();
 
-    threadPool.submit([this, item, videoCard](std::shared_ptr<HttpClient> client) {
-        brls::Logger::debug("VideoCarousel: Downloading image for item: {}", item.title);
+    ASYNC_RETAIN
+    threadPool.submit([ASYNC_TOKEN, item, videoCard](std::shared_ptr<HttpClient> client) {
+        brls::Logger::verbose("VideoCarousel: Downloading image for item: {}", item.title);
 
         auto imageBuffer = client->downloadImageToBuffer(
             fmt::format("https://image.tmdb.org/t/p/w300_and_h450_face{}", item.posterPath)
         );
 
         if (!imageBuffer.empty()) {
-            ASYNC_RETAIN
             brls::sync([ASYNC_TOKEN, videoCard, item, imageBuffer = std::move(imageBuffer)] {
                 ASYNC_RELEASE
                     if (videoCard && videoCard->picture) {
                         try {
-                            brls::Logger::debug("VideoCarousel: Image loaded for item: {}", item.id);
+                            brls::Logger::verbose("VideoCarousel: Image loaded for item: {}", item.id);
                             videoCard->picture->setImageFromMem(imageBuffer.data(), imageBuffer.size());
                         }
                         catch (const std::exception& e) {

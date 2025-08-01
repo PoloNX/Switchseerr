@@ -1,0 +1,12 @@
+<brls:Box
+    width="auto"
+    height="auto">
+        <brls:Box
+            height="auto"
+            width="auto"
+            axis="column"
+            id="search/content"
+            wireframe="false">
+
+        </brls:Box>
+</brls:Box>

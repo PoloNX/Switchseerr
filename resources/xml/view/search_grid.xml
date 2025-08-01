@@ -1,24 +1,43 @@
 <brls:Box
     id="movie/content"
     width="auto"
-    height="auto"
+    height="100%"
     axis="column"
     alignItems="center">
 
+    <brls:Box
+        width="100%"
+        height="10%"
+        id="media/search"
+        alignItems="center"
+        wireframe="false">
+
+        <SVGImage
+            id="media/search/svg"
+            width="19"
+            height="18"
+            marginLeft="10"
+            marginRight="10" />
+        <brls:Label
+            id="media/search/input"
+            marginTop="8"
+            marginBottom="10" />
+
+    </brls:Box>
+
     <RecyclingGrid
-        paddingTop="20"
         paddingRight="20"
         grow="1"
         spanCount="5"
         itemHeight="350"
         wireframe="false"
         id="media/recycler"
-        height="90%"
+        height="80%"
         width="100%"/>
     
     <brls:Box
         height="10%"
-        width="20%"
+        width="50%"
         wireframe="false"
         id="media/page"
         justifyContent="spaceBetween"

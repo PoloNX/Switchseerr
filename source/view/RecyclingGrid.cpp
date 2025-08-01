@@ -187,7 +187,8 @@ RecyclingGrid::~RecyclingGrid() {
     this->hintImage = nullptr;
     if (this->hintLabel) this->hintLabel->freeView();
     this->hintLabel = nullptr;
-    delete this->dataSource;
+    // Comment because of the usage of unique_ptr in RecyclingView
+    //delete this->dataSource;
     for (const auto& it : queueMap) {
         for (auto item : *it.second) {
             item->setParent(nullptr);

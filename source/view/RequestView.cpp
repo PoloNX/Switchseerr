@@ -36,7 +36,15 @@ void RequestView::loadButtonActions() {
         request.languageProfileId = 0; // Assuming language profile ID is not used for movies
         request.userId = authService->getUserId();
 
-        requestService.createRequest(request);
+        if (requestService.createRequest(request, mediaItem.type)) {
+            brls::Logger::debug("RequestView: Request created successfully for media item ID: {}", mediaItem.id);
+            brls::Application::notify("Request created successfully!");
+            return false;
+        } else {
+            brls::Logger::error("RequestView: Failed to create request for media item ID: {}", mediaItem.id);
+            brls::Application::notify("Failed to create request for media item. Please try again later.");
+            return false;
+        }
         return true;
     });
 }

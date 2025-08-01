@@ -9,6 +9,8 @@
 #include "tab/DiscoverTab.hpp"
 #include "utils/ThreadPool.hpp"
 #include "view/LabelBackground.hpp"
+#include "view/AutoTabFrame.hpp"
+#include "view/SvgImage.hpp"
 
 #include <borealis.hpp>
 #include <memory>
@@ -32,9 +34,11 @@ int main() {
     brls::Application::createWindow("Switchseerr");
     brls::Application::setGlobalQuit(false);
 
+    brls::Application::registerXMLView("SVGImage", SVGImage::create);
     brls::Application::registerXMLView("RecyclingGrid", RecyclingGrid::create);
     brls::Application::registerXMLView("HRecyclerFrame", HRecyclerFrame::create);
     brls::Application::registerXMLView("LabelBackground", LabelBackground::create);
+    brls::Application::registerXMLView("AutoTabFrame", AutoTabFrame::create);
 
     brls::Theme::getDarkTheme().addColor("color/background_start", nvgRGBA(45, 45, 45, 150));
     brls::Theme::getDarkTheme().addColor("color/background_end", nvgRGBA(45, 45, 45, 255));
@@ -45,6 +49,9 @@ int main() {
     brls::Theme::getDarkTheme().addColor("color/grey_2", nvgRGB(51, 53, 55));
     brls::Theme::getLightTheme().addColor("color/grey_3", nvgRGBA(200, 200, 200, 16));
     brls::Theme::getDarkTheme().addColor("color/grey_3", nvgRGBA(160, 160, 160, 160));
+
+    brls::Theme::getLightTheme().addColor("font/grey", nvgRGB(148, 153, 160));
+    brls::Theme::getDarkTheme().addColor("font/grey", nvgRGB(148, 153, 160));
 
     brls::Application::getPlatform()->setThemeVariant(brls::ThemeVariant::DARK);
 

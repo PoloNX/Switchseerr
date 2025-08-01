@@ -40,10 +40,10 @@ namespace jellyseerr {
             
             if (type == MediaType::Movie) {
                 mediaItem.title = get_or_default<std::string>(detailsData, "title", "");
-                mediaItem.releaseDate = get_or_default<std::string>(detailsData, "releaseDate", "");
+                mediaItem.releaseDate = format_date(get_or_default<std::string>(detailsData, "releaseDate", ""));
             } else if (type == MediaType::Tv) {
                 mediaItem.title = get_or_default<std::string>(detailsData, "name", "");
-                mediaItem.firstAirDate = get_or_default<std::string>(detailsData, "firstAirDate", "");
+                mediaItem.firstAirDate = format_date(get_or_default<std::string>(detailsData, "firstAirDate", ""));
             }
             
             if (status >= static_cast<int>(MediaStatus::Unknown) && status <= static_cast<int>(MediaStatus::Available)) {
@@ -157,15 +157,19 @@ namespace jellyseerr {
                     mediaItem.backdropPath = get_or_default<std::string>(item, "backdropPath", "");
 
                     if(mediaItem.type == MediaType::Movie) {
-                        mediaItem.releaseDate = get_or_default<std::string>(item, "releaseDate", "");
+                        mediaItem.releaseDate = format_date(get_or_default<std::string>(item, "releaseDate", ""));
                     } else if(mediaItem.type == MediaType::Tv) {
-                        mediaItem.firstAirDate = get_or_default<std::string>(item, "firstAirDate", "");
+                        mediaItem.firstAirDate = format_date(get_or_default<std::string>(item, "firstAirDate", ""));
                     }
 
                     auto mediaInfo = get_or_default<nlohmann::json>(item, "mediaInfo", nlohmann::json::object());
                     if (mediaInfo.contains("status")) {
                         int status = mediaInfo["status"].get<int>();
-                        if (status >= static_cast<int>(MediaStatus::Unknown) && status <= static_cast<int>(MediaStatus::Available)) {
+                        // blacklisted status is 6, we skip it
+                        if (status == 6) {
+                            continue;
+                        }
+                        else if (status >= static_cast<int>(MediaStatus::Unknown) && status <= static_cast<int>(MediaStatus::Available)) {
                             mediaItem.status = static_cast<MediaStatus>(status);
                         } else {
                             mediaItem.status = MediaStatus::Unknown;
@@ -331,7 +335,7 @@ namespace jellyseerr {
         }
     }
 
-    std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, MediaType type, size_t pageSize) {
+    std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, MediaType type, size_t page) {
         brls::Logger::debug("Jellyseerr: Fetching medias from {} with API key", url);
 
         struct curl_slist* headers = nullptr;
@@ -341,9 +345,9 @@ namespace jellyseerr {
         try {
             std::string requestUrl;
             if (type == MediaType::Movie) {
-                requestUrl = fmt::format("{}/api/v1/discover/movies?page=1", url);
+                requestUrl = fmt::format("{}/api/v1/discover/movies?page={}", url, page);
             } else if (type == MediaType::Tv) {
-                requestUrl = fmt::format("{}/api/v1/discover/tv?page=1", url);
+                requestUrl = fmt::format("{}/api/v1/discover/tv?page={}", url, page);
             } else {
                 throw std::invalid_argument("Unsupported media type");
             }
@@ -357,6 +361,35 @@ namespace jellyseerr {
             
         } catch (const std::exception& e) {
             brls::Logger::error("Jellyseerr : error fetching medias: {}", e.what());
+            return {};
+        }
+    }
+
+    std::vector<MediaItem> searchMedias(std::shared_ptr<HttpClient> httpClient, const std::string &url, const std::string &apiKey, const std::string &query, size_t page) {
+        brls::Logger::debug("Jellyseerr: Searching medias with query '{}' on {}", query, url);
+
+        struct curl_slist* headers = nullptr;
+        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
+        headers = curl_slist_append(headers, "accept: application/json");
+
+        try {
+            std::string requestUrl = fmt::format("{}/api/v1/search?query={}&page={}", url, query, page);
+            const std::string response = httpClient->get(requestUrl, headers);
+            curl_slist_free_all(headers);
+
+            if (response.empty()) {
+                brls::Logger::warning("Jellyseerr: No results found for query '{}'", query);
+                return {};
+            }
+
+            const auto searchData = nlohmann::json::parse(response);
+            //parsing the search results
+            auto medias = parseDiscoverResponse(searchData);
+
+            return medias;
+
+        } catch (const std::exception& e) {
+            brls::Logger::error("Jellyseerr: Error searching medias: {}", e.what());
             return {};
         }
     }

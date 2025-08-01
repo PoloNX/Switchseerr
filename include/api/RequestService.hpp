@@ -11,7 +11,7 @@ class RequestService {
 public:
     RequestService(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService);
 
-    std::optional<int> createRequest(const MovieRequest& request);
+    bool createRequest(const MovieRequest& request, MediaType mediaType);
     
     std::vector<MovieRequest> getUserRequests();
     std::optional<MovieRequest> getRequestById(int requestId);

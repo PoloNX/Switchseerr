@@ -3,12 +3,11 @@
 #include "view/RequestView.hpp"
 
 MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, MediaItem& mediaItem, brls::View* parentView) : httpClient(httpClient), authService(authService), mediaItem(mediaItem) {
-    brls::Logger::debug("MediaPreview: create");
+    brls::Logger::debug("MediaPreview: create for item ID: {}", mediaItem.id);
     this->inflateFromXMLRes("xml/view/media_preview.xml");
 
     this->registerAction("back", brls::BUTTON_B, [this, parentView](brls::View* view) {
         brls::Logger::debug("MediaPreview: Back action triggered");
-        getAppletFrame()->setHeaderVisibility(brls::Visibility::VISIBLE);
         this->dismiss();
         brls::Application::giveFocus(parentView);
         return true;

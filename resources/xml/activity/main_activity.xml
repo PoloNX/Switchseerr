@@ -1,12 +1,92 @@
 <brls:AppletFrame
     id="main/applet_frame"
-    iconInterpolation="linear">
+    iconInterpolation="linear"
+    headerHidden="true">
+    
+    <brls:Box
+        axis="column"
+        width="100%"
+        height="100%">
 
-    <brls:TabFrame
-        title="SwitchSeerr"
-        id="main/tab_frame"
-        icon="@res/img/jellyseerr/small_logo.png">
+        <AutoTabFrame
+            id="main/tab_frame"
+            grow="1"
+            defaultTab="0"
+            sidebarPosition="left">
 
-    </brls:TabFrame>
+            <!-- <Tab label=""
+                fontSize="18"
+                icon="@res/icon/ico-home.svg"
+                iconActivate="@res/icon/ico-home-activate.svg">
+                <brls:Box
+                    width="auto"
+                    height="auto"
+                    axis="column"
+                    paddingTop="@style/about/padding_top_bottom"
+                    paddingBottom="@style/about/padding_top_bottom"
+                    paddingLeft="@style/about/padding_sides"
+                    paddingRight="@style/about/padding_sides" >
+
+                    <brls:Box
+                        width="auto"
+                        height="auto"
+                        axis="column"
+                        marginBottom="@style/about/description_margin">
+
+                        <brls:Label
+                            width="auto"
+                            height="auto"
+                            fontSize="35"
+                            horizontalAlign="center"
+                            text="@i18n/menu/main/app_name"/>
+
+                        <brls:Image
+                            width="auto"
+                            height="33%"
+                            image="@res/icon/icon.png"
+                            cornerRadius="15"
+                            marginTop="@style/about/description_margin"
+                            marginBottom="@style/about/description_margin"/>
+
+                        <brls:Label
+                            fontSize="15"
+                            width="auto"
+                            height="auto"
+                            singleLine="false"
+                            text="@i18n/menu/about/description"
+                            horizontalAlign="center"/>
+
+                    </brls:Box>
+
+                    <brls:Box
+                        width="auto"
+                        height="auto"
+                        axis="column"
+                        alignItems="flexStart"
+                        grow="1.0" >
+
+                        <brls:Label
+                            width="auto"
+                            height="auto"
+                            fontSize="12"
+                            singleLine="false"
+                            text="@i18n/menu/about/thanks"
+                            grow="1.0"/>
+
+                        <brls:Label
+                            width="auto"
+                            height="auto"
+                            fontSize="12"
+                            text="@i18n/menu/about/translator"
+                            singleLine="false"/>
+
+                    </brls:Box>
+
+                </brls:Box>
+            </Tab> -->
+
+        </AutoTabFrame>
+
+    </brls:Box>
 
 </brls:AppletFrame>
