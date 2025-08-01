@@ -20,14 +20,11 @@ target("Switchseerr")
     set_kind("binary")
     add_files("source/**.cpp")
     add_includedirs("include")
-<<<<<<< Updated upstream
+
     add_packages("libcurl", "nlohmann_json", "fmt", "borealis")
     set_rundir("$(projectdir)")
 
     if is_plat("macosx") then
         add_frameworks("CoreWLAN")
     end
-=======
-    add_packages("libcurl", "nlohmann_json", "fmt", "borealis", "lunasvg")
-    set_rundir("$(projectdir)")
->>>>>>> Stashed changes
+
