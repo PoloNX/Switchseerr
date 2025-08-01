@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include "MediaSearchResult.hpp"
 
 enum class DiscoverType {
@@ -15,15 +16,26 @@ enum class DiscoverType {
 
 enum class MediaStatus {
     Unknown = 1,
-    Pending,
-    Processing,
-    PartiallyAvailable,
-    Available,
-    Blacklisted,
-    Deleted
+    Pending = 2,
+    Processing = 3,
+    PartiallyAvailable = 4,
+    Available = 5,
+    Blacklisted = 6,
+    Deleted = 7
+};
+
+struct Season {
+    std::string airDate;
+    int episodeCount;
+    int id;
+    std::string name;
+    std::string overview;
+    int seasonNumber;
+    std::string posterPath;
 };
 
 struct MediaItem {
+    //common
     int id;
     MediaType type;
     MediaStatus status;
@@ -31,29 +43,25 @@ struct MediaItem {
     std::string overview;
     std::string posterPath;
     std::string backdropPath;
-    std::string releaseDate;   
-    std::string firstAirDate;  
+    std::string originalLanguage;
+    std::vector<std::string> genres;
+    
+    //movie specific
+    std::string releaseDate;  
+    std::string originalTitle;
+    int revenue;
+    int runtime;
+    std::string statusString;
+
+    //tv specific
+    std::string firstAirDate;
+    bool inProduction;
+    std::string lasAirDate;
+    int numberOfEpisodes;
+    int numberOfSeasons;
+    std::string originalName;
+    std::vector<Season> seasons;
+
+
     double voteAverage;
-    
-    MediaItem() = default;
-    
-    MediaItem(const Movie& movie) 
-        : id(movie.id)
-        , type(MediaType::Movie)
-        , title(movie.title)
-        , overview(movie.overview)
-        , posterPath(movie.posterPath)
-        , backdropPath(movie.backdropPath)
-        , releaseDate(movie.releaseDate)
-        , voteAverage(movie.voteAverage) {}
-    
-    MediaItem(const TvShow& tvShow)
-        : id(tvShow.id)
-        , type(MediaType::Tv)
-        , title(tvShow.name)
-        , overview(tvShow.overview)
-        , posterPath(tvShow.posterPath)
-        , backdropPath(tvShow.backdropPath)
-        , firstAirDate(tvShow.firstAirDate)
-        , voteAverage(tvShow.voteAverage) {}
 };

@@ -9,7 +9,6 @@ VideoCarousel::VideoCarousel(std::shared_ptr<HttpClient> httpClient, std::shared
     : httpClient(httpClient), authService(authService), type(type) {
     brls::Logger::debug("VideoCarousel: Creating carousel for type {}", static_cast<int>(type));
     this->inflateFromXMLRes("xml/view/video_carousel.xml");
-    this->scrollingFrame->setFocusable(true);
     this->setMargins(10, 0, 10, 0);
 
     serverUrl = authService->getServerUrl();

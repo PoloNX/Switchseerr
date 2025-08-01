@@ -1,6 +1,8 @@
 #include "view/MediaPreview.hpp"
 #include "utils/ThreadPool.hpp"
 #include "view/RequestView.hpp"
+#include "view/MediaInfoView.hpp"
+#include "api/Jellyseerr.hpp"
 
 MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, MediaItem& mediaItem, brls::View* parentView) : httpClient(httpClient), authService(authService), mediaItem(mediaItem) {
     brls::Logger::debug("MediaPreview: create for item ID: {}", mediaItem.id);
@@ -17,6 +19,8 @@ MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, std::shared_p
 
     this->titleLabel->setText(mediaItem.title);
     this->overviewLabel->setText(mediaItem.overview);
+
+    brls::Logger::debug("MediaPreview: Media item type: {}", static_cast<int>(mediaItem.status));
     
     switch(mediaItem.status) {
         case MediaStatus::Pending:
@@ -49,6 +53,9 @@ MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, std::shared_p
  
     brls::Application::giveFocus(scroller);
     
+    this->actionsBox->setVisibility(brls::Visibility::GONE);
+
+    downloadDetails();
     downloadPosterImage();
     downloadBackdropImage();
 }
@@ -64,9 +71,20 @@ void MediaPreview::willAppear(bool resetState) {
         brls::Application::pushActivity(new brls::Activity(requestView));
         return true;
     });
-
+    requestButton->setMargins(0, 10, 0, 10);
     this->actionsBox->addView(requestButton);
 
+
+    auto infoButton = new brls::Button();
+    infoButton->setText("Info");
+    infoButton->setStyle(&brls::BUTTONSTYLE_HIGHLIGHT);
+    infoButton->registerClickAction([this](brls::View* view) {
+        auto mediaInfoView = new MediaInfoView(this->mediaItem);
+        brls::Application::pushActivity(new brls::Activity(mediaInfoView));
+        return true;
+    });
+    infoButton->setMargins(0, 10, 0, 10);
+    this->actionsBox->addView(infoButton);
 }
 
 void MediaPreview::downloadPosterImage() {
@@ -86,6 +104,20 @@ void MediaPreview::downloadPosterImage() {
         } else {
             brls::Logger::error("MediaPreview, Failed to download poster image for item ID: {}", mediaItem.id);
         }
+    });
+}
+
+void MediaPreview::downloadDetails() {
+    auto& threadPool = ThreadPool::instance();
+    ASYNC_RETAIN
+    threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
+        // Fetch additional details like genres, release date, etc.
+        jellyseerr::fillDetails(client, mediaItem, authService->getServerUrl(), authService->getToken().value_or(""));
+        brls::sync([ASYNC_TOKEN] {
+            ASYNC_RELEASE
+            // Update the UI with the fetched details
+            this->actionsBox->setVisibility(brls::Visibility::VISIBLE);
+        });
     });
 }
 

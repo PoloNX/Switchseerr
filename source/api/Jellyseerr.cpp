@@ -394,4 +394,73 @@ namespace jellyseerr {
         }
     }
 
+    void fillDetails(std::shared_ptr<HttpClient> httpClient, MediaItem& mediaItem, const std::string& url, const std::string& apiKey) {
+        brls::Logger::debug("Jellyseerr: Filling details for media item ID: {}", mediaItem.id);
+        struct curl_slist* headers = nullptr;
+        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
+        headers = curl_slist_append(headers, "accept: application/json");
+        
+        try {
+            std::string detailsUrl;
+            if (mediaItem.type == MediaType::Movie) {
+                detailsUrl = fmt::format("{}/api/v1/movie/{}", url, mediaItem.id);
+            } else {
+                detailsUrl = fmt::format("{}/api/v1/tv/{}", url, mediaItem.id);
+            }
+
+            std::string response = httpClient->get(detailsUrl, headers);
+            curl_slist_free_all(headers);
+
+            if (response.empty()) {
+                brls::Logger::warning("Jellyseerr: No details found for media item ID: {}", mediaItem.id);
+                return;
+            }
+
+            const auto detailsData = nlohmann::json::parse(response, nullptr, false);
+
+            // Update common fields
+            mediaItem.overview = get_or_default<std::string>(detailsData, "overview", "");
+            mediaItem.posterPath = get_or_default<std::string>(detailsData, "posterPath", "");
+            mediaItem.backdropPath = get_or_default<std::string>(detailsData, "backdropPath", "");
+            mediaItem.originalLanguage = get_or_default<std::string>(detailsData, "originalLanguage", "");
+            mediaItem.genres = get_or_default<std::vector<std::string>>(detailsData, "genres", {});
+
+            // Update type-specific fields
+            if (mediaItem.type == MediaType::Movie) {
+                mediaItem.title = get_or_default<std::string>(detailsData, "title", "");
+                mediaItem.releaseDate = format_date(get_or_default<std::string>(detailsData, "releaseDate", ""));
+                mediaItem.originalTitle = get_or_default<std::string>(detailsData, "originalTitle", "");
+                mediaItem.revenue = get_or_default<int>(detailsData, "revenue", 0);
+                mediaItem.runtime = get_or_default<int>(detailsData, "runtime", 0);
+                mediaItem.statusString = get_or_default<std::string>(detailsData, "statusString", "");
+            } else {
+                mediaItem.title = get_or_default<std::string>(detailsData, "name", "");
+                mediaItem.firstAirDate = format_date(get_or_default<std::string>(detailsData, "firstAirDate", ""));
+                mediaItem.inProduction = get_or_default<bool>(detailsData, "inProduction", false);
+                mediaItem.lasAirDate = format_date(get_or_default<std::string>(detailsData, "lastAirDate", ""));
+                mediaItem.numberOfEpisodes = get_or_default<int>(detailsData, "numberOfEpisodes", 0);
+                mediaItem.numberOfSeasons = get_or_default<int>(detailsData, "numberOfSeasons", 0);
+                mediaItem.originalName = get_or_default<std::string>(detailsData, "originalName", "");
+                
+                // Parse seasons if available
+                if (detailsData.contains("seasons") && detailsData["seasons"].is_array()) {
+                    for (const auto& season : detailsData["seasons"]) {
+                        Season seasonItem;
+                        seasonItem.airDate = get_or_default<std::string>(season, "airDate", "");
+                        seasonItem.episodeCount = get_or_default<int>(season, "episodeCount", 0);
+                        seasonItem.id = get_or_default<int>(season, "id", 0);
+                        seasonItem.name = get_or_default<std::string>(season, "name", "");
+                        seasonItem.overview = get_or_default<std::string>(season, "overview", "");
+                        seasonItem.seasonNumber = get_or_default<int>(season, "seasonNumber", 0);
+                        seasonItem.posterPath = get_or_default<std::string>(season, "posterPath", "");
+                        
+                        mediaItem.seasons.push_back(std::move(seasonItem));
+                    }
+                }
+            }
+        } catch (const std::exception& e) {
+            brls::Logger::error("Jellyseerr: Error fetching media item details for ID {}: {}", mediaItem.id, e.what());
+        }
+    }
+
 };

@@ -21,6 +21,7 @@ private:
 
     void downloadPosterImage();
     void downloadBackdropImage();
+    void downloadDetails();
 
     BRLS_BIND(brls::ScrollingFrame, scroller, "preview/video/scroller");
     BRLS_BIND(brls::Image, posterImage, "preview/video/poster");

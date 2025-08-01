@@ -144,27 +144,17 @@ void RequestView::loadImage() {
 
 void RequestView::show(std::function<void(void)> cb, bool animate, float animationDuration) {
     if(animate) {
-        content->setTranslationY(30.0f);
+        content->setTranslationY(100.0f);
 
         showOffset.stop();
-        showOffset.reset(30.0f);
-        showOffset.addStep(0, animationDuration, brls::EasingFunction::quadraticOut);
+        showOffset.reset(100.0f);
+        showOffset.addStep(0, animationDuration, brls::EasingFunction::quinticOut);
         showOffset.setTickCallback([this]
             { this->offsetTick(); });
         showOffset.start();
     }
 
     Box::show(cb, animate, animationDuration);
-
-    if (animate) {
-        alpha.stop();
-        alpha.reset(1);
-
-        applet->alpha.stop();
-        applet->alpha.reset(0);
-        applet->alpha.addStep(1, animationDuration, brls::EasingFunction::quadraticOut);
-        applet->alpha.start();
-    }
 }
 
 void RequestView::offsetTick()
@@ -174,16 +164,15 @@ void RequestView::offsetTick()
 
 void RequestView::hide(std::function<void(void)> cb, bool animated, float animationDuration)
 {
+    if(animated) {
+        content->setTranslationY(0.0f);
 
-    if (animated)
-    {
-        alpha.stop();
-        alpha.reset(0);
-
-        applet->alpha.stop();
-        applet->alpha.reset(1);
-        applet->alpha.addStep(0, animationDuration, brls::EasingFunction::quadraticOut);
-        applet->alpha.start();
+        showOffset.stop();
+        showOffset.reset(0.0f);
+        showOffset.addStep(100.0f, animationDuration, brls::EasingFunction::quinticOut);
+        showOffset.setTickCallback([this]
+            { this->offsetTick(); });
+        showOffset.start();
     }
 
     Box::hide(cb, animated, animationDuration);
