@@ -12,8 +12,8 @@ SearchGridView::SearchGridView(std::shared_ptr<HttpClient> httpClient, std::shar
     ThreadPool& threadPool = ThreadPool::instance();
     
     this->inputLabel->setText("Search for Movies or TV Shows");
-    inputLabel->setTextColor(brls::Application::getTheme().getColor("font/grey"));
-    searchIcon->setImageFromSVGRes("icon/icon-search.svg");
+    inputLabel->setTextColor(nvgRGBA(255, 255, 255, 255));
+    searchIcon->setImageFromSVGRes("icon/icon-search-white.svg");
 
     searchBox->setFocusable(true);
     searchBox->addGestureRecognizer(new brls::TapGestureRecognizer(this->searchBox));
@@ -23,9 +23,13 @@ SearchGridView::SearchGridView(std::shared_ptr<HttpClient> httpClient, std::shar
             [this](const std::string& text) {
                 this->currentSearchQuery = text;
                 this->updateData();
-            }, "Enter search query", "", 32, this->currentSearchQuery, 0);
+            }, "Enter search query", "", 64, this->currentSearchQuery, 0);
         return true;
     });
+    searchBox->setBorderThickness(4);
+    searchBox->setBackgroundColor(nvgRGBA(88, 84, 84, 255));
+    searchBox->setCornerRadius(10);
+    //searchBox->setWireframeEnabled(true);
 
     previousPageButton->registerClickAction([this](brls::View* view) {
         onPreviousPage();
@@ -44,6 +48,12 @@ void SearchGridView::updateData() {
     threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
         if (currentSearchQuery.empty()) {
             brls::Logger::debug("SearchGridView: No search query");
+            brls::sync([ASYNC_TOKEN]() {
+                ASYNC_RELEASE
+                brls::Logger::debug("SearchGridView: No search query, showing input label");
+                this->inputLabel->setText("Search for Movies or TV Shows");
+                this->pageBox->setVisibility(brls::Visibility::GONE);
+            });
             brls::Application::notify("Please enter a search query.");
         } else {
             brls::Logger::debug("SearchGridView: Updating data for query: {}", currentSearchQuery);
@@ -54,6 +64,7 @@ void SearchGridView::updateData() {
                 brls::Logger::debug("SearchGridView: Data updated");
                 recycler->notifyDataChanged();
                 recycler->reloadData();
+                this->inputLabel->setText(currentSearchQuery);
                 pageBox->setVisibility(brls::Visibility::VISIBLE);
                 pageIndicator->setText(fmt::format("Page {}", currentPage));
             });

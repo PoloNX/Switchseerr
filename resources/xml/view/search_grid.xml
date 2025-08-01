@@ -6,10 +6,11 @@
     alignItems="center">
 
     <brls:Box
-        width="100%"
+        width="90%"
         height="10%"
         id="media/search"
         alignItems="center"
+        margin="10"
         wireframe="false">
 
         <SVGImage

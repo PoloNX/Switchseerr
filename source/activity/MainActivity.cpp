@@ -11,10 +11,10 @@ MainActivity::MainActivity(std::shared_ptr<HttpClient> httpClient, std::shared_p
 
 void MainActivity::onContentAvailable() {
     brls::Logger::debug("MainActivity: content available");
-    
+
     // Créer un onglet Discover
     auto* discoverTab = new AutoSidebarItem();
-    discoverTab->setTabStyle(AutoTabBarStyle::PLAIN);
+    discoverTab->setTabStyle(AutoTabBarStyle::ACCENT);
     discoverTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-discover.svg");
     discoverTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-discover-selected.svg");
     discoverTab->setFontSize(18);
@@ -24,7 +24,7 @@ void MainActivity::onContentAvailable() {
     });
 
     auto* movieTab = new AutoSidebarItem();
-    movieTab->setTabStyle(AutoTabBarStyle::PLAIN);
+    movieTab->setTabStyle(AutoTabBarStyle::ACCENT);
     movieTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-movie.svg");
     movieTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-movie-selected.svg");
     tabFrame->addTab(movieTab, [this]() -> brls::View* {
@@ -32,7 +32,7 @@ void MainActivity::onContentAvailable() {
     });
 
     auto* tvTab = new AutoSidebarItem();
-    tvTab->setTabStyle(AutoTabBarStyle::PLAIN);
+    tvTab->setTabStyle(AutoTabBarStyle::ACCENT);
     tvTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-tv.svg");
     tvTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-tv-selected.svg");
     tabFrame->addTab(tvTab, [this]() -> brls::View* {
@@ -40,7 +40,7 @@ void MainActivity::onContentAvailable() {
     });
 
     auto* searchTab = new AutoSidebarItem();
-    searchTab->setTabStyle(AutoTabBarStyle::PLAIN);
+    searchTab->setTabStyle(AutoTabBarStyle::ACCENT);
     searchTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-search.svg");
     searchTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-search-selected.svg");
     tabFrame->addTab(searchTab, [this]() -> brls::View* {
