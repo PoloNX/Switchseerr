@@ -56,6 +56,8 @@ std::string Config::configDir() {
     SHGetSpecialFolderPathW(0, wpath, CSIDL_LOCAL_APPDATA, false);
     WideCharToMultiByte(CP_UTF8, 0, wpath, std::wcslen(wpath), lpath.data(), lpath.size(), nullptr, nullptr);
     return fmt::format("{}\\{}", lpath.data(), "switchseerr");
+#elif __APPLE__
+    return fmt::format("{}/Library/Application Support/{}", getenv("HOME"), "switchseerr");
 #endif
 }
 

@@ -22,3 +22,7 @@ target("Switchseerr")
     add_includedirs("include")
     add_packages("libcurl", "nlohmann_json", "fmt", "borealis")
     set_rundir("$(projectdir)")
+
+    if is_plat("macosx") then
+        add_frameworks("CoreWLAN")
+    end
