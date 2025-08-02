@@ -63,16 +63,23 @@ MediaPreview::MediaPreview(std::shared_ptr<HttpClient> httpClient, std::shared_p
 void MediaPreview::willAppear(bool resetState) {
     brls::Logger::debug("MediaPreview: willAppear called");
 
-    auto requestButton = new brls::Button();
-    requestButton->setText("Request");
-    requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
-    requestButton->registerClickAction([this](brls::View* view) {
-        auto requestView = new RequestView(this->httpClient, this->mediaItem, this->authService);
-        brls::Application::pushActivity(new brls::Activity(requestView));
-        return true;
-    });
-    requestButton->setMargins(0, 10, 0, 10);
-    this->actionsBox->addView(requestButton);
+    if(mediaItem.status != MediaStatus::Available) {
+        auto requestButton = new brls::Button();
+        if (mediaItem.status != MediaStatus::PartiallyAvailable) {
+            requestButton->setText("Request");
+            requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
+        } else {
+            requestButton->setText("Request More Content");
+            requestButton->setStyle(&brls::BUTTONSTYLE_HIGHLIGHT);
+        }
+        requestButton->registerClickAction([this](brls::View* view) {
+            auto requestView = new RequestView(this->httpClient, this->mediaItem, this->authService);
+            brls::Application::pushActivity(new brls::Activity(requestView));
+            return true;
+        });
+        requestButton->setMargins(0, 10, 0, 10);
+        this->actionsBox->addView(requestButton);
+    }
 
 
     auto infoButton = new brls::Button();

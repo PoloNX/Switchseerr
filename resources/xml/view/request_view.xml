@@ -24,7 +24,7 @@
             <brls:Box
                 id="request/content"
                 width="600"
-                height="330"
+                height="450"
                 axis="column"
                 backgroundColor="@theme/brls/background"
                 cornerRadius="8">
@@ -47,6 +47,7 @@
                     <brls:Box
                         background="vertical_linear"
                         positionType="absolute"
+                        positionTop="0"
                         width="100%"
                         height="100%"
                         id="request/image/background"
@@ -90,12 +91,20 @@
                     margin="20">
 
                     <brls:Header
-                        id="request/header"
-                        title="Request Details"/>
+                        id="request/server/header"
+                        title="Server"/>
+                    <brls:DetailCell
+                        id="request/server"
+                        title="Server"/>
+
+                    <brls:Header
+                        id="request/quality/header"
+                        title="Quality Profile"/>
 
                     <brls:DetailCell
                         id="request/quality"
                         title="Quality Profile"/>
+
 
 
                 </brls:Box>

@@ -18,6 +18,7 @@ void MainActivity::onContentAvailable() {
     discoverTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-discover.svg");
     discoverTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-discover-selected.svg");
     discoverTab->setFontSize(18);
+    discoverTab->setLabel("Discover");
     tabFrame->addTab(discoverTab, [this]() -> brls::View* {
         auto container = new DiscoverTab(httpClient, authService);
         return container;
@@ -27,6 +28,8 @@ void MainActivity::onContentAvailable() {
     movieTab->setTabStyle(AutoTabBarStyle::ACCENT);
     movieTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-movie.svg");
     movieTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-movie-selected.svg");
+    movieTab->setLabel("Movies");
+    movieTab->setFontSize(18);
     tabFrame->addTab(movieTab, [this]() -> brls::View* {
         return new MediaTab(httpClient, authService, MediaType::Movie);
     });
@@ -35,6 +38,8 @@ void MainActivity::onContentAvailable() {
     tvTab->setTabStyle(AutoTabBarStyle::ACCENT);
     tvTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-tv.svg");
     tvTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-tv-selected.svg");
+    tvTab->setLabel("TV Shows");
+    tvTab->setFontSize(18);
     tabFrame->addTab(tvTab, [this]() -> brls::View* {
         return new MediaTab(httpClient, authService, MediaType::Tv);
     });
@@ -43,6 +48,8 @@ void MainActivity::onContentAvailable() {
     searchTab->setTabStyle(AutoTabBarStyle::ACCENT);
     searchTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-search.svg");
     searchTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-search-selected.svg");
+    searchTab->setLabel("Search");
+    searchTab->setFontSize(18);
     tabFrame->addTab(searchTab, [this]() -> brls::View* {
         return new SearchTab(httpClient, authService);
     });

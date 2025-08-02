@@ -1,6 +1,7 @@
 <brls:Box
     width="auto"
-    height="auto">
+    height="auto"
+    paddingLeft="20">
         <brls:Box
             height="auto"
             width="auto"

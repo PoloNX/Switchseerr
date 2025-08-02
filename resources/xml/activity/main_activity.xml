@@ -12,7 +12,9 @@
             id="main/tab_frame"
             grow="1"
             defaultTab="0"
-            sidebarPosition="left">
+            sidebarPosition="left"
+            tabItemActiveTextColor="@theme/color/app"
+            tabBackgroundColor="@theme/color/grey_1">
 
             <!-- <Tab label=""
                 fontSize="18"

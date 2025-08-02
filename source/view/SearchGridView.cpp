@@ -7,7 +7,7 @@ SearchGridView::SearchGridView(std::shared_ptr<HttpClient> httpClient, std::shar
     data = std::make_unique<MediaGridData>(httpClient, authService, MediaType::Movie);
     recycler->setDataSource(data.get());
     recycler->registerCell("Cell", VideoCardCell::create);
-    recycler->estimatedRowSpace = 31;
+    recycler->estimatedRowSpace = 28;
 
     ThreadPool& threadPool = ThreadPool::instance();
     
@@ -26,7 +26,6 @@ SearchGridView::SearchGridView(std::shared_ptr<HttpClient> httpClient, std::shar
             }, "Enter search query", "", 64, this->currentSearchQuery, 0);
         return true;
     });
-    searchBox->setBorderThickness(4);
     searchBox->setBackgroundColor(nvgRGBA(88, 84, 84, 255));
     searchBox->setCornerRadius(10);
     //searchBox->setWireframeEnabled(true);
@@ -53,6 +52,7 @@ void SearchGridView::updateData() {
                 brls::Logger::debug("SearchGridView: No search query, showing input label");
                 this->inputLabel->setText("Search for Movies or TV Shows");
                 this->pageBox->setVisibility(brls::Visibility::GONE);
+                this->recycler->clearData();
             });
             brls::Application::notify("Please enter a search query.");
         } else {

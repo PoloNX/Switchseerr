@@ -28,14 +28,25 @@ private:
     MediaItem mediaItem;
     std::shared_ptr<HttpClient> client;
     std::shared_ptr<AuthService> authService;
+
     QualityProfile selectedQualityProfile;
-    std::vector<QualityProfile> availableQualityProfiles;
+    RadarrService selectedRadarrService;
+
+    std::vector<RadarrService> availableServers;
+
+    void loadQualityProfiles();
+    void loadRadarrProfiles();
 
     BRLS_BIND(brls::Box, shadowImage, "request/image/background");
     BRLS_BIND(brls::Image, backdropImage, "request/image");
     BRLS_BIND(brls::Label, titleLabel, "request/title");
     BRLS_BIND(brls::Label, mediaLabel, "request/media");
+
+    BRLS_BIND(brls::Header, serverHeader, "request/server/header");
+    BRLS_BIND(brls::DetailCell, serverCell, "request/server");
+    BRLS_BIND(brls::Header, qualityHeader, "request/quality/header");
     BRLS_BIND(brls::DetailCell, qualityCell, "request/quality");
+
     BRLS_BIND(brls::Button, requestButton, "request/button/approve");
     BRLS_BIND(brls::Button, cancelButton, "request/button/cancel");
     BRLS_BIND(brls::Box, content, "request/content");

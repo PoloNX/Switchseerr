@@ -23,7 +23,6 @@ bool RequestService::createRequest(const MovieRequest& request, MediaType mediaT
                 {"serverId", request.serverId},
                 {"profileId", request.profilerId},
                 {"rootFolder", request.rootFolder},
-                {"languageProfileId", request.languageProfileId},
                 {"userId", request.userId}
             };
             break;
@@ -47,6 +46,7 @@ bool RequestService::createRequest(const MovieRequest& request, MediaType mediaT
 
     // Convert the JSON to a string
     std::string jsonData = jsonRequest.dump();
+    brls::Logger::debug("RequestService: Creating request with data: {}", jsonData);
 
     struct curl_slist* headers = nullptr;
     std::string apiKeyHeader = "X-Api-Key: " + auth->getToken().value_or("");
@@ -60,6 +60,7 @@ bool RequestService::createRequest(const MovieRequest& request, MediaType mediaT
         
         // Parse the response JSON
         nlohmann::json jsonResponse = nlohmann::json::parse(response);
+        brls::Logger::debug("RequestService: Response from request creation: {}", jsonResponse.dump(4));
 
         // Check if the request was successful and return the request ID
         if (jsonResponse.contains("id")) {

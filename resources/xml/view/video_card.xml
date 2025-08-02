@@ -9,7 +9,7 @@
         axis="row"
         grow="1"
         height="300"
-        width="200"
+        width="100%"
         wireframe="false">
         <brls:Image
             id="video/card/picture"
@@ -50,12 +50,20 @@
             wireframe="false"
             id="video/card/type/background"/>
 
+        <SVGImage
+            id="video/card/svg/icon"
+            positionType="absolute"
+            positionTop="5"
+            positionRight="5"
+            width="20"
+            height="20"/>
+
     </brls:Box>
 
     <brls:Box
         axis="column"
         height="50"
-        justifyContent="spaceEvenly"
+        justifyContent="center"
         alignItems="center"
         width="200"
         paddingRight="10"
@@ -63,11 +71,13 @@
         <brls:Label
             wireframe="false"
             id="video/card/label/title"
-            fontSize="18" />
+            fontSize="18"
+            marginBottom="5" />
         <brls:Label
             wireframe="false"
             id="video/card/label/ext"
-            fontSize="13" />
+            fontSize="13"
+            marginTop="5" />
     </brls:Box>
 
 </brls:Box>

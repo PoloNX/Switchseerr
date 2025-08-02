@@ -28,9 +28,10 @@ RecyclingGridItem* MediaGridData::cellForRow(RecyclingView* recycler, size_t ind
     brls::Logger::verbose("MediaGridData::cellForRow index: {}", items[index].title);
     cell->labelTitle->setText(items[index].title);
     cell->labelExt->setText(items[index].releaseDate.empty() ? items[index].firstAirDate : items[index].releaseDate);
+    cell->setStatus(items[index].status);
         // Format the rating to two decimal places
     std::stringstream ss;
-    ss << std::fixed << std::setprecision(2) << items[index].voteAverage;
+    ss << std::fixed << std::setprecision(1) << items[index].voteAverage;
     cell->labelRating->setText(ss.str());
 
     switch(items[index].type) {
@@ -90,7 +91,7 @@ MediaGridView::MediaGridView(std::shared_ptr<HttpClient> httpClient, std::shared
     data = std::make_unique<MediaGridData>(httpClient, authService, type);
     recycler->setDataSource(data.get());
     recycler->registerCell("Cell", VideoCardCell::create);
-    recycler->estimatedRowSpace = 31;
+    recycler->estimatedRowSpace = 28;
 
 
     ThreadPool& threadPool = ThreadPool::instance();

@@ -40,6 +40,9 @@ int main() {
     brls::Application::registerXMLView("LabelBackground", LabelBackground::create);
     brls::Application::registerXMLView("AutoTabFrame", AutoTabFrame::create);
 
+    brls::Theme::getLightTheme().addColor("color/app", nvgRGB(2, 176, 183));
+    brls::Theme::getDarkTheme().addColor("color/app", nvgRGB(51, 186, 227));
+
     brls::Theme::getDarkTheme().addColor("color/background_start", nvgRGBA(45, 45, 45, 150));
     brls::Theme::getDarkTheme().addColor("color/background_end", nvgRGBA(45, 45, 45, 255));
 

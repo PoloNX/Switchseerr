@@ -273,6 +273,8 @@ namespace jellyseerr {
                 service.isDefault = item["isDefault"].get<bool>();
                 service.activeDirectory = item["activeDirectory"].get<std::string>();
                 service.activeProfileId = item["activeProfileId"].get<int>();
+                
+                service.qualityProfiles = getRadarrQualityProfiles(httpClient, url, apiKey, service.id);
 
                 services.emplace_back(std::move(service));
             }
@@ -311,7 +313,6 @@ namespace jellyseerr {
             for (const auto& item : profilesData["profiles"]) {
                 brls::Logger::debug("Jellyseerr: Processing Radarr quality profile: {}", item.dump(4));
                 QualityProfile profile;
-                profile.radarrService = radarrService;
                 profile.id = item["id"].get<int>();
                 profile.name = item["name"].get<std::string>();
 

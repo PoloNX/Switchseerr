@@ -1,7 +1,7 @@
 <brls:Box
     id="movie/content"
     width="auto"
-    height="100%"
+    height="auto"
     axis="column"
     alignItems="center">
 
@@ -21,8 +21,9 @@
             marginRight="10" />
         <brls:Label
             id="media/search/input"
-            marginTop="8"
-            marginBottom="10" />
+            marginTop="10"
+            marginBottom="10"
+            fontSize="18" />
 
     </brls:Box>
 
@@ -33,16 +34,17 @@
         itemHeight="350"
         wireframe="false"
         id="media/recycler"
-        height="80%"
+        height="78%"
         width="100%"/>
     
     <brls:Box
-        height="10%"
+        height="8%"
         width="50%"
         wireframe="false"
         id="media/page"
         justifyContent="spaceBetween"
-        alignItems="center">
+        alignItems="center"
+        axis="row">
 
         <brls:Button
             id="media/page/prev"

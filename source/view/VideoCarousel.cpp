@@ -76,9 +76,13 @@ void VideoCarousel::createAndAddVideoCard(MediaItem& item) {
 void VideoCarousel::setupVideoCardContent(VideoCardCell* videoCard, const MediaItem& item) {
     videoCard->labelTitle->setText(item.title);
     videoCard->labelExt->setText(item.releaseDate.empty() ? item.firstAirDate : item.releaseDate);
+    videoCard->setStatus(item.status);
     // Format the rating to two decimal places
     std::stringstream ss;
-    ss << std::fixed << std::setprecision(2) << item.voteAverage;
+    ss << std::fixed << std::setprecision(1) << item.voteAverage;
+    if (ss.str() == "0.0") {
+        ss.str("N/A"); // If the rating is 0.0, display "N/A"
+    }
     videoCard->labelRating->setText(ss.str());
 }
 
