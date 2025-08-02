@@ -33,6 +33,20 @@ int main() {
 
     brls::Application::createWindow("Switchseerr");
     brls::Application::setGlobalQuit(false);
+    brls::Application::getPlatform()->getInputManager()->getKeyboardKeyStateChanged()->subscribe(
+        [](brls::KeyState state) {
+            if(!state.pressed) return;
+            auto top = brls::Application::getActivitiesStack().back();
+            switch(state.key) {
+                case brls::BRLS_KBD_KEY_F:
+#ifndef __APPLE__
+                case brls::BRLS_KBD_KEY_F11:
+#endif
+                    brls::Application::getPlatform()->getVideoContext()->fullScreen(!VideoContext::FULLSCREEN);
+                    break;
+            }
+        }
+    );
 
     brls::Application::registerXMLView("SVGImage", SVGImage::create);
     brls::Application::registerXMLView("RecyclingGrid", RecyclingGrid::create);
