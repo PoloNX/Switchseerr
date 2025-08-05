@@ -120,7 +120,7 @@
                         id="preview/video/overview"
                         text="This is a brief overview of the video content, providing insights into the plot, characters, and themes."
                         singleLine="false"
-                        fontSize="12"
+                        fontSize="15"
                         marginTop="5"/>
 
                 </brls:Box>

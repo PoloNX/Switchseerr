@@ -8,7 +8,8 @@
     <brls:Image
         id="server/image"
         width="auto"
-        height="30%"/>
+        height="30%"
+        marginTop="5"/>
 
     <brls:Box
         width="45%"

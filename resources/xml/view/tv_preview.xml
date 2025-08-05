@@ -113,14 +113,14 @@
 
                     <brls:Label
                         text="Summary"
-                        fontSize="30"
+                        fontSize="20"
                         marginBottom="5"/>
 
                     <brls:Label
                         id="preview/video/overview"
                         text="This is a brief overview of the video content, providing insights into the plot, characters, and themes."
                         singleLine="false"
-                        fontSize="20"
+                        fontSize="15"
                         marginTop="5"/>
 
                 </brls:Box>
