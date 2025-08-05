@@ -1,34 +1,99 @@
 <brls:Box
     alignItems="center"
-    justifyContent="center">
+    justifyContent="flexStart"
+    width="100%"
+    height="100%"
+    axis="column">
+
+    <brls:Image
+        id="server/image"
+        width="auto"
+        height="30%"/>
 
     <brls:Box
-        width="50%"
+        width="45%"
+        height="auto"
+        marginTop="30"
         axis="column"
-        alignItems="stretch">
-
-        <brls:Image
-            id="server/image"
-            width="100%"
-            height="auto"
-            marginBottom="30px"/>
+        backgroundColor="@theme/color/grey_1"
+        alignItems="center"
+        cornerRadius="10">
 
         <brls:Header
+            width="80%"
             id="server/signin_to"/>
         
-        <brls:InputCell
-            id="server/user"/>
+        <brls:Box
+            width="80%"
+            height="auto"
+            id="server/user"
+            cornerRadius="5"
+            backgroundColor="@theme/color/background"
+            margin="10"
+            focusable="true"
+            hideHighlightBackground="true"
+            borderThickness="3"
+            borderColor="@theme/color/grey_3">
 
-        <brls:InputCell
+            <brls:Label
+                id="server/username_label"
+                margin="13"
+                text="Username"/>
+
+        </brls:Box>
+
+        <brls:Box
+            width="80%"
+            height="auto"
             id="server/password"
-            type="password"/>
+            cornerRadius="5"
+            backgroundColor="@theme/color/background"
+            margin="10"
+            focusable="true"
+            hideHighlightBackground="true"
+            borderThickness="3"
+            borderColor="@theme/color/grey_3">
+
+            <brls:Label
+                id="server/password_label"
+                margin="13"
+                text="Password"/>
+
+        </brls:Box>
         
         <brls:Button
             id="server/signin"
             text="signin"
-            marginTop="15"/>
+            margin="10"
+            width="80%"/>
 
+        <brls:Box
+            id="server/other"
+            width="100%"
+            height="auto"
+            axis="column"
+            alignItems="center"
+            justifyContent="center"
+            margin="10">
+
+            <brls:Header
+                width="80%"
+                title="Other login methods"/>
+
+            <ConnectionCell
+                width="80%"
+                height="auto"
+                cornerRadius="5"
+                backgroundColor="@theme/color/background"
+                margin="10"
+                hideHighlightBackground="true"
+                borderThickness="3"
+                borderColor="@theme/color/grey_3"
+                id="server/other/connection_cell"/>
+
+        </brls:Box>
 
     </brls:Box>
+
 
 </brls:Box>

@@ -1,0 +1,22 @@
+<brls:Box
+    axis="row"
+    alignItems="center"
+    justifyContent="center">
+
+    <brls:Image
+        id="server/icon"
+        width="30"
+        height="30"
+        marginTop="10"
+        marginBottom="10"
+        marginRight="5"/>
+
+    <brls:Label
+        id="server/name"
+        fontSize="16"
+        marginTop="10"
+        marginBottom="10"
+        marginLeft="5"
+        text="Server Name"/>  
+
+</brls:Box>

@@ -91,6 +91,9 @@ public:
             else {
                 brls::sync([this, u]() {
                     brls::Application::unblockInputs();
+                    auto dialog = new brls::Dialog("Login failed, your cookies are invalid or expired. Please re-add the user.");
+                    dialog->addButton("OK", []{});
+                    dialog->open();
                 });
                 brls::Logger::error("ServerUserDataSource: Failed to log in user {}", u.name);
             }

@@ -436,4 +436,31 @@ namespace jellyseerr {
         }
     }
 
+    PublicServerInfo getPublicServerInfo(std::shared_ptr<HttpClient> httpClient, const std::string& url) {
+        brls::Logger::debug("Jellyseerr: Fetching public server info from {}", url);
+
+        try {
+            std::string response = httpClient->get(fmt::format("{}/api/v1/settings/public", url));
+            auto serverInfoData = nlohmann::json::parse(response);
+
+            PublicServerInfo serverInfo;
+            serverInfo.applicationTitle = get_or_default<std::string>(serverInfoData, "applicationTitle", "Jellyseerr");
+            serverInfo.localLogin = get_or_default<bool>(serverInfoData, "localLogin", false);
+            serverInfo.mediaServerLogin = get_or_default<bool>(serverInfoData, "mediaServerLogin", false);
+
+            // 1 : Plex, 2 : Jellyfin
+            int serverTypeStr = get_or_default<int>(serverInfoData, "mediaServerType", 0);
+            if (serverTypeStr == 1) {
+                serverInfo.serverType = ConnectionServer::PLEX;
+            } else {
+                serverInfo.serverType = ConnectionServer::JELLYFIN;
+            }
+
+            return serverInfo;
+        } catch (const std::exception& e) {
+            brls::Logger::error("Jellyseerr: Error fetching public server info: {}", e.what());
+            return {};
+        }
+    }
+
 };

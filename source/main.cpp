@@ -11,6 +11,7 @@
 #include "view/LabelBackground.hpp"
 #include "view/AutoTabFrame.hpp"
 #include "view/SvgImage.hpp"
+#include "tab/ServerLogin.hpp"
 
 #include <borealis.hpp>
 #include <memory>
@@ -45,6 +46,7 @@ int main() {
         }
     );
 
+    brls::Application::registerXMLView("ConnectionCell", ConnectionCell::create);
     brls::Application::registerXMLView("SVGImage", SVGImage::create);
     brls::Application::registerXMLView("RecyclingGrid", RecyclingGrid::create);
     brls::Application::registerXMLView("HRecyclerFrame", HRecyclerFrame::create);

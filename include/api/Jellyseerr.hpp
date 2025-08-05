@@ -10,11 +10,25 @@
 
 namespace jellyseerr {
 
+    enum class ConnectionServer {
+        JELLYFIN,
+        PLEX,
+        LOCAL
+    };
+
+    struct PublicServerInfo {
+        std::string applicationTitle;
+        bool localLogin;
+        bool mediaServerLogin;
+        ConnectionServer serverType;
+    };
+
     struct PublicSystemInfo {
         std::string version;
     };
     NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(PublicSystemInfo, version);
 
+    PublicServerInfo getPublicServerInfo(std::shared_ptr<HttpClient> httpClient, const std::string& url);
     void fillDetails(std::shared_ptr<HttpClient> httpClient, MediaItem& mediaItem, const std::string& url);
     std::vector<MediaItem> searchMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& query, size_t page = 1);
     std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, MediaType type, size_t page = 1);
