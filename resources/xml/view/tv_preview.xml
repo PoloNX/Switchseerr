@@ -1,0 +1,151 @@
+           
+<brls:Box
+    height="100%"
+    width="100%">
+
+    <brls:ScrollingFrame
+        width="auto"
+        height="auto"
+        grow="1.0"
+        id="preview/video/scroller" >
+    
+        <brls:Box
+            height="100%"
+            width="100%"
+            axis="column"
+            paddingLeft="30"
+            paddingRight="30">
+
+                <!-- Head Content (Image, title, status, duration) -->
+
+            <brls:Image
+                positionType="absolute"
+                scalingType="fill"
+                image="@res/img/video-card-bg.png"
+                width="1280"
+                height="350"
+                id="preview/video/backdrop"/>
+
+            <brls:Box
+                background="vertical_linear"
+                positionType="absolute"
+                width="1280"
+                height="350">
+
+            </brls:Box>
+
+            <brls:Box
+                width="100%"
+                height="auto"
+                axis="row"
+                marginTop="20"
+                wireframe="false">
+
+                <brls:Image
+                    id="preview/video/poster"
+                    backgroundColor="@theme/color/grey_1"
+                    scalingType="fill"
+                    width="200"
+                    height="300"
+                    image="@res/img/video-card-bg.png"
+                    cornerRadius="8"/>
+
+                <brls:Box
+                    width="50%"
+                    axis="column"
+                    justifyContent="flexEnd"
+                    marginLeft="20">
+
+                    <LabelBackground
+                        id="preview/video/status"/>
+
+                    <brls:Label
+                        id="preview/video/title"
+                        text="Title"
+                        fontSize="30"
+                        marginTop="5"
+                        marginBottom="5"/>
+
+                    <brls:Box
+                        axis="row"
+                        alignItems="flexStart"
+                        marginTop="5"
+                        marginBottom="5">
+
+                        <brls:Label
+                            id="preview/video/duration"
+                            text="duration"
+                            fontSize="12"/>
+
+                        <brls:Label
+                            id="preview/video/genre"
+                            text="genre"
+                            fontSize="12"
+                            marginLeft="10"/>
+
+                    </brls:Box>
+
+                </brls:Box>
+
+                <brls:Box
+                    wireframe="false"
+                    axis="row"
+                    width="32%"
+                    justifyContent="flexEnd"
+                    alignItems="flexEnd"
+                    id="preview/video/actions">
+
+                </brls:Box>
+            </brls:Box>
+
+            <!-- Description Content (Description, Trailer, Cast) -->
+            <brls:Box
+                width="100%"
+                height="auto"
+                axis="column"
+                marginTop="50">
+
+                <!-- Description -->
+                <brls:Box
+                    width="100%"
+                    height="auto"
+                    axis="column">
+
+                    <brls:Label
+                        text="Summary"
+                        fontSize="30"
+                        marginBottom="5"/>
+
+                    <brls:Label
+                        id="preview/video/overview"
+                        text="This is a brief overview of the video content, providing insights into the plot, characters, and themes."
+                        singleLine="false"
+                        fontSize="20"
+                        marginTop="5"/>
+
+                </brls:Box>
+
+                <!-- Saisons -->
+                <brls:Box
+                    width="100%"
+                    height="auto"
+                    id="preview/video/seasons"
+                    axis="column"
+                    wireframe="false">
+
+                    <brls:Label
+                        text="Saisons"
+                        fontSize="30"
+                        marginTop="20"
+                        marginBottom="5"/>
+
+                    
+
+                </brls:Box>
+
+            </brls:Box>
+
+
+        </brls:Box>
+    </brls:ScrollingFrame>
+</brls:Box>

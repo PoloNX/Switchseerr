@@ -7,10 +7,9 @@
 struct AppUser {
     int id;
     std::string name;
-    std::string api_key;
     std::string server_url;
 };
-NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(AppUser, id, name, api_key, server_url);
+NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(AppUser, id, name, server_url);
 
 struct AppServer {        
     std::string name;

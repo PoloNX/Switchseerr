@@ -47,7 +47,7 @@ bool ServerLogin::onSignin() {
     //AuthService authService(this->httpClient, this->url);
     std::shared_ptr<AuthService> authService = std::make_shared<AuthService>(this->httpClient, this->url);
 
-    if (authService->login(user, password)) {
+    if (authService->loginWithJellyfin(user, password)) {
         brls::Logger::debug("ServerLogin: Login successful for user {}", user);
 
         // Optionally, you can navigate to another view or perform further actions here

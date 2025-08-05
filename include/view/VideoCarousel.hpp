@@ -21,7 +21,6 @@ private:
     std::shared_ptr<AuthService> authService;
     std::string title;
     std::string serverUrl;
-    std::string apiKey;
 
     void configureHeaderTitle();
     void createAndAddVideoCard(MediaItem& item);

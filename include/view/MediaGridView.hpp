@@ -26,7 +26,6 @@ public:
 private:
     std::string searchQuery = "";
     std::string serverUrl;
-    std::string apiKey;
     std::shared_ptr<HttpClient> httpClient;
     std::shared_ptr<AuthService> authService;
     MediaType mediaType;

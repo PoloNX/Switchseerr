@@ -8,9 +8,9 @@
 #include <borealis.hpp>
 #include <memory>
 
-class MediaPreview : public brls::Box {
+class TvPreview : public brls::Box {
 public:
-    MediaPreview(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, MediaItem& mediaItem, brls::View* parentView);
+    TvPreview(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, MediaItem& mediaItem, brls::View* parentView);
 
     void willAppear(bool resetState = false) override;
 
@@ -19,6 +19,7 @@ private:
     std::shared_ptr<AuthService> authService;
     MediaItem& mediaItem;
 
+    void loadSeasons();
     void downloadPosterImage();
     void downloadBackdropImage();
     void downloadDetails();
@@ -35,4 +36,5 @@ private:
     // BRLS_BIND(brls::Button, requestButton, "preview/video/request");
     // BRLS_BIND(brls::Button, reportButton, "preview/video/report");
     BRLS_BIND(brls::Label, overviewLabel, "preview/video/overview");
+    BRLS_BIND(brls::Box, seasonsBox, "preview/video/seasons");
 };

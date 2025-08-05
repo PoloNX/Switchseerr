@@ -79,19 +79,20 @@ public:
             std::shared_ptr<HttpClient> client = this->parent->getHttpClient();
             std::shared_ptr<AuthService> authService = std::make_shared<AuthService>(client, u.server_url);
 
-            if (authService->loginWithApiKey(u.api_key)) {
+            if (authService->tryLoginFromCookies(u.name)) {
                 brls::sync([this, u, authService = std::move(authService), client]() mutable {
-                    brls::Logger::info("ServerUserDataSource: User {} logged in successfully with API key {}", u.name, u.api_key);
+                    brls::Logger::info("ServerUserDataSource: User {} logged in successfully from cookies", u.name);
                     Config::instance().addUser(u, this->parent->getUrl());
                     brls::Application::unblockInputs();
                     brls::Application::clear();
                     brls::Application::pushActivity(new MainActivity(client, authService), brls::TransitionAnimation::NONE);
                 });
-            } else {
+            }
+            else {
                 brls::sync([this, u]() {
                     brls::Application::unblockInputs();
                 });
-                brls::Logger::error("ServerUserDataSource: Failed to log in user {} with API key {}", u.name, u.api_key);
+                brls::Logger::error("ServerUserDataSource: Failed to log in user {}", u.name);
             }
         });
     }

@@ -83,7 +83,6 @@ void Config::addUser(const AppUser& u, const std::string& url) {
     auto it = std::find_if(this->users.begin(), this->users.end(), is_user);
     if (it != this->users.end()) {
         it->name = u.name;
-        it->api_key = u.api_key;
         it->server_url = u.server_url;
     } else {
         it = this->users.insert(it, u);

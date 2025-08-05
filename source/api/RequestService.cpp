@@ -47,16 +47,11 @@ bool RequestService::createRequest(const MovieRequest& request, MediaType mediaT
     // Convert the JSON to a string
     std::string jsonData = jsonRequest.dump();
     brls::Logger::debug("RequestService: Creating request with data: {}", jsonData);
-
-    struct curl_slist* headers = nullptr;
-    std::string apiKeyHeader = "X-Api-Key: " + auth->getToken().value_or("");
-    headers = curl_slist_append(headers, apiKeyHeader.c_str());
-    headers = curl_slist_append(headers, "accept: application/json");
     
 
     try {
         // Perform the POST request
-        std::string response = client->post(url, jsonData, headers, false);
+        std::string response = client->post(url, jsonData);
         
         // Parse the response JSON
         nlohmann::json jsonResponse = nlohmann::json::parse(response);

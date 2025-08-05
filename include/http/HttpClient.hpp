@@ -15,6 +15,13 @@ public:
 
     std::vector<unsigned char> downloadImageToBuffer(const std::string& url, bool verbose = false);
 
+    void setCookieFile(const std::string& cookieFile);
+    void clearCookies();
+    bool hasCookies();
+    void flushCookies();
+
+    std::string getCookieFilePath() const {return cookieFilePath; }
+
     CURL* getCurl() const {
         return curl;
     }
@@ -22,8 +29,10 @@ private:
     CURL* curl;
     curl_slist* headers;
     curl_slist* defaultHeaders; 
+    std::string cookieFilePath;
 
     void initDefaultHeaders(); 
+    void initCookies();
     curl_slist* mergeHeaders(curl_slist* customHeaders); 
 
     static size_t writeBufferCallback(void* contents, size_t size, size_t nmemb, std::vector<unsigned char>* buffer);

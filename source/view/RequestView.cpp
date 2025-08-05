@@ -120,7 +120,7 @@ void RequestView::loadProfiles() {
     ASYNC_RETAIN
     threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
         brls::Logger::debug("RequestView: Fetching quality profiles for media item ID: {}", this->mediaItem.id);
-        availableServers = jellyseerr::getRadarrServices(client, this->authService->getServerUrl(), this->authService->getToken().value_or(""));
+        availableServers = jellyseerr::getRadarrServices(client, this->authService->getServerUrl());
         
         if (availableServers.empty()) {
             brls::Logger::warning("RequestView: No Radarr services found");

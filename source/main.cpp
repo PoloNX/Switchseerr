@@ -38,10 +38,7 @@ int main() {
             if(!state.pressed) return;
             auto top = brls::Application::getActivitiesStack().back();
             switch(state.key) {
-                case brls::BRLS_KBD_KEY_F:
-#ifndef __APPLE__
                 case brls::BRLS_KBD_KEY_F11:
-#endif
                     brls::Application::getPlatform()->getVideoContext()->fullScreen(!VideoContext::FULLSCREEN);
                     break;
             }
@@ -59,6 +56,9 @@ int main() {
 
     brls::Theme::getDarkTheme().addColor("color/background_start", nvgRGBA(45, 45, 45, 150));
     brls::Theme::getDarkTheme().addColor("color/background_end", nvgRGBA(45, 45, 45, 255));
+
+    brls::Theme::getDarkTheme().addColor("color/background", nvgRGBA(88, 84, 84, 255));
+    brls::Theme::getLightTheme().addColor("color/background",  nvgRGBA(88, 84, 84, 255));
 
     brls::Theme::getLightTheme().addColor("color/grey_1", nvgRGB(245, 246, 247));
     brls::Theme::getDarkTheme().addColor("color/grey_1", nvgRGB(51, 52, 53));

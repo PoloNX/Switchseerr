@@ -1,6 +1,7 @@
 #include "view/VideoCarousel.hpp"
 #include "api/Jellyseerr.hpp"
-#include "view/MediaPreview.hpp"
+#include "view/MoviePreview.hpp"
+#include "view/TvPreview.hpp"
 #include "utils/ThreadPool.hpp"
 
 static std::mutex downloadMutex;
@@ -12,7 +13,6 @@ VideoCarousel::VideoCarousel(std::shared_ptr<HttpClient> httpClient, std::shared
     this->setMargins(10, 0, 10, 0);
 
     serverUrl = authService->getServerUrl();
-    apiKey = authService->getToken().value_or("");
 }
 
 VideoCarousel::~VideoCarousel() {
@@ -29,7 +29,7 @@ void VideoCarousel::doRequest() {
     brls::async([this]() {
         // Configure le titre et récupère les données
         configureHeaderTitle();
-        auto items = jellyseerr::getMedias(httpClient, serverUrl, apiKey, type, 20);
+        auto items = jellyseerr::getMedias(httpClient, serverUrl, type, 20);
 
         // Crée les cartes pour chaque item
         for (auto& item : items) {
@@ -105,9 +105,15 @@ void VideoCarousel::setupVideoCardStyling(VideoCardCell* videoCard, const MediaI
 void VideoCarousel::setupVideoCardInteractions(VideoCardCell* videoCard, MediaItem& item) {
     videoCard->registerClickAction([this, item](brls::View* view) mutable {
         brls::Logger::debug("VideoCarousel: Item clicked with ID: {}", item.id);
-        auto mediaPreview = new MediaPreview(httpClient, authService, item, this);
-        this->present(mediaPreview);
-        getAppletFrame()->setHeaderVisibility(brls::Visibility::GONE);
+        if (item.type == MediaType::Movie) {
+            brls::Logger::debug("VideoCarousel: Opening MoviePreview for item ID: {}", item.id);
+            auto moviePreview = new MoviePreview(httpClient, authService, item, this);
+            this->present(moviePreview);
+        } else {
+            auto tvPreview = new TvPreview(httpClient, authService, item, this);
+            brls::Logger::debug("VideoCarousel: Opening TvPreview for item ID: {}", item.id);
+            this->present(tvPreview);
+        }
         return true;
     });
 }

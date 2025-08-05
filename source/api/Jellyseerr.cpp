@@ -8,7 +8,7 @@
 
 namespace jellyseerr {
     // Fonction helper pour faire une requête de détails pour un seul média
-    std::optional<MediaItem> fetchMediaDetails(const std::string& url, const std::string& apiKey, 
+    std::optional<MediaItem> fetchMediaDetails(const std::string& url, 
                                              int tmdbId, MediaType type, int status, std::shared_ptr<HttpClient> httpClient) {
         
         std::string detailsUrl;
@@ -18,12 +18,8 @@ namespace jellyseerr {
             detailsUrl = fmt::format("{}/api/v1/tv/{}", url, tmdbId);
         }
 
-        struct curl_slist* headers = nullptr;
-        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
-
         try {
-            std::string detailsResponse = httpClient->get(detailsUrl, headers, false);
-            curl_slist_free_all(headers);
+            std::string detailsResponse = httpClient->get(detailsUrl);
 
             if (detailsResponse.empty()) {
                 return std::nullopt;
@@ -56,17 +52,18 @@ namespace jellyseerr {
             
             return mediaItem;
         } catch (const std::exception& e) {
-            curl_slist_free_all(headers);
             brls::Logger::error("Jellyseerr: Failed to fetch details for media ID {}: {}", tmdbId, e.what());
             return std::nullopt;
         }
     }
 
-    std::vector<MediaItem> parseRecentlyAddedResponse(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, const nlohmann::json& response) {
+    std::vector<MediaItem> parseRecentlyAddedResponse(std::shared_ptr<HttpClient> httpClient, const std::string& url, const nlohmann::json& response) {
         std::vector<MediaItem> medias;
         if (!response.contains("results") || !response["results"].is_array()) {
             return medias;
         }
+
+        std::string cookieFilePath = httpClient->getCookieFilePath();
 
         // Utiliser des shared_ptr pour les promises pour éviter les problèmes de capture
         std::vector<std::shared_ptr<std::promise<std::optional<MediaItem>>>> promises;
@@ -103,9 +100,12 @@ namespace jellyseerr {
             futures.push_back(promise->get_future());
             
             // Soumettre la tâche à la ThreadPool
-            threadPool.submit([url, apiKey, tmdbId, type, status, promise](std::shared_ptr<HttpClient> client) {
+            threadPool.submit([url, tmdbId, type, status, promise, cookieFilePath](std::shared_ptr<HttpClient> client) {
                 try {
-                    auto result = fetchMediaDetails(url, apiKey, tmdbId, type, status, client);
+                    if (!cookieFilePath.empty()) {
+                        client->setCookieFile(cookieFilePath);
+                    }
+                    auto result = fetchMediaDetails(url, tmdbId, type, status, client);
                     promise->set_value(result);
                 } catch (const std::exception& e) {
                     brls::Logger::error("Jellyseerr: Error in ThreadPool task: {}", e.what());
@@ -189,13 +189,8 @@ namespace jellyseerr {
         return medias;
     }
 
-    std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, DiscoverType type, size_t pageSize) {
-        brls::Logger::debug("Jellyseerr, Fetching latest medias from {} with API key", url);
-
-        struct curl_slist* headers = nullptr;
-        std::string apiKeyHeader = "X-Api-Key: " + apiKey;
-        headers = curl_slist_append(headers, apiKeyHeader.c_str());
-        headers = curl_slist_append(headers, "accept: application/json");
+    std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, DiscoverType type, size_t pageSize) {
+        brls::Logger::debug("Jellyseerr, Fetching latest medias from {}", url);
 
         try {
             std::string requestUrl;
@@ -228,14 +223,13 @@ namespace jellyseerr {
                 }
             }        
 
-            const std::string response = httpClient->get(requestUrl, headers);
-            curl_slist_free_all(headers);
+            const std::string response = httpClient->get(requestUrl);
             //brls::Logger::debug("Jellyseerr : Response: {}", nlohmann::json::parse(response).dump(4));
             const auto mediasData = nlohmann::json::parse(response);
 
             std::vector<MediaItem> medias;
             if (type == DiscoverType::RecentlyAdded) {
-                medias = parseRecentlyAddedResponse(httpClient, url, apiKey, mediasData);
+                medias = parseRecentlyAddedResponse(httpClient, url, mediasData);
             } else {
                 medias = parseDiscoverResponse(mediasData);
             }
@@ -248,16 +242,11 @@ namespace jellyseerr {
         }
     }
 
-    std::vector<RadarrService> getRadarrServices(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey) {
+    std::vector<RadarrService> getRadarrServices(std::shared_ptr<HttpClient> httpClient, const std::string& url) {
         brls::Logger::debug("Jellyseerr: Fetching Radarr services from {}", url);
 
-        struct curl_slist* headers = nullptr;
-        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
-        headers = curl_slist_append(headers, "accept: application/json");
-
         try {
-            std::string response = httpClient->get(fmt::format("{}/api/v1/service/radarr", url), headers);
-            curl_slist_free_all(headers);
+            std::string response = httpClient->get(fmt::format("{}/api/v1/service/radarr", url));
 
             auto servicesData = nlohmann::json::parse(response);
             
@@ -274,7 +263,7 @@ namespace jellyseerr {
                 service.activeDirectory = item["activeDirectory"].get<std::string>();
                 service.activeProfileId = item["activeProfileId"].get<int>();
                 
-                service.qualityProfiles = getRadarrQualityProfiles(httpClient, url, apiKey, service.id);
+                service.qualityProfiles = getRadarrQualityProfiles(httpClient, url, service.id);
 
                 services.emplace_back(std::move(service));
             }
@@ -286,16 +275,11 @@ namespace jellyseerr {
         }
     }
 
-    std::vector<QualityProfile> getRadarrQualityProfiles(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, int radarrServiceId) {
+    std::vector<QualityProfile> getRadarrQualityProfiles(std::shared_ptr<HttpClient> httpClient, const std::string& url, int radarrServiceId) {
         brls::Logger::debug("Jellyseerr: Fetching Radarr quality profiles for service ID {}", radarrServiceId);
 
-        struct curl_slist* headers = nullptr;
-        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
-        headers = curl_slist_append(headers, "accept: application/json");
-
         try {
-            std::string response = httpClient->get(fmt::format("{}/api/v1/service/radarr/{}", url, radarrServiceId), headers);
-            curl_slist_free_all(headers);
+            std::string response = httpClient->get(fmt::format("{}/api/v1/service/radarr/{}", url, radarrServiceId));
 
             auto profilesData = nlohmann::json::parse(response);
             std::vector<QualityProfile> profiles;
@@ -336,12 +320,8 @@ namespace jellyseerr {
         }
     }
 
-    std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, const std::string& apiKey, MediaType type, size_t page) {
+    std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, MediaType type, size_t page) {
         brls::Logger::debug("Jellyseerr: Fetching medias from {} with API key", url);
-
-        struct curl_slist* headers = nullptr;
-        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
-        headers = curl_slist_append(headers, "accept: application/json");
 
         try {
             std::string requestUrl;
@@ -353,8 +333,7 @@ namespace jellyseerr {
                 throw std::invalid_argument("Unsupported media type");
             }
 
-            const std::string response = httpClient->get(requestUrl, headers);
-            curl_slist_free_all(headers);
+            const std::string response = httpClient->get(requestUrl);
             //brls::Logger::debug("Jellyseerr : Response: {}", nlohmann::json::parse(response).dump(4));
             const auto mediasData = nlohmann::json::parse(response);
 
@@ -366,17 +345,12 @@ namespace jellyseerr {
         }
     }
 
-    std::vector<MediaItem> searchMedias(std::shared_ptr<HttpClient> httpClient, const std::string &url, const std::string &apiKey, const std::string &query, size_t page) {
+    std::vector<MediaItem> searchMedias(std::shared_ptr<HttpClient> httpClient, const std::string &url, const std::string &query, size_t page) {
         brls::Logger::debug("Jellyseerr: Searching medias with query '{}' on {}", query, url);
-
-        struct curl_slist* headers = nullptr;
-        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
-        headers = curl_slist_append(headers, "accept: application/json");
 
         try {
             std::string requestUrl = fmt::format("{}/api/v1/search?query={}&page={}", url, query, page);
-            const std::string response = httpClient->get(requestUrl, headers);
-            curl_slist_free_all(headers);
+            const std::string response = httpClient->get(requestUrl);
 
             if (response.empty()) {
                 brls::Logger::warning("Jellyseerr: No results found for query '{}'", query);
@@ -395,11 +369,8 @@ namespace jellyseerr {
         }
     }
 
-    void fillDetails(std::shared_ptr<HttpClient> httpClient, MediaItem& mediaItem, const std::string& url, const std::string& apiKey) {
+    void fillDetails(std::shared_ptr<HttpClient> httpClient, MediaItem& mediaItem, const std::string& url) {
         brls::Logger::debug("Jellyseerr: Filling details for media item ID: {}", mediaItem.id);
-        struct curl_slist* headers = nullptr;
-        headers = curl_slist_append(headers, fmt::format("X-Api-Key: {}", apiKey).c_str());
-        headers = curl_slist_append(headers, "accept: application/json");
         
         try {
             std::string detailsUrl;
@@ -409,8 +380,7 @@ namespace jellyseerr {
                 detailsUrl = fmt::format("{}/api/v1/tv/{}", url, mediaItem.id);
             }
 
-            std::string response = httpClient->get(detailsUrl, headers);
-            curl_slist_free_all(headers);
+            std::string response = httpClient->get(detailsUrl);
 
             if (response.empty()) {
                 brls::Logger::warning("Jellyseerr: No details found for media item ID: {}", mediaItem.id);
@@ -443,6 +413,8 @@ namespace jellyseerr {
                 mediaItem.numberOfSeasons = get_or_default<int>(detailsData, "numberOfSeasons", 0);
                 mediaItem.originalName = get_or_default<std::string>(detailsData, "originalName", "");
                 
+            
+
                 // Parse seasons if available
                 if (detailsData.contains("seasons") && detailsData["seasons"].is_array()) {
                     for (const auto& season : detailsData["seasons"]) {

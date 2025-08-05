@@ -1,5 +1,6 @@
 #include "view/MediaGridView.hpp"
-#include "view/MediaPreview.hpp"
+#include "view/MoviePreview.hpp"
+#include "view/TvPreview.hpp"
 #include "utils/ThreadPool.hpp"
 #include "api/Jellyseerr.hpp"
 #include "utils/utils.hpp"
@@ -7,15 +8,14 @@
 MediaGridData::MediaGridData(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, MediaType type)
     : httpClient(httpClient), authService(authService), mediaType(type) {
     this->serverUrl = authService->getServerUrl();
-    this->apiKey = authService->getToken().value_or("");
 }
 
 bool MediaGridData::loadData(int page) {
     std::vector<MediaItem> medias = {};
     if (searchQuery.empty()) {
-        medias = jellyseerr::getMedias(this->httpClient, this->serverUrl, this->apiKey, mediaType, page);
+        medias = jellyseerr::getMedias(this->httpClient, this->serverUrl, mediaType, page);
     } else {
-        medias = jellyseerr::searchMedias(this->httpClient, this->serverUrl, this->apiKey, escaped_string(this->searchQuery), page);
+        medias = jellyseerr::searchMedias(this->httpClient, this->serverUrl, escaped_string(this->searchQuery), page);
     }
     if (!medias.empty()) {
         this->items = medias;
@@ -77,7 +77,12 @@ size_t MediaGridData::getItemCount() {
 
 void MediaGridData::onItemSelected(brls::Box* recycler, size_t index) {
     brls::Logger::debug("MediaGridData::onItemSelected index: {}", index);
-    recycler->present(new MediaPreview(httpClient, authService, items[index], recycler));
+    if (items[index].type== MediaType::Movie) {
+        recycler->present(new MoviePreview(httpClient, authService, items[index], recycler));
+    } else {
+        recycler->present(new TvPreview(httpClient, authService, items[index], recycler));
+    }
+    
 }
 
 void MediaGridData::clearData() {
