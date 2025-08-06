@@ -1,0 +1,83 @@
+<brls:Box
+    width="auto"
+    height="auto"
+    wireframe="false"
+    axis="column">
+
+    <brls:AppletFrame
+        id="season/applet"
+        width="auto"
+        height="auto"
+        grow="1"
+        headerHidden="true"
+        footerHidden="true"
+        backgroundColor="@theme/brls/backdrop">
+
+        <brls:Box
+            width="auto"
+            height="auto"
+            grow="1"
+            axis="column"
+            justifyContent="center"
+            alignItems="center">
+
+            <brls:Box
+                id="season/content"
+                width="80%"
+                height="80%"
+                axis="column"
+                backgroundColor="@theme/brls/background"
+                cornerRadius="8"
+                alignItems="center">
+
+
+
+                <!-- Title-->
+                <brls:Box
+                    axis="column"
+                    width="auto"
+                    height="auto"
+                    wireframe="false"
+                    paddingTop="20">
+
+                    <brls:Label
+                        text="Season Info"
+                        id="season/title"
+                        fontSize="25"/>
+
+                </brls:Box>
+
+                        
+                <brls:ScrollingFrame
+                    width="auto"
+                    height="100%"
+                    grow="1.0">
+
+                    <brls:Box
+                        padding="20"
+                        axis="column"
+                        width="80%"
+                        height="auto"
+                        id="season/episodes">
+
+                    </brls:Box>
+
+                </brls:ScrollingFrame>
+
+                <brls:Box
+                    height="auto"
+                    marginBottom="10">
+                    <brls:Button
+                        id="season/back_button"
+                        text="Back"
+                        margin="5"/>
+
+                </brls:Box>
+
+            </brls:Box>
+
+
+        </brls:Box>
+
+    </brls:AppletFrame>
+</brls:Box>

@@ -241,7 +241,7 @@ std::string HttpClient::post(const std::string& url, const std::string& data, cu
 }
 
 std::vector<unsigned char> HttpClient::downloadImageToBuffer(const std::string& url, bool verbose) {
-    brls::Logger::debug("HttpClient: Downloading image from {} to buffer", url);
+    brls::Logger::verbose("HttpClient: Downloading image from {} to buffer", url);
     
     if (!curl) {
         throw std::runtime_error("CURL is not initialized");
@@ -280,7 +280,7 @@ std::vector<unsigned char> HttpClient::downloadImageToBuffer(const std::string& 
         }
     }
 
-    brls::Logger::debug("Image downloaded successfully to buffer, size: {} bytes", buffer.size());
+    brls::Logger::verbose("Image downloaded successfully to buffer, size: {} bytes", buffer.size());
     return buffer;
 }
 

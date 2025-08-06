@@ -17,7 +17,7 @@ public:
 private:
     std::shared_ptr<HttpClient> httpClient;
     std::shared_ptr<AuthService> authService;
-    MediaItem& mediaItem;
+    MediaItem mediaItem;
 
     void loadSeasons();
     void downloadPosterImage();

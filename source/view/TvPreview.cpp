@@ -3,6 +3,7 @@
 #include "view/RequestView.hpp"
 #include "view/MediaInfoView.hpp"
 #include "api/Jellyseerr.hpp"
+#include "view/SeasonPreview.hpp"
 
 class SeasonBox : public brls::Box {
     public:
@@ -14,6 +15,7 @@ class SeasonBox : public brls::Box {
             this->addGestureRecognizer(new brls::TapGestureRecognizer(this));
             this->registerClickAction([this, season](brls::View* view) {
                 brls::Logger::debug("SeasonBox: Season {} clicked", season.seasonNumber);
+                //brls::Application::pushActivity(new brls::Activity(new SeasonPreview(season)));
                 return true;
             });
         }

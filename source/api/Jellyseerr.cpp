@@ -137,7 +137,7 @@ namespace jellyseerr {
                     const std::string mediaType = item["mediaType"];
                     
                     MediaItem mediaItem;
-                    
+
                     if (mediaType == "movie") {
                         mediaItem.type = MediaType::Movie;
                     } else if (mediaType == "tv") {
@@ -147,6 +147,9 @@ namespace jellyseerr {
                     }
 
                     mediaItem.id = get_or_default<int>(item, "id", -1);
+
+                    
+
                     if (mediaItem.type == MediaType::Movie) {
                         mediaItem.title = get_or_default<std::string>(item, "title", "");
                     } else if (mediaItem.type == MediaType::Tv) {
@@ -371,7 +374,7 @@ namespace jellyseerr {
 
     void fillDetails(std::shared_ptr<HttpClient> httpClient, MediaItem& mediaItem, const std::string& url) {
         brls::Logger::debug("Jellyseerr: Filling details for media item ID: {}", mediaItem.id);
-        
+        brls::Logger::debug("Jellyseerr: Media type: {}, Media name: {}", mediaItem.type == MediaType::Movie ? "Movie" : "TV Show", mediaItem.title);
         try {
             std::string detailsUrl;
             if (mediaItem.type == MediaType::Movie) {
@@ -389,31 +392,60 @@ namespace jellyseerr {
 
             const auto detailsData = nlohmann::json::parse(response, nullptr, false);
 
+            // Log the response to debug
+            //brls::Logger::debug("Jellyseerr: Details response: {}", detailsData.dump(4));
+
             // Update common fields
             mediaItem.overview = get_or_default<std::string>(detailsData, "overview", "");
             mediaItem.posterPath = get_or_default<std::string>(detailsData, "posterPath", "");
             mediaItem.backdropPath = get_or_default<std::string>(detailsData, "backdropPath", "");
             mediaItem.originalLanguage = get_or_default<std::string>(detailsData, "originalLanguage", "");
-            mediaItem.genres = get_or_default<std::vector<std::string>>(detailsData, "genres", {});
+            
+            // Handle genres properly - they might be an array of objects or strings
+            if (detailsData.contains("genres") && detailsData["genres"].is_array()) {
+                std::vector<std::string> genres;
+                for (const auto& genre : detailsData["genres"]) {
+                    if (genre.is_string()) {
+                        genres.push_back(genre.get<std::string>());
+                    } else if (genre.is_object() && genre.contains("name")) {
+                        genres.push_back(genre["name"].get<std::string>());
+                    }
+                }
+                mediaItem.genres = genres;
+            } else {
+                mediaItem.genres = {};
+            }
 
-            // Update type-specific fields
+            // Update type-specific fields - use the original type, not the parsed data
             if (mediaItem.type == MediaType::Movie) {
-                mediaItem.title = get_or_default<std::string>(detailsData, "title", "");
+                brls::Logger::debug("Jellyseerr: Processing movie details for item name: {}", mediaItem.title);
+                
+                // Only update title if it's not empty in the response
+                std::string newTitle = get_or_default<std::string>(detailsData, "title", "");
+                if (!newTitle.empty()) {
+                    mediaItem.title = newTitle;
+                }
+                
                 mediaItem.releaseDate = format_date(get_or_default<std::string>(detailsData, "releaseDate", ""));
                 mediaItem.originalTitle = get_or_default<std::string>(detailsData, "originalTitle", "");
                 mediaItem.revenue = get_or_default<int>(detailsData, "revenue", 0);
                 mediaItem.runtime = get_or_default<int>(detailsData, "runtime", 0);
                 mediaItem.statusString = get_or_default<std::string>(detailsData, "statusString", "");
-            } else {
-                mediaItem.title = get_or_default<std::string>(detailsData, "name", "");
+            } else if (mediaItem.type == MediaType::Tv) {
+                brls::Logger::debug("Jellyseerr: Processing TV details for item name: {}", mediaItem.title);
+                
+                // Only update title if it's not empty in the response
+                std::string newTitle = get_or_default<std::string>(detailsData, "name", "");
+                if (!newTitle.empty()) {
+                    mediaItem.title = newTitle;
+                }
+                
                 mediaItem.firstAirDate = format_date(get_or_default<std::string>(detailsData, "firstAirDate", ""));
                 mediaItem.inProduction = get_or_default<bool>(detailsData, "inProduction", false);
                 mediaItem.lasAirDate = format_date(get_or_default<std::string>(detailsData, "lastAirDate", ""));
                 mediaItem.numberOfEpisodes = get_or_default<int>(detailsData, "numberOfEpisodes", 0);
                 mediaItem.numberOfSeasons = get_or_default<int>(detailsData, "numberOfSeasons", 0);
                 mediaItem.originalName = get_or_default<std::string>(detailsData, "originalName", "");
-                
-            
 
                 // Parse seasons if available
                 if (detailsData.contains("seasons") && detailsData["seasons"].is_array()) {

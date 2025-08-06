@@ -15,6 +15,8 @@ MoviePreview::MoviePreview(std::shared_ptr<HttpClient> httpClient, std::shared_p
         return true;
     });
 
+    brls::Logger::warning("MoviePreview: Media item type: {}", mediaItem.type == MediaType::Movie ? "Movie" : "TV Show");
+
     this->scroller->setFocusable(true);
 
     this->titleLabel->setText(mediaItem.title);
@@ -86,6 +88,7 @@ void MoviePreview::willAppear(bool resetState) {
     infoButton->setText("Info");
     infoButton->setStyle(&brls::BUTTONSTYLE_HIGHLIGHT);
     infoButton->registerClickAction([this](brls::View* view) {
+        brls::Logger::warning("MoviePreview: metiaItem.type = {}, mediaItem.name = {}", mediaItem.type == MediaType::Movie ? "Movie" : "TV Show", mediaItem.title);
         auto mediaInfoView = new MediaInfoView(this->mediaItem);
         brls::Application::pushActivity(new brls::Activity(mediaInfoView));
         return true;
