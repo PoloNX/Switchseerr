@@ -37,6 +37,7 @@ struct Season {
     std::string airDate;
     int episodeCount;
     int id;
+    MediaStatus status;
     int tvId;
     std::string name;
     std::string overview;

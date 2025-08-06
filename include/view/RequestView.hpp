@@ -30,12 +30,13 @@ private:
     std::shared_ptr<AuthService> authService;
 
     QualityProfile selectedQualityProfile;
-    RadarrService selectedRadarrService;
+    std::shared_ptr<BaseService> selectedService;
 
-    std::vector<RadarrService> availableServers;
+    std::vector<std::shared_ptr<BaseService>> availableServers;
 
     void loadQualityProfiles();
-    void loadRadarrProfiles();
+    void loadServerProfiles();
+    void loadSeasons();
 
     BRLS_BIND(brls::Box, shadowImage, "request/image/background");
     BRLS_BIND(brls::Image, backdropImage, "request/image");
@@ -46,6 +47,12 @@ private:
     BRLS_BIND(brls::DetailCell, serverCell, "request/server");
     BRLS_BIND(brls::Header, qualityHeader, "request/quality/header");
     BRLS_BIND(brls::DetailCell, qualityCell, "request/quality");
+
+    // For TV Shows only
+    BRLS_BIND(brls::Header, seasonHeader, "request/seasons/header");
+    BRLS_BIND(brls::Box, seasonContent, "request/seasons/content");
+    BRLS_BIND(brls::ScrollingFrame, seasonFrame, "request/seasons/frame");
+    std::vector<int> selectedSeasons;
 
     BRLS_BIND(brls::Button, requestButton, "request/button/approve");
     BRLS_BIND(brls::Button, cancelButton, "request/button/cancel");

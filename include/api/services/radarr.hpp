@@ -1,27 +1,20 @@
 #pragma once
 
-#include <borealis.hpp>
+#include "api/services/baseService.hpp"
+#include "models/RequestModel.hpp"
 
-struct RootFolder {
-    int id;
-    int freeSpace;
-    std::string path;
+class RadarrService : public BaseService {
+public:
+    RadarrService() = default;
+    RadarrService(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, int id, const std::string& name, bool is4k, bool isDefault, const std::string& activeDirectory, int activeProfileId, const std::vector<QualityProfile>& qualityProfiles)
+        : BaseService{httpClient, authService, name, id, is4k, isDefault, activeDirectory, activeProfileId, qualityProfiles} {}
+    RadarrService(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService)
+        : BaseService{httpClient, authService} {}
+
+    bool performRequest(const MovieRequest& request);
+
 };
 
-struct QualityProfile {
-    int id;
-    std::string name;
-    std::vector<RootFolder> rootFolders;
-};
 
-struct RadarrService {
-    int id;
-    std::string name;
-    bool is4k;
-    bool isDefault;
-    std::string activeDirectory;
-    int activeProfileId;
-    std::vector<QualityProfile> qualityProfiles;
-};
 
 

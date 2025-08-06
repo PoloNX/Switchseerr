@@ -21,7 +21,7 @@ add_defines(
 
 target("Switchseerr")
     set_kind("binary")
-    add_files("source/**.cpp")
+    add_files("source/***.cpp")
     add_includedirs("include")
 
     add_packages("libcurl", "nlohmann_json", "fmt", "borealis", "lunasvg", "plutovg")

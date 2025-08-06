@@ -245,7 +245,13 @@ namespace jellyseerr {
         }
     }
 
-    std::vector<RadarrService> getRadarrServices(std::shared_ptr<HttpClient> httpClient, const std::string& url) {
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////// Radarr specific functions /////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    std::vector<std::shared_ptr<RadarrService>> getRadarrServices(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, const std::string& url) {
         brls::Logger::debug("Jellyseerr: Fetching Radarr services from {}", url);
 
         try {
@@ -255,18 +261,20 @@ namespace jellyseerr {
             
             brls::Logger::debug("Jellyseerr: Radarr services response: {}", servicesData.dump(4));
 
-            std::vector<RadarrService> services;
+            std::vector<std::shared_ptr<RadarrService>> services;
 
             for (const auto& item : servicesData) {
-                RadarrService service;
-                service.id = item["id"].get<int>();
-                service.name = item["name"].get<std::string>();
-                service.is4k = item["is4k"].get<bool>();
-                service.isDefault = item["isDefault"].get<bool>();
-                service.activeDirectory = item["activeDirectory"].get<std::string>();
-                service.activeProfileId = item["activeProfileId"].get<int>();
-                
-                service.qualityProfiles = getRadarrQualityProfiles(httpClient, url, service.id);
+                std::shared_ptr<RadarrService> service = std::make_shared<RadarrService>(httpClient, authService);
+
+                // service.qualityProfiles = getRadarrQualityProfiles(httpClient, url, service.id);
+
+                service->setId(item["id"].get<int>());
+                service->setServiceName(item["name"].get<std::string>());
+                service->setIs4k(item["is4k"].get<bool>());
+                service->setIsDefault(item["isDefault"].get<bool>());
+                service->setActiveDirectory(item["activeDirectory"].get<std::string>());
+                service->setActiveProfileId(item["activeProfileId"].get<int>());
+                service->setQualityProfiles(getRadarrQualityProfiles(httpClient, url, service->getId()));
 
                 services.emplace_back(std::move(service));
             }
@@ -289,16 +297,86 @@ namespace jellyseerr {
 
             brls::Logger::debug("Jellyseerr: Radarr quality profiles response: {}", profilesData.dump(4));
 
-            RadarrService radarrService;
-            radarrService.id = profilesData["server"]["id"].get<int>();
-            radarrService.name = profilesData["server"]["name"].get<std::string>();
-            radarrService.is4k = profilesData["server"]["is4k"].get<bool>();
-            radarrService.isDefault = profilesData["server"]["isDefault"].get<bool>();
-            radarrService.activeDirectory = profilesData["server"]["activeDirectory"].get<std::string>();
-            radarrService.activeProfileId = profilesData["server"]["activeProfileId"].get<int>();
-
             for (const auto& item : profilesData["profiles"]) {
                 brls::Logger::debug("Jellyseerr: Processing Radarr quality profile: {}", item.dump(4));
+                QualityProfile profile;
+                profile.id = item["id"].get<int>();
+                profile.name = item["name"].get<std::string>();
+
+                if(item.contains("rootFolders") && item["rootFolders"].is_array()) {
+                    for (const auto& folder : item["rootFolders"]) {
+                        RootFolder rootFolder;
+                        rootFolder.id = folder["id"].get<int>();
+                        rootFolder.freeSpace = folder["freeSpace"].get<int>();
+                        rootFolder.path = folder["path"].get<std::string>();
+                        profile.rootFolders.push_back(std::move(rootFolder));
+                    }
+                }
+
+                profiles.emplace_back(std::move(profile));
+            }
+
+            return profiles;
+        } catch (const std::exception& e) {
+            brls::Logger::error("Jellyseerr: Error fetching Radarr quality profiles: {}", e.what());
+            return {};
+        }
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////// Sonarr specific functions /////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    std::vector<std::shared_ptr<SonarrService>> getSonarrServices(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, const std::string& url) {
+        brls::Logger::debug("Jellyseerr: Fetching Sonarr services from {}", url);
+
+        try {
+            std::string response = httpClient->get(fmt::format("{}/api/v1/service/sonarr", url));
+
+            auto servicesData = nlohmann::json::parse(response);
+
+            brls::Logger::debug("Jellyseerr: Sonarr services response: {}", servicesData.dump(4));
+
+            std::vector<std::shared_ptr<SonarrService>> services;
+
+            for (const auto& item : servicesData) {
+                std::shared_ptr<SonarrService> service = std::make_shared<SonarrService>(httpClient, authService);
+
+                // service.qualityProfiles = getSonarrQualityProfiles(httpClient, url, service.id);
+
+                service->setId(item["id"].get<int>());
+                service->setServiceName(item["name"].get<std::string>());
+                service->setIs4k(item["is4k"].get<bool>());
+                service->setIsDefault(item["isDefault"].get<bool>());
+                service->setActiveDirectory(item["activeDirectory"].get<std::string>());
+                service->setActiveProfileId(item["activeProfileId"].get<int>());
+                service->setQualityProfiles(getRadarrQualityProfiles(httpClient, url, service->getId()));
+
+                services.emplace_back(std::move(service));
+            }
+
+            return services;
+        } catch (const std::exception& e) {
+            brls::Logger::error("Jellyseerr: Error fetching Radarr services: {}", e.what());
+            return {};
+        }
+    }
+
+    std::vector<QualityProfile> getSonarrQualityProfiles(std::shared_ptr<HttpClient> httpClient, const std::string& url, int sonarrServiceId) {
+        brls::Logger::debug("Jellyseerr: Fetching Sonarr quality profiles for service ID {}", sonarrServiceId);
+
+        try {
+            std::string response = httpClient->get(fmt::format("{}/api/v1/service/sonarr/{}", url, sonarrServiceId));
+
+            auto profilesData = nlohmann::json::parse(response);
+            std::vector<QualityProfile> profiles;
+
+            brls::Logger::debug("Jellyseerr: Sonarr quality profiles response: {}", profilesData.dump(4));
+
+            for (const auto& item : profilesData["profiles"]) {
+                brls::Logger::debug("Jellyseerr: Processing Sonarr quality profile: {}", item.dump(4));
                 QualityProfile profile;
                 profile.id = item["id"].get<int>();
                 profile.name = item["name"].get<std::string>();
@@ -450,6 +528,7 @@ namespace jellyseerr {
                 // Parse seasons if available
                 if (detailsData.contains("seasons") && detailsData["seasons"].is_array()) {
                     for (const auto& season : detailsData["seasons"]) {
+                        brls::Logger::debug("Jellyseerr: Processing season: {}", season.dump(4));
                         Season seasonItem;
                         seasonItem.airDate = get_or_default<std::string>(season, "airDate", "");
                         seasonItem.episodeCount = get_or_default<int>(season, "episodeCount", 0);
@@ -459,8 +538,26 @@ namespace jellyseerr {
                         seasonItem.overview = get_or_default<std::string>(season, "overview", "");
                         seasonItem.seasonNumber = get_or_default<int>(season, "seasonNumber", 0);
                         seasonItem.posterPath = get_or_default<std::string>(season, "posterPath", "");
-                        
+
                         mediaItem.seasons.push_back(std::move(seasonItem));
+                    }
+                }
+
+                // Fill season status (available, pending, ...). This code is a garbage, but it works, idk how jellyseerr handle this by default
+
+
+                if (detailsData.contains("mediaInfo") && detailsData["mediaInfo"].contains("seasons") && detailsData["mediaInfo"]["seasons"].is_array()) {
+                    for (const auto& season : detailsData["mediaInfo"]["seasons"]) {
+                        int seasonNumber = get_or_default<int>(season, "seasonNumber", 0);
+                        MediaStatus status = static_cast<MediaStatus>(get_or_default<int>(season, "status", static_cast<int>(MediaStatus::Unknown)));
+                        
+                        auto it = std::find_if(mediaItem.seasons.begin(), mediaItem.seasons.end(),
+                            [seasonNumber](const Season& s) { return s.seasonNumber == seasonNumber; });
+                        
+                        if (it != mediaItem.seasons.end()) {
+                            brls::Logger::debug("Jellyseerr: Setting status for season {} to {}", seasonNumber, static_cast<int>(status));
+                            it->status = status;
+                        }
                     }
                 }
             }

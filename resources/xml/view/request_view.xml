@@ -84,6 +84,37 @@
 
                 </brls:Box>
 
+                <!-- Seasons for Tv shows -->
+                <brls:ScrollingFrame
+                    id="request/seasons/frame"
+                    height="auto"
+                    width="100%"
+                    wireframe="false">
+                    <brls:Box
+                        id="request/seasons"
+                        axis="column"
+                        width="auto"
+                        height="auto">
+
+                        <brls:Header
+                            id="request/seasons/header"
+                            title="Seasons"/>
+
+                        <brls:Box
+                            id="request/seasons/content"
+                            axis="column"
+                            width="auto"
+                            height="auto"
+                            alignItems="center"
+                            justifyContent="center"
+                            wireframe="true">
+
+                        </brls:Box>
+
+                    </brls:Box>
+
+                </brls:ScrollingFrame>
+
                 <brls:Box
                     axis="column"
                     width="auto"

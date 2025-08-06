@@ -96,6 +96,7 @@ If you want to run it on your switch with nxlink you can use:
 ### Future Enhancements
 - [ ] Additional Jellyseerr features integration
 - [ ] Lidarr integration
+- [ ] Support for Overseerr
 
 ## Thanks to
 - **[xfangfang](https://github.com/xfangfang) for [borealis](https://github.com/xfangfang/borealis) and [wiliwili](https://github.com/xfangfang/wiliwili)**

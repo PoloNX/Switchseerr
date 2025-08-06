@@ -9,11 +9,23 @@ struct MovieRequest {
     MediaType type;
     int mediaId;
     int tvdbId;
-    std::vector<int> seasons;
     bool is4k;
     int serverId;
-    int profilerId;
+    int profileId;
     std::string rootFolder;
     int languageProfileId;
     int userId;
+};
+
+struct TvRequest {
+    MediaType type;
+    int mediaId;
+    int tvdbId;
+    bool is4k;
+    int serverId;
+    int profileId;
+    std::string rootFolder;
+    int languageProfileId;
+    int userId;
+    std::vector<int> selectedSeasons;
 };
