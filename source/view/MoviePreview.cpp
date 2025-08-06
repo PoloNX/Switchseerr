@@ -4,18 +4,20 @@
 #include "view/MediaInfoView.hpp"
 #include "api/Jellyseerr.hpp"
 
+using namespace brls::literals;
+
 MoviePreview::MoviePreview(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, MediaItem& mediaItem, brls::View* parentView) : httpClient(httpClient), authService(authService), mediaItem(mediaItem) {
     brls::Logger::debug("MoviePreview: create for item ID: {}", mediaItem.id);
     this->inflateFromXMLRes("xml/view/movie_preview.xml");
 
-    this->registerAction("back", brls::BUTTON_B, [this, parentView](brls::View* view) {
+    this->registerAction("hints/back"_i18n, brls::BUTTON_B, [this, parentView](brls::View* view) {
         brls::Logger::debug("MoviePreview: Back action triggered");
         this->dismiss();
         brls::Application::giveFocus(parentView);
         return true;
     });
 
-    brls::Logger::warning("MoviePreview: Media item type: {}", mediaItem.type == MediaType::Movie ? "Movie" : "TV Show");
+    brls::Logger::warning("MoviePreview: Media item type: {}", mediaItem.type == MediaType::Movie ? "main/models/movie"_i18n : "main/models/tv_show"_i18n);
 
     this->scroller->setFocusable(true);
 
@@ -27,27 +29,27 @@ MoviePreview::MoviePreview(std::shared_ptr<HttpClient> httpClient, std::shared_p
     switch(mediaItem.status) {
         case MediaStatus::Pending:
             this->statusLabel->setStyle(LabelBackgroundStyle::Pending);
-            this->statusLabel->setText("Pending");
+            this->statusLabel->setText("main/view/media_preview/pending"_i18n);
             break;
         case MediaStatus::Processing:
-            this->statusLabel->setStyle(LabelBackgroundStyle::Processing);  
-            this->statusLabel->setText("Processing");
+            this->statusLabel->setStyle(LabelBackgroundStyle::Processing);
+            this->statusLabel->setText("main/view/media_preview/processing"_i18n);
             break;
         case MediaStatus::PartiallyAvailable:
             this->statusLabel->setStyle(LabelBackgroundStyle::PartiallyAvailable);
-            this->statusLabel->setText("Partially Available");
+            this->statusLabel->setText("main/view/media_preview/partially_available"_i18n);
             break;
         case MediaStatus::Available:
             this->statusLabel->setStyle(LabelBackgroundStyle::Available);
-            this->statusLabel->setText("Available");
+            this->statusLabel->setText("main/view/media_preview/available"_i18n);
             break;
         case MediaStatus::Blacklisted:
             this->statusLabel->setStyle(LabelBackgroundStyle::Blacklisted);
-            this->statusLabel->setText("Blacklisted");
+            this->statusLabel->setText("main/view/media_preview/blacklisted"_i18n);
             break;
         case MediaStatus::Deleted:
             this->statusLabel->setStyle(LabelBackgroundStyle::Deleted);
-            this->statusLabel->setText("Deleted");
+            this->statusLabel->setText("main/view/media_preview/deleted"_i18n);
             break;
         default:
             this->statusLabel->setVisibility(brls::Visibility::GONE);
@@ -68,10 +70,10 @@ void MoviePreview::willAppear(bool resetState) {
     if(mediaItem.status != MediaStatus::Available) {
         auto requestButton = new brls::Button();
         if (mediaItem.status != MediaStatus::PartiallyAvailable) {
-            requestButton->setText("Request");
+            requestButton->setText("main/view/media_preview/request"_i18n);
             requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
         } else {
-            requestButton->setText("Request More Content");
+            requestButton->setText("main/view/media_preview/request_more_content"_i18n);
             requestButton->setStyle(&brls::BUTTONSTYLE_HIGHLIGHT);
         }
         requestButton->registerClickAction([this](brls::View* view) {
@@ -85,7 +87,7 @@ void MoviePreview::willAppear(bool resetState) {
 
 
     auto infoButton = new brls::Button();
-    infoButton->setText("Info");
+    infoButton->setText("main/view/media_preview/info"_i18n);
     infoButton->setStyle(&brls::BUTTONSTYLE_HIGHLIGHT);
     infoButton->registerClickAction([this](brls::View* view) {
         brls::Logger::warning("MoviePreview: metiaItem.type = {}, mediaItem.name = {}", mediaItem.type == MediaType::Movie ? "Movie" : "TV Show", mediaItem.title);

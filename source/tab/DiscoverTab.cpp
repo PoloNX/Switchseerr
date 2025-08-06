@@ -3,6 +3,8 @@
 #include "view/VideoCarousel.hpp"
 #include "utils/ThreadPool.hpp"
 
+using namespace brls::literals;
+
 DiscoverTab::DiscoverTab(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService) : httpClient(httpClient), authService(authService) {
     brls::Logger::debug("DiscoverTab: Initializing DiscoverTab");
     this->inflateFromXMLRes("xml/tab/discover.xml"); 
@@ -29,7 +31,7 @@ DiscoverTab::DiscoverTab(std::shared_ptr<HttpClient> httpClient, std::shared_ptr
         carousel->doRequest();
     }
 
-    this->registerAction("Reload", brls::BUTTON_Y, [this, carousels](brls::View* view) {
+    this->registerAction("hints/refresh"_i18n, brls::BUTTON_Y, [this, carousels](brls::View* view) {
         brls::Logger::debug("VideoCarousel: Reload action triggered");
         for (auto* carousel : carousels) {
             carousel->doRequest();

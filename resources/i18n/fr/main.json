@@ -1,0 +1,100 @@
+{
+    "activity": {
+        "main": {
+            "discover": "Découvrir",
+            "movies": "Films",
+            "tvShows": "Séries TV",
+            "search": "Rechercher"
+        },
+        "login": {
+            "cookie_expired": "Connexion échouée, vos cookies sont invalides ou expirés. Veuillez ré-ajouter l'utilisateur."
+        }
+    },
+
+    "tab": {
+        "server_add": {
+            "connect": "Se connecter",
+            "url": "URL"
+        },
+        "server_login": {
+            "sign_in": "Se connecter",
+            "sign_in_with": "Se connecter avec",
+            "jellyseerr": "Jellyseerr",
+            "jellyfin": "Jellyfin",
+            "plex": "Plex",
+            "enter_username": "Saisir le nom d'utilisateur",
+            "enter_password": "Saisir le mot de passe",
+            "username": "Nom d'utilisateur",
+            "password": "Mot de passe",
+            "username_required": "Veuillez saisir un nom d'utilisateur.",
+            "login_failed": "Connexion échouée. Veuillez vérifier vos identifiants."
+        }
+    },
+
+    "models": {
+        "movie": "Film",
+        "movies": "Films",
+        "tv_show": "Série TV",
+        "tv_shows": "Séries TV",
+        "season": "Saison",
+        "seasons": "Saisons",
+        "episode": "Épisode",
+        "episodes": "Épisodes",
+        "unkown_air_date": "Date de diffusion inconnue"
+    },
+
+    "view": {
+        "media_grid": {
+            "page": "Page",
+            "search": "Rechercher des films ou des séries TV",
+            "enter_query": "Saisir une requête de recherche",
+            "no_query": "Veuillez saisir une requête de recherche..."
+        },
+        "media_info": {
+            "media_type": "Type de média",
+            "release_date": "Date de sortie",
+            "runtime": "Durée",
+            "original_title": "Titre original",
+            "overview": "Synopsis",
+            "cast": "Distribution",
+            "crew": "Équipe technique",
+            "backdrop": "Image de fond",
+            "poster": "Affiche",
+            "first_air_date": "Première diffusion",
+            "last_air_date": "Dernière diffusion",
+            "in_production": "En production",
+            "number_of_seasons": "Nombre de saisons",
+            "number_of_episodes": "Nombre d'épisodes",
+            "original_name": "Nom original",
+            "status": "Statut"
+        },
+        "media_preview": {
+            "pending": "En attente",
+            "processing": "En cours de traitement",
+            "partially_available": "Partiellement disponible",
+            "available": "Disponible",
+            "blacklisted": "Sur liste noire",
+            "deleted": "Supprimé",
+            "request": "Demander",
+            "request_more_content": "Demander plus de contenu",
+            "info": "Informations"
+        },
+        "request": {
+            "success": "Demande créée avec succès !",
+            "error": "Une erreur s'est produite lors de la création de la demande.",
+            "no_profiles": "Aucun profil de qualité disponible.",
+            "select_profile": "Sélectionner un profil de qualité",
+            "loading_profiles": "Chargement des profils de qualité...",
+            "no_radarr_service": "Aucun service Radarr disponible",
+            "select_radarr_service": "Sélectionner un service Radarr"
+        },
+        "carousel": {
+            "recently_added": "Récemment ajoutés",
+            "trending": "Tendances",
+            "popular_movies": "Films populaires",
+            "popular_tv_shows": "Séries TV populaires",
+            "future_movies": "Films à venir",
+            "future_tv_shows": "Séries TV à venir"
+        }
+    }
+}

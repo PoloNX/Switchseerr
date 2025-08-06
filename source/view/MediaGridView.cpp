@@ -5,6 +5,8 @@
 #include "api/Jellyseerr.hpp"
 #include "utils/utils.hpp"
 
+using namespace brls::literals;
+
 MediaGridData::MediaGridData(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, MediaType type)
     : httpClient(httpClient), authService(authService), mediaType(type) {
     this->serverUrl = authService->getServerUrl();
@@ -37,11 +39,11 @@ RecyclingGridItem* MediaGridData::cellForRow(RecyclingView* recycler, size_t ind
     switch(items[index].type) {
     case MediaType::Movie:
         cell->labelBackground->setStyle(LabelBackgroundStyle::Movie);
-        cell->labelBackground->setText("Film");
+        cell->labelBackground->setText("main/models/movie"_i18n);
         break;
     case MediaType::Tv:
         cell->labelBackground->setStyle(LabelBackgroundStyle::TVShow);
-        cell->labelBackground->setText("Série");
+        cell->labelBackground->setText("main/models/tv_show"_i18n);
         break;
     }
 
@@ -112,7 +114,7 @@ MediaGridView::MediaGridView(std::shared_ptr<HttpClient> httpClient, std::shared
         });
     });
 
-    pageIndicator->setText(fmt::format("Page {}", currentPage));
+    pageIndicator->setText(fmt::format("{} {}", "main/view/media_grid/page"_i18n ,currentPage));
 
     previousPageButton->registerClickAction([this](brls::View* view) {
         onPreviousPage();
@@ -137,7 +139,7 @@ void MediaGridView::onPreviousPage() {
                 brls::Logger::debug("MediaGridView::loadData completed");
                 recycler->notifyDataChanged();
                 recycler->reloadData();
-                pageIndicator->setText(fmt::format("Page {}", currentPage));
+                pageIndicator->setText(fmt::format("{} {}", "main/view/media_grid/page"_i18n, currentPage));
             });
         });
         recycler->notifyDataChanged();
@@ -155,7 +157,7 @@ void MediaGridView::onNextPage() {
             brls::Logger::debug("MediaGridView::loadData completed");
             recycler->notifyDataChanged();
             recycler->reloadData();
-            pageIndicator->setText(fmt::format("Page {}", currentPage));
+            pageIndicator->setText(fmt::format("{} {}", "main/view/media_grid/page"_i18n, currentPage));
         });
     });
     recycler->notifyDataChanged();

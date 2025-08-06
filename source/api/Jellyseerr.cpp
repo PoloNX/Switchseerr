@@ -453,7 +453,8 @@ namespace jellyseerr {
                         Season seasonItem;
                         seasonItem.airDate = get_or_default<std::string>(season, "airDate", "");
                         seasonItem.episodeCount = get_or_default<int>(season, "episodeCount", 0);
-                        seasonItem.id = get_or_default<int>(season, "id", 0);
+                        seasonItem.id = get_or_default<int>(season, "seasonNumber", 0);
+                        seasonItem.tvId = mediaItem.id; // Assuming tvId is the same as mediaItem.id
                         seasonItem.name = get_or_default<std::string>(season, "name", "");
                         seasonItem.overview = get_or_default<std::string>(season, "overview", "");
                         seasonItem.seasonNumber = get_or_default<int>(season, "seasonNumber", 0);
@@ -492,6 +493,33 @@ namespace jellyseerr {
         } catch (const std::exception& e) {
             brls::Logger::error("Jellyseerr: Error fetching public server info: {}", e.what());
             return {};
+        }
+    }
+
+    void fillSeasonDetails(std::shared_ptr<HttpClient> httpClient, const std::string& url, Season& season) {
+        brls::Logger::debug("Jellyseerr: Fetching details for season ID: {}", season.id);
+
+        try {
+            std::string response = httpClient->get(fmt::format("{}/api/v1/tv/{}/season/{}", url, season.tvId, season.id));
+            auto seasonData = nlohmann::json::parse(std::move(response), nullptr, false);
+            if (!seasonData.contains("episodes")) {
+                brls::Logger::warning("Jellyseerr: No episodes found for season ID: {}", season.id);
+                return;
+            }
+
+            for (const auto& episodeData : seasonData["episodes"]) {
+                Episode episode;
+                episode.id = get_or_default<int>(episodeData, "id", 0);
+                episode.name = get_or_default<std::string>(episodeData, "name", "");
+                episode.airDate = format_date(get_or_default<std::string>(episodeData, "airDate", ""));
+                episode.episodeNumber = get_or_default<int>(episodeData, "episodeNumber", 0);
+                episode.overview = get_or_default<std::string>(episodeData, "overview", "");
+                episode.stillPath = get_or_default<std::string>(episodeData, "stillPath", "");
+                season.episodes.push_back(std::move(episode));
+            }
+
+        } catch (const std::exception& e) {
+            brls::Logger::error("Jellyseerr: Error fetching season details for ID {}: {}", season.id, e.what());
         }
     }
 

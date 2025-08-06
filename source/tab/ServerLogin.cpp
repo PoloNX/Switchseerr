@@ -5,18 +5,19 @@
 
 #include <nlohmann/json.hpp>
 
+using namespace brls::literals;
 
 ServerLogin::ServerLogin(std::shared_ptr<HttpClient> httpClient, const std::string& serverUrl, const std::string& user) : httpClient(httpClient), url(serverUrl) {
     this->inflateFromXMLRes("xml/tab/server_login.xml");
     brls::Logger::debug("ServerLogin: create");
 
-    this->headerSignin->setTitle("Sign with jellyseerr");
+    this->headerSignin->setTitle(fmt::format("{} {}", "main/tab/server_login/sign_in_with"_i18n, "main/tab/server_login/jellyseerr"_i18n));
     this->inputUser->registerClickAction([this](brls::View* view) {
         brls::Application::getImeManager()->openForText(
         [this](const std::string& text) {
             this->username = text;
             this->usernameLabel->setText(text);
-        }, "Enter username", "", 64, this->username, 0);
+        }, "main/tab/server_login/enter_username"_i18n, "", 64, this->username, 0);
 
         return true;
     });
@@ -29,14 +30,14 @@ ServerLogin::ServerLogin(std::shared_ptr<HttpClient> httpClient, const std::stri
             this->password = text;
             // don't show the password but only dots
             this->passwordLabel->setText(std::string(text.length(), '*'));
-        }, "Enter password", "", 64, this->password);
+        }, "main/tab/server_login/enter_password"_i18n, "", 64, this->password);
 
         return true;
     });
 
     this->inputPassword->addGestureRecognizer(new brls::TapGestureRecognizer(this->inputPassword));
 
-    this->buttonSignin->setText("Sign in");
+    this->buttonSignin->setText("main/tab/server_login/sign_in"_i18n);
     this->buttonSignin->setStyle(&brls::BUTTONSTYLE_PRIMARY);
 
     this->buttonSignin->registerClickAction([this](...) {
@@ -75,13 +76,13 @@ void ServerLogin::setupMediaServerLogin(jellyseerr::ConnectionServer serverType)
     this->updateUIForServerType();
     this->setupConnectionToggle();
     
-    this->usernameLabel->setText("Username");
-    this->passwordLabel->setText("Password");
+    this->usernameLabel->setText("main/tab/server_login/username"_i18n);
+    this->passwordLabel->setText("main/tab/server_login/password"_i18n);
 }
 
 void ServerLogin::updateUIForServerType() {
     std::string title = (this->mediaServerLogin) ? 
-        "Sign with jellyfin" : "Sign with jellyseerr";
+        fmt::format("{} {}", "main/tab/server_login/sign_in_with"_i18n, "main/tab/server_login/jellyfin"_i18n) : fmt::format("{} {}", "main/tab/server_login/sign_in_with"_i18n, "main/tab/server_login/jellyseerr"_i18n);
     
     this->headerSignin->setTitle(title);
     // update de connection cell with the other server type to make a button to toggle
@@ -116,14 +117,7 @@ bool ServerLogin::onSignin() {
     brls::Logger::debug("ServerLogin: username={}, password={}", username, password);
 
     if (username.empty()) {
-        auto dialog = new brls::Dialog("Please enter a username.");
-        dialog->addButton("OK", []{});
-        dialog->open();
-        return false;
-    }
-
-    if (password.empty()) {
-        auto dialog = new brls::Dialog("Please enter a password.");
+        auto dialog = new brls::Dialog("main/tab/server_login/username_required"_i18n);
         dialog->addButton("OK", []{});
         dialog->open();
         return false;
@@ -163,8 +157,8 @@ bool ServerLogin::onSignin() {
         brls::Application::pushActivity(new MainActivity(this->httpClient, authService), brls::TransitionAnimation::NONE);
         return true;
     } else {
-        auto dialog = new brls::Dialog("Login failed. Please check your credentials.");
-        dialog->addButton("OK", []{});
+        auto dialog = new brls::Dialog("main/tab/server_login/login_failed"_i18n);
+        dialog->addButton("hints/ok"_i18n, []{});
         dialog->open();
         
         buttonSignin->setState(brls::ButtonState::ENABLED);

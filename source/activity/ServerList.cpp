@@ -5,12 +5,14 @@
 #include "auth/AuthService.hpp"
 #include "activity/MainActivity.hpp"
 
+using namespace brls::literals;
+
 ServerCell::ServerCell(const AppServer& server) {
     this->inflateFromXMLRes("xml/view/server_cell.xml");
 
     this->setFocusSound(brls::SOUND_FOCUS_SIDEBAR);
     this->registerAction(
-        "ok", brls::BUTTON_A, [](brls::View* view) {
+        "hints/ok"_i18n, brls::BUTTON_A, [](brls::View* view) {
             brls::Application::onControllerButtonPressed(brls::BUTTON_NAV_RIGHT, false);
             return true;
         }, false, false, brls::SOUND_CLICK_SIDEBAR
@@ -58,9 +60,9 @@ public:
         UserCell* cell = dynamic_cast<UserCell*>(recycler->dequeueReusableCell("Cell"));
         auto& u = this->list.at(index);
 
-        cell->registerAction("delete", brls::BUTTON_X, [this, u](brls::View* view) {
+        cell->registerAction("hints/delete"_i18n, brls::BUTTON_X, [this, u](brls::View* view) {
             auto dialog = new brls::Dialog("delete");
-            dialog->addButton("yes", [this, u]() {
+            dialog->addButton("hints/yes"_i18n, [this, u]() {
                 Config::instance().removeUser(u.id);
                 this->parent->onUser(u.server_url);
             });
@@ -91,8 +93,8 @@ public:
             else {
                 brls::sync([this, u]() {
                     brls::Application::unblockInputs();
-                    auto dialog = new brls::Dialog("Login failed, your cookies are invalid or expired. Please re-add the user.");
-                    dialog->addButton("OK", []{});
+                    auto dialog = new brls::Dialog("main/activity/login/cookie_expired"_i18n);
+                    dialog->addButton("hints/ok"_i18n, []{});
                     dialog->open();
                 });
                 brls::Logger::error("ServerUserDataSource: Failed to log in user {}", u.name);
@@ -120,7 +122,7 @@ void ServerList::onContentAvailable() {
         return true;
     });
 
-    this->sidebarServers->registerAction("add", brls::BUTTON_Y, [this](brls::View* view) {
+    this->sidebarServers->registerAction("hints/add"_i18n, brls::BUTTON_Y, [this](brls::View* view) {
         view->present(new ServerAdd(httpClient));
         return true;
     });
@@ -148,9 +150,9 @@ void ServerList::willAppear(bool resetState) {
             this->onServer(server);
         });
 
-        cell->registerAction("delete", brls::BUTTON_X, [this, server](brls::View* item) {
+        cell->registerAction("hints/delete"_i18n, brls::BUTTON_X, [this, server](brls::View* item) {
             auto dialog = new brls::Dialog("delete");
-            dialog->addButton("yes", [this, server, item]() {
+            dialog->addButton("hints/yes"_i18n, [this, server, item]() {
                 if (Config::instance().removeServer(server.url)) {
                     brls::View* view = new ServerAdd(httpClient);
                     this->appletFrame->present(view);

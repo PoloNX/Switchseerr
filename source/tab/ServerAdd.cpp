@@ -5,17 +5,19 @@
 
 #include <nlohmann/json.hpp>
 
+using namespace brls::literals;
+
 ServerAdd::ServerAdd(std::shared_ptr<HttpClient> httpClient) : httpClient(httpClient) {
     this->inflateFromXMLRes("xml/tab/server_add.xml");
     brls::Logger::debug("ServerAdd: create");
 
-    inputUrl->init("URL", "", [](std::string) {}, "http://<Servier IP>:5055", "", 255);
+    inputUrl->init("main/tab/server_add/url"_i18n, "", [](std::string) {}, "http://<Servier IP>:5055", "", 255);
 
     jellyseerrImage->setImageFromRes("img/jellyseerr/logo_stacked.png");
 
     connectButton->registerClickAction([this](...) {return this->onConnect();});
     connectButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
-    connectButton->setText("Connect");
+    connectButton->setText("main/tab/server_add/connect"_i18n);
 }
 
 ServerAdd::~ServerAdd() {

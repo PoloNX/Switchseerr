@@ -35,4 +35,5 @@ namespace jellyseerr {
     std::vector<RadarrService> getRadarrServices(std::shared_ptr<HttpClient> httpClient, const std::string& url);
     std::vector<QualityProfile> getRadarrQualityProfiles(std::shared_ptr<HttpClient> httpClient, const std::string& url, int radarrServiceId);
     std::vector<MediaItem> getMedias(std::shared_ptr<HttpClient> httpClient, const std::string& url, DiscoverType type,size_t pageSize = 10);
+    void fillSeasonDetails(std::shared_ptr<HttpClient> httpClient, const std::string& url, Season& season);
 };

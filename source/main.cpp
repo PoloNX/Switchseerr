@@ -17,7 +17,7 @@
 #include <memory>
 
 int main() {
-    brls::Platform::APP_LOCALE_DEFAULT = brls::LOCALE_AUTO;
+    brls::Platform::APP_LOCALE_DEFAULT = brls::LOCALE_FR;
 
     if (!brls::Application::init()) {
         brls::Logger::error("Failed to initialize Borealis application.");

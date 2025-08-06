@@ -135,7 +135,7 @@
 
                     <brls:Label
                         text="Saisons"
-                        fontSize="30"
+                        fontSize="20"
                         marginTop="20"
                         marginBottom="5"/>
 

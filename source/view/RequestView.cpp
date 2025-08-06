@@ -3,6 +3,8 @@
 #include "utils/ThreadPool.hpp"
 #include "api/RequestService.hpp"
 
+using namespace brls::literals;
+
 RequestView::RequestView(std::shared_ptr<HttpClient> httpClient, MediaItem mediaItem, std::shared_ptr<AuthService> authService) : mediaItem(mediaItem), authService(authService), client(httpClient) {
     this->inflateFromXMLRes("xml/view/request_view.xml");
 
@@ -38,11 +40,11 @@ void RequestView::loadButtonActions() {
 
         if (requestService.createRequest(request, mediaItem.type)) {
             brls::Logger::debug("RequestView: Request created successfully for media item ID: {}", mediaItem.id);
-            brls::Application::notify("Request created successfully!");
+            brls::Application::notify("main/view/request/success"_i18n);
             return false;
         } else {
             brls::Logger::error("RequestView: Failed to create request for media item ID: {}", mediaItem.id);
-            brls::Application::notify("Failed to create request for media item. Please try again later.");
+            brls::Application::notify("main/view/request/error"_i18n);
             return false;
         }
         return true;
@@ -58,7 +60,7 @@ void RequestView::loadQualityProfiles() {
     }
 
     this->qualityCell->setFocusable(true);
-    this->qualityCell->setText(profileNames.empty() ? "No profiles" : profileNames[0]);
+    this->qualityCell->setText(profileNames.empty() ? "main/view/request/no_profiles"_i18n : profileNames[0]);
     
     if (this->selectedRadarrService.qualityProfiles.empty()) return;
     
@@ -70,7 +72,7 @@ void RequestView::loadQualityProfiles() {
     this->qualityCell->registerClickAction([this, names = std::move(names)](brls::View* view) {        
         int selectedProfileIndex = std::distance(names.begin(), std::find(names.begin(), names.end(), this->selectedQualityProfile.name));
 
-        auto dropdown = new brls::Dropdown("Select Quality Profile", names, [this](int _selected) {
+        auto dropdown = new brls::Dropdown("main/view/request/select_profile"_i18n, names, [this](int _selected) {
             if (_selected >= 0 && _selected < this->selectedRadarrService.qualityProfiles.size()) {
                 this->selectedQualityProfile = this->selectedRadarrService.qualityProfiles[_selected];
                 this->qualityCell->setText(this->selectedQualityProfile.name);
@@ -89,14 +91,14 @@ void RequestView::loadRadarrProfiles() {
         serviceNames.push_back(service.name);
     }
     this->serverCell->setFocusable(true);
-    this->serverCell->setText(serviceNames.empty() ? "No Radarr services" : serviceNames[0]);
+    this->serverCell->setText(serviceNames.empty() ? "main/view/request/no_radarr_service"_i18n : serviceNames[0]);
 
     if (serviceNames.empty()) return;
 
     this->serverCell->registerClickAction([this, serviceNames](brls::View* view) {
         // Show a dropdown to select the Radarr service
         int selectedServiceIndex = std::distance(serviceNames.begin(), std::find(serviceNames.begin(), serviceNames.end(), this->selectedRadarrService.name));
-        auto dropdown = new brls::Dropdown("Select Radarr Service", serviceNames, [this](int _selected) {
+        auto dropdown = new brls::Dropdown("main/view/request/select_radarr_service"_i18n, serviceNames, [this](int _selected) {
             if (_selected >= 0 && _selected < availableServers.size()) {
                 this->selectedRadarrService = availableServers[_selected];
                 this->serverCell->setText(this->selectedRadarrService.name);
@@ -114,7 +116,7 @@ void RequestView::loadProfiles() {
     brls::Logger::debug("RequestView: Loading profiles for media item ID: {}", mediaItem.id);
 
     this->qualityCell->setFocusable(false);
-    this->qualityCell->setText("Loading profiles...");
+    this->qualityCell->setText("main/view/request/loading_profiles"_i18n);
 
     ThreadPool& threadPool = ThreadPool::instance();
     ASYNC_RETAIN

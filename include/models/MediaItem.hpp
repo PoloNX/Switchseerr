@@ -24,14 +24,25 @@ enum class MediaStatus {
     Deleted = 7
 };
 
+struct Episode {
+    int id;
+    std::string name;
+    std::string airDate;
+    int episodeNumber;
+    std::string overview;
+    std::string stillPath;
+};
+
 struct Season {
     std::string airDate;
     int episodeCount;
     int id;
+    int tvId;
     std::string name;
     std::string overview;
     int seasonNumber;
     std::string posterPath;
+    std::vector<Episode> episodes;
 };
 
 struct MediaItem {

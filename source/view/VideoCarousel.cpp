@@ -4,6 +4,8 @@
 #include "view/TvPreview.hpp"
 #include "utils/ThreadPool.hpp"
 
+using namespace brls::literals;
+
 static std::mutex downloadMutex;
 
 VideoCarousel::VideoCarousel(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<AuthService> authService, DiscoverType type)
@@ -44,12 +46,12 @@ void VideoCarousel::doRequest() {
 
 void VideoCarousel::configureHeaderTitle() {
     static const std::unordered_map<DiscoverType, std::string> titleMap = {
-        {DiscoverType::RecentlyAdded, "Recently Added"},
-        {DiscoverType::Trending, "Trending"},
-        {DiscoverType::PopularMovies, "Popular Movies"},
-        {DiscoverType::PopularTvShows, "Popular TV Shows"},
-        {DiscoverType::FutureMovies, "Future Movies"},
-        {DiscoverType::FutureTvShows, "Future TV Shows"}
+        {DiscoverType::RecentlyAdded, "main/view/carousel/recently_added"_i18n},
+        {DiscoverType::Trending, "main/view/carousel/trending"_i18n},
+        {DiscoverType::PopularMovies, "main/view/carousel/popular_movies"_i18n},
+        {DiscoverType::PopularTvShows, "main/view/carousel/popular_tv_shows"_i18n},
+        {DiscoverType::FutureMovies, "main/view/carousel/future_movies"_i18n},
+        {DiscoverType::FutureTvShows, "main/view/carousel/future_tv_shows"_i18n}
     };
 
     if (auto it = titleMap.find(type); it != titleMap.end()) {
@@ -90,11 +92,11 @@ void VideoCarousel::setupVideoCardStyling(VideoCardCell* videoCard, const MediaI
     switch(item.type) {
         case MediaType::Movie:
             videoCard->labelBackground->setStyle(LabelBackgroundStyle::Movie);
-            videoCard->labelBackground->setText("Film");
+            videoCard->labelBackground->setText("main/models/movie"_i18n);
             break;
         case MediaType::Tv:
             videoCard->labelBackground->setStyle(LabelBackgroundStyle::TVShow);
-            videoCard->labelBackground->setText("Série");
+            videoCard->labelBackground->setText("main/models/tv_show"_i18n);
             break;
 
     }

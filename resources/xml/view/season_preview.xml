@@ -28,7 +28,8 @@
                 axis="column"
                 backgroundColor="@theme/brls/background"
                 cornerRadius="8"
-                alignItems="center">
+                alignItems="center"
+                justifyContent="center">
 
 
 
@@ -38,7 +39,8 @@
                     width="auto"
                     height="auto"
                     wireframe="false"
-                    paddingTop="20">
+                    marginTop="10"
+                    marginBottom="10">
 
                     <brls:Label
                         text="Season Info"
@@ -49,30 +51,35 @@
 
                         
                 <brls:ScrollingFrame
-                    width="auto"
-                    height="100%"
-                    grow="1.0">
+                    width="100%"
+                    height="80%"
+                    wireframe="false"
+                    id="season/frame">
 
                     <brls:Box
-                        padding="20"
                         axis="column"
-                        width="80%"
+                        width="100%"
                         height="auto"
-                        id="season/episodes">
+                        alignItems="center"
+                        justifyContent="center">
+                        <brls:Box
+                            padding="20"
+                            axis="column"
+                            width="100%"
+                            height="auto"
+                            wireframe="false"
+                            id="season/episodes"
+                            alignItems="center"
+                            justifyContent="center">
 
+                        </brls:Box>
+
+                        <brls:Button
+                            id="season/back_button"
+                            text="Back"
+                            margin="5"/>
                     </brls:Box>
-
                 </brls:ScrollingFrame>
-
-                <brls:Box
-                    height="auto"
-                    marginBottom="10">
-                    <brls:Button
-                        id="season/back_button"
-                        text="Back"
-                        margin="5"/>
-
-                </brls:Box>
 
             </brls:Box>
 

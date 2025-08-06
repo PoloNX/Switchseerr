@@ -1,0 +1,39 @@
+<brls:Box
+    width="90%"
+    height="auto"
+    axis="row"
+    margin="10"
+    backgroundColor="@theme/color/grey_1"
+    alignItems="center"
+    cornerRadius="10">
+
+    <brls:Box
+        axis="column"
+        height="auto"
+        width="75%"
+        margin="10"
+        justifyContent="center">
+
+        <brls:Label
+            id="episode/name"
+            text="Episode Name"
+            fontSize="20"
+            margin="5"/>
+
+        <brls:Label
+            id="episode/overview"
+            text="Episode Overview"
+            fontSize="16"
+            margin="5"/>
+
+    </brls:Box>
+
+    <brls:Image
+        id="episode/image"
+        width="177"
+        height="100"
+        margin="10"
+        scalingType="fill"
+        cornerRadius="10"/>
+
+</brls:Box>

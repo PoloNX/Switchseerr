@@ -1,0 +1,103 @@
+{
+    "activity": {
+        "main": {
+            "discover": "Discover",
+            "movies": "Movies",
+            "tvShows": "TV Shows",
+            "search": "Search"
+        },
+        "login": {
+            "cookie_expired": "ogin failed, your cookies are invalid or expired. Please re-add the user."
+        }
+    },
+
+    "tab": {
+        "server_add": {
+            "connect": "Connect",
+            "url": "URL"
+        },
+        "server_login": {
+            "sign_in": "Sign in",
+            "sign_in_with": "Sign in with",
+            "jellyseerr": "Jellyseerr",
+            "jellyfin": "Jellyfin",
+            "plex": "Plex",
+            "enter_username": "Enter username",
+            "enter_password": "Enter password",
+            "username": "Username",
+            "password": "Password",
+            "username_required": "Please enter a username.",
+            "login_failed": "Login failed. Please check your credentials."
+        }
+    },
+
+    "models": {
+        "movie": "Movie",
+        "movies": "Movies",
+        "tv_show": "TV Show",
+        "tv_shows": "TV Shows",
+        "season": "Season",
+        "seasons": "Seasons",
+        "episode": "Episode",
+        "episodes": "Episodes",
+        "unkown_air_date": "Unknown Air Date"
+    },
+
+    "view": {
+        "media_grid": {
+            "page": "Page",
+            "search": "Search for Movies or TV Shows",
+            "enter_query": "Enter search query",
+            "no_query": "Please enter a search query..."
+        },
+        "media_info": {
+            "media_type": "Media type",
+            "release_date": "Release Date",
+            "runtime": "Runtime",
+            "original_title": "Original Title",
+            "overview": "Overview",
+            "cast": "Cast",
+            "crew": "Crew",
+            "backdrop": "Backdrop",
+            "poster": "Poster",
+            "first_air_date": "First Air Date",
+            "last_air_date": "Last Air Date",
+            "in_production": "In Production",
+            "number_of_seasons": "Number of Seasons",
+            "number_of_episodes": "Number of Episodes",
+            "original_name": "Original Name",
+            "status": "Status",
+            "revenue": "Revenue"
+        },
+        "media_preview": {
+            "pending": "Pending",
+            "processing": "Processing",
+            "partially_available": "Partially Available",
+            "available": "Available",
+            "blacklisted": "Blacklisted",
+            "deleted": "Deleted",
+            "request": "Request",
+            "request_more_content": "Request More Content",
+            "info": "Info"
+        },
+        "request": {
+            "success": "Request created successfully!",
+            "error": "An error occurred while creating the request.",
+            "no_profiles": "No quality profiles available.",
+            "select_profile": "Select a quality profile",
+            "loading_profiles": "Loading quality profiles...",
+            "no_radarr_service": "No Radarr service available",
+            "select_radarr_service": "Select a Radarr service"
+        },
+        "carousel": {
+            "recently_added": "Recently Added",
+            "trending": "Trending",
+            "popular_movies": "Popular Movies",
+            "popular_tv_shows": "Popular TV Shows",
+            "future_movies": "Future Movies",
+            "future_tv_shows": "Future TV Shows"
+        }
+    }
+
+
+}

@@ -5,21 +5,27 @@
 #include "api/Jellyseerr.hpp"
 #include "view/SeasonPreview.hpp"
 
+using namespace brls::literals;
+
 class SeasonBox : public brls::Box {
     public:
-        SeasonBox(const Season& season) {
+        SeasonBox(std::shared_ptr<HttpClient>httpClient, std::shared_ptr<AuthService> authService, Season& season) : httpClient(httpClient), authService(authService), season(season) {
             this->inflateFromXMLRes("xml/view/season_box.xml");
             this->seasonName->setText(season.name);
-            this->episodeCount->setText(fmt::format("{} episodes", season.episodeCount));
-            this->airDate->setText(season.airDate.empty() ? "Unknown Air Date" : season.airDate);
+            this->episodeCount->setText(fmt::format("{} {}", season.episodeCount, "main/models/episodes"_i18n));
+            this->airDate->setText(season.airDate.empty() ? "main/view/models/unknown_air_date"_i18n : season.airDate);
             this->addGestureRecognizer(new brls::TapGestureRecognizer(this));
-            this->registerClickAction([this, season](brls::View* view) {
-                brls::Logger::debug("SeasonBox: Season {} clicked", season.seasonNumber);
-                //brls::Application::pushActivity(new brls::Activity(new SeasonPreview(season)));
+            this->registerClickAction([this](brls::View* view) mutable {
+                brls::Logger::debug("SeasonBox: Season {} clicked", this->season.seasonNumber);
+                brls::Application::pushActivity(new brls::Activity(new SeasonPreview(this->httpClient, this->authService, this->season)));
                 return true;
             });
         }
     private:
+        std::shared_ptr<HttpClient> httpClient;
+        std::shared_ptr<AuthService> authService;
+        Season season;
+
         BRLS_BIND(brls::Label, seasonName, "season/title");
         BRLS_BIND(brls::Label, episodeCount, "season/episodeCount");
         BRLS_BIND(brls::Label, airDate, "season/airDate");
@@ -47,27 +53,27 @@ TvPreview::TvPreview(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<Aut
     switch(mediaItem.status) {
         case MediaStatus::Pending:
             this->statusLabel->setStyle(LabelBackgroundStyle::Pending);
-            this->statusLabel->setText("Pending");
+            this->statusLabel->setText("main/view/media_preview/pending"_i18n);
             break;
         case MediaStatus::Processing:
-            this->statusLabel->setStyle(LabelBackgroundStyle::Processing);  
-            this->statusLabel->setText("Processing");
+            this->statusLabel->setStyle(LabelBackgroundStyle::Processing);
+            this->statusLabel->setText("main/view/media_preview/processing"_i18n);
             break;
         case MediaStatus::PartiallyAvailable:
             this->statusLabel->setStyle(LabelBackgroundStyle::PartiallyAvailable);
-            this->statusLabel->setText("Partially Available");
+            this->statusLabel->setText("main/view/media_preview/partially_available"_i18n);
             break;
         case MediaStatus::Available:
             this->statusLabel->setStyle(LabelBackgroundStyle::Available);
-            this->statusLabel->setText("Available");
+            this->statusLabel->setText("main/view/media_preview/available"_i18n);
             break;
         case MediaStatus::Blacklisted:
             this->statusLabel->setStyle(LabelBackgroundStyle::Blacklisted);
-            this->statusLabel->setText("Blacklisted");
+            this->statusLabel->setText("main/view/media_preview/blacklisted"_i18n);
             break;
         case MediaStatus::Deleted:
             this->statusLabel->setStyle(LabelBackgroundStyle::Deleted);
-            this->statusLabel->setText("Deleted");
+            this->statusLabel->setText("main/view/media_preview/deleted"_i18n);
             break;
         default:
             this->statusLabel->setVisibility(brls::Visibility::GONE);
@@ -88,10 +94,10 @@ void TvPreview::willAppear(bool resetState) {
     if(mediaItem.status != MediaStatus::Available) {
         auto requestButton = new brls::Button();
         if (mediaItem.status != MediaStatus::PartiallyAvailable) {
-            requestButton->setText("Request");
+            requestButton->setText("main/view/media_preview/request"_i18n);
             requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
         } else {
-            requestButton->setText("Request More Content");
+            requestButton->setText("main/view/media_preview/request_more_content"_i18n);
             requestButton->setStyle(&brls::BUTTONSTYLE_HIGHLIGHT);
         }
         requestButton->registerClickAction([this](brls::View* view) {
@@ -105,7 +111,7 @@ void TvPreview::willAppear(bool resetState) {
 
 
     auto infoButton = new brls::Button();
-    infoButton->setText("Info");
+    infoButton->setText("main/view/media_preview/info"_i18n);
     infoButton->setStyle(&brls::BUTTONSTYLE_HIGHLIGHT);
     infoButton->registerClickAction([this](brls::View* view) {
         auto mediaInfoView = new MediaInfoView(this->mediaItem);
@@ -128,9 +134,9 @@ void TvPreview::loadSeasons() {
         brls::Logger::debug("TvPreview: Season {} - Name: {}, Episodes: {}, Air Date: {}", season.seasonNumber, season.name, season.episodeCount, season.airDate);
     }
 
-    for (const auto& season : mediaItem.seasons) {
-        auto seasonBox = new SeasonBox(season);
-        
+    for (auto& season : mediaItem.seasons) {
+        auto seasonBox = new SeasonBox(httpClient, authService, season);
+        seasonBox->setMargins(10, 0, 10, 0);
         seasonsBox->addView(seasonBox);
     }
 }
