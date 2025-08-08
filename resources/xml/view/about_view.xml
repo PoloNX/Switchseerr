@@ -1,0 +1,138 @@
+<brls:Box
+    width="auto"
+    height="auto"
+    wireframe="false"
+    axis="column">
+
+    <brls:AppletFrame
+        id="about/applet"
+        width="auto"
+        height="auto"
+        grow="1"
+        headerHidden="true"
+        footerHidden="true"
+        backgroundColor="@theme/brls/backdrop">
+
+        <brls:Box
+            width="auto"
+            height="auto"
+            grow="1"
+            axis="column"
+            justifyContent="center"
+            alignItems="center">
+
+            <brls:Box
+                id="about/content"
+                width="600"
+                height="auto"
+                axis="column"
+                backgroundColor="@theme/brls/background"
+                cornerRadius="8"
+                alignItems="center">
+
+
+                <brls:Box
+                    height="auto"
+                    width="auto"
+                    axis="row"
+                    alignItems="flexEnd"
+                    marginTop="20">
+                    
+                    <brls:Label
+                        text="@i18n/main/view/about/title"
+                        fontSize="34"/>
+
+                    <brls:Label
+                        id="about/version"
+                        fontSize="20"
+                        textColor="#8b8585ff"/>
+
+                    <brls:Label
+                        text="@i18n/main/view/about/developed_by"
+                        fontSize="14"
+                        marginLeft="10"
+                        textColor="@theme/color/background"/>
+                </brls:Box>
+
+                <brls:Box
+                    height="auto"
+                    width="100%"
+                    axis="column"
+                    alignItems="center">
+
+                    <brls:Header
+                        title="@i18n/main/view/about/description_header"
+                        marginTop="10"
+                        width="90%"
+                        marginBottom="10"/>
+
+
+                    <brls:Label
+                        text="@i18n/main/view/about/description_text"
+                        fontSize="16"
+                        width="90%"/>
+
+
+
+                </brls:Box>
+
+                <brls:Box
+                    marginTop="20"
+                    height="auto"
+                    width="100%"
+                    axis="column"
+                    alignItems="center">
+
+                    <brls:Header
+                        title="@i18n/main/view/about/gh_repo"
+                        marginTop="10"
+                        width="90%"
+                        marginBottom="10"/>
+                    
+                    <brls:Box
+                        id="about/repoBox"
+                        marginBottom="10"
+                        focusable="true">
+
+                        <brls:Label
+                            text="https://github.com/PoloNX/Switchseerr"
+                            fontSize="16"
+                            id="about/repoLink"
+                            textColor="#6693B6"
+                            width="90%"/>
+
+                    </brls:Box>
+
+
+                </brls:Box>
+
+                <brls:Box
+                    width="100%"
+                    height="auto"
+                    axis="column"
+                    alignItems="center"
+                    marginTop="20"
+                    marginBottom="20">
+
+                    <brls:Header
+                        title="@i18n/main/view/about/credits"
+                        marginTop="10"
+                        width="90%"
+                        marginBottom="10"/>
+
+                    <brls:Label
+                        text="@i18n/main/view/about/credits_text"
+                        fontSize="16"
+                        singleLine="false"
+                        width="90%"/>
+
+                </brls:Box>
+
+
+
+            </brls:Box>
+
+        </brls:Box>
+
+    </brls:AppletFrame>
+</brls:Box>

@@ -38,8 +38,7 @@
 
             <brls:Label
                 id="server/username_label"
-                margin="13"
-                text="Username"/>
+                margin="13"/>
 
         </brls:Box>
 
@@ -57,14 +56,12 @@
 
             <brls:Label
                 id="server/password_label"
-                margin="13"
-                text="Password"/>
+                margin="13"/>
 
         </brls:Box>
         
         <brls:Button
             id="server/signin"
-            text="signin"
             margin="10"
             width="80%"/>
 

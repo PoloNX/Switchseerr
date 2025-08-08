@@ -68,6 +68,17 @@ void RequestView::loadSeasons()
                     selectedSeasons.erase(std::remove(selectedSeasons.begin(), selectedSeasons.end(), season.seasonNumber), selectedSeasons.end());
                 } });
         }
+        if (&season == &mediaItem.seasons.back())
+        {
+            // Set a custom navigation route for the last season cell
+            cell->setCustomNavigationRoute(
+                brls::FocusDirection::DOWN,
+                serverCell->isFocusable()
+                    ? static_cast<brls::View*>(serverCell.getView())
+                    : static_cast<brls::View*>(requestButton.getView())
+            );
+        }
+
         seasonContent->addView(cell);
     }
 }
@@ -96,6 +107,7 @@ void RequestView::loadButtonActions()
             if (sonarrService) {
                 if (sonarrService->performRequest(request)) {
                     brls::Logger::debug("RequestView: TV request created successfully for media item ID: {}", mediaItem.id);
+                    brls::Application::notify("main/view/request/success"_i18n);
                     brls::Application::popActivity();
                 } else {
                     brls::Logger::error("RequestView: Failed to create TV request for media item ID: {}", mediaItem.id);
@@ -120,6 +132,7 @@ void RequestView::loadButtonActions()
             if (radarrService) {
                 if (radarrService->performRequest(request)) {
                     brls::Logger::debug("RequestView: Movie request created successfully for media item ID: {}", mediaItem.id);
+                    brls::Application::notify("main/view/request/success"_i18n);
                     brls::Application::popActivity();
                 } else {
                     brls::Logger::error("RequestView: Failed to create movie request for media item ID: {}", mediaItem.id);

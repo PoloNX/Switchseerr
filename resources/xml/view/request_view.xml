@@ -71,13 +71,13 @@
                     margin="20">
 
                     <brls:Label
-                        text="Request Media"
+                        text="@i18n/main/view/request/title"
                         id="request/title"
                         fontSize="18"
                         marginBottom="5"/>
                     
                     <brls:Label
-                        text="Request a new media item to be added to the library."
+                        text="@i18n/main/view/request/desc"
                         id="request/media"
                         fontSize="14"
                         marginTop="5"/>
@@ -94,11 +94,13 @@
                         id="request/seasons"
                         axis="column"
                         width="auto"
-                        height="auto">
+                        height="auto"
+                        alignItems="center">
 
                         <brls:Header
                             id="request/seasons/header"
-                            title="Seasons"/>
+                            title="Seasons"
+                            width="92%"/>
 
                         <brls:Box
                             id="request/seasons/content"
@@ -107,7 +109,7 @@
                             height="auto"
                             alignItems="center"
                             justifyContent="center"
-                            wireframe="true">
+                            wireframe="false">
 
                         </brls:Box>
 
@@ -149,12 +151,12 @@
                     
                     <brls:Button
                         id="request/button/cancel"
-                        text="Deny"
+                        text="@i18n/hints/cancel"
                         margin="5"/>
 
                     <brls:Button
                         id="request/button/approve"
-                        text="Approve"
+                        text="@i18n/hints/submit"
                         margin="5"/>
 
                 </brls:Box>

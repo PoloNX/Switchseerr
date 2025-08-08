@@ -1,0 +1,45 @@
+<brls:Box>
+    <brls:ScrollingFrame
+        width="auto"
+        height="auto"
+        marginTop="10"
+        grow="1">
+
+    <brls:Box
+        width="auto"
+        height="auto"
+        axis="column"
+        alignItems="stretch">
+
+        <brls:Box
+            width="100%"
+            height="auto"
+            axis="column"
+            alignItems="center">
+
+            <brls:Header
+                title="@i18n/main/tab/settings/header_general"
+                width="95%"/>
+
+            <brls:RadioCell
+                id="settings/logout"
+                width="90%"
+                title="@i18n/main/tab/settings/logout"
+                margin="5"/>
+
+            <brls:SelectorCell
+                id="settings/language"
+                width="90%"
+                margin="5"/>
+
+            <brls:DetailCell
+                id="settings/about"
+                width="90%"
+                title="@i18n/main/tab/settings/about"
+                margin="5"/>
+        </brls:Box>
+    </brls:Box>
+
+
+    </brls:ScrollingFrame>
+</brls:Box>

@@ -58,6 +58,8 @@ std::string Config::configDir() {
     return fmt::format("{}\\{}", lpath.data(), "switchseerr");
 #elif __APPLE__
     return fmt::format("{}/Library/Application Support/{}", getenv("HOME"), "switchseerr");
+#elif __SWITCH__
+    return fmt::format("romfs:/config/switchseerr");
 #endif
 }
 
@@ -88,7 +90,6 @@ void Config::addUser(const AppUser& u, const std::string& url) {
         it = this->users.insert(it, u);
     }
     this->server_url = url;
-    this->user_id = u.id;
     this->user = it;
     this->save();
 }

@@ -42,8 +42,7 @@
                     marginTop="10"
                     marginBottom="10">
 
-                    <brls:Label
-                        text="Season Info"
+                    <brls:label
                         id="season/title"
                         fontSize="25"/>
 
@@ -76,7 +75,7 @@
 
                         <brls:Button
                             id="season/back_button"
-                            text="Back"
+                            text="@i18n/hints/back"
                             margin="5"/>
                     </brls:Box>
                 </brls:ScrollingFrame>

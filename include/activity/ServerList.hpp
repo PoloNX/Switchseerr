@@ -12,6 +12,7 @@ public:
     CONTENT_FROM_XML_RES("activity/server_list.xml");
 
     ServerList(std::shared_ptr<HttpClient> httpClient);
+    ServerList();
     ~ServerList();
 
     void onUser(const std::string& id);

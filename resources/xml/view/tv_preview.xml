@@ -61,12 +61,11 @@
 
                     <brls:Label
                         id="preview/video/title"
-                        text="Title"
                         fontSize="30"
                         marginTop="5"
                         marginBottom="5"/>
 
-                    <brls:Box
+                    <!-- <brls:Box
                         axis="row"
                         alignItems="flexStart"
                         marginTop="5"
@@ -83,7 +82,7 @@
                             fontSize="12"
                             marginLeft="10"/>
 
-                    </brls:Box>
+                    </brls:Box> -->
 
                 </brls:Box>
 
@@ -112,13 +111,12 @@
                     axis="column">
 
                     <brls:Label
-                        text="Summary"
-                        fontSize="20"
+                        text="@i18n/main/view/media_preview/overview"
+                        fontSize="24"
                         marginBottom="5"/>
 
                     <brls:Label
                         id="preview/video/overview"
-                        text="This is a brief overview of the video content, providing insights into the plot, characters, and themes."
                         singleLine="false"
                         fontSize="15"
                         marginTop="5"/>
@@ -134,8 +132,8 @@
                     wireframe="false">
 
                     <brls:Label
-                        text="Saisons"
-                        fontSize="20"
+                        text="@i18n/main/view/media_preview/seasons"
+                        fontSize="24"
                         marginTop="20"
                         marginBottom="5"/>
 

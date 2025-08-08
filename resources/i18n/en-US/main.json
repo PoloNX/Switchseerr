@@ -4,10 +4,17 @@
             "discover": "Discover",
             "movies": "Movies",
             "tvShows": "TV Shows",
-            "search": "Search"
+            "search": "Search",
+            "settings": "Settings"
         },
         "login": {
-            "cookie_expired": "ogin failed, your cookies are invalid or expired. Please re-add the user."
+            "cookie_expired": "ogin failed, your cookies are invalid or expired. Please re-add the user.",
+            "server_add": "Add Server",
+            "sign_in": "Sign In",
+            "server_detail": "Server Detail",
+            "url": "URL",
+            "version": "Version",
+            "servers": "Servers"
         }
     },
 
@@ -27,7 +34,14 @@
             "username": "Username",
             "password": "Password",
             "username_required": "Please enter a username.",
-            "login_failed": "Login failed. Please check your credentials."
+            "login_failed": "Login failed. Please check your credentials.",
+            "plex_not_implemented": "Plex login is not implemented yet. Please use Jellyseerr or Jellyfin for now."
+        },
+        "settings": {
+            "logout": "Logout",
+            "language": "Language",
+            "about": "About",
+            "header_general": "General"
         }
     },
 
@@ -67,7 +81,8 @@
             "number_of_episodes": "Number of Episodes",
             "original_name": "Original Name",
             "status": "Status",
-            "revenue": "Revenue"
+            "revenue": "Revenue",
+            "title": "Media Info"
         },
         "media_preview": {
             "pending": "Pending",
@@ -78,7 +93,9 @@
             "deleted": "Deleted",
             "request": "Request",
             "request_more_content": "Request More Content",
-            "info": "Info"
+            "info": "Info",
+            "overview": "overview",
+            "seasons": "Seasons"
         },
         "request": {
             "success": "Request created successfully!",
@@ -87,7 +104,9 @@
             "select_profile": "Select a quality profile",
             "loading_profiles": "Loading quality profiles...",
             "no_radarr_service": "No Radarr service available",
-            "select_radarr_service": "Select a Radarr service"
+            "select_radarr_service": "Select a Radarr service",
+            "title": "Request Media",
+            "desc": "Request a new media item to be added to the library."
         },
         "carousel": {
             "recently_added": "Recently Added",
@@ -96,7 +115,20 @@
             "popular_tv_shows": "Popular TV Shows",
             "future_movies": "Future Movies",
             "future_tv_shows": "Future TV Shows"
+        },
+        "about": {
+            "title": "Switchseerr",
+            "description_header": "Description",
+            "description_text": "Switchseerr is a Jellyseerr client that allows you to manage your media library across multiple platforms.",
+            "developed_by": "Developed by PoloNX",
+            "gh_repo": "GitHub Repository",
+            "credits": "Credits",
+            "credits_text": "Thanks to the Jellyseerr team for their work on the Jellyseerr project \nThanks to xfangfang for borealis and wiliwili \nThanks to Dragonflylee for Switchfin"
+        },
+        "connection_cell": {
+            "title": "Connection"
         }
+        
     }
 
 

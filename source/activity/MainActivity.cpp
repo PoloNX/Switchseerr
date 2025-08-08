@@ -3,6 +3,7 @@
 #include "tab/MediaTab.hpp"
 #include "view/SvgImage.hpp"
 #include "tab/SearchTab.hpp"
+#include "tab/SettingsTab.hpp"
 
 using namespace brls::literals;
 
@@ -54,6 +55,16 @@ void MainActivity::onContentAvailable() {
     searchTab->setFontSize(18);
     tabFrame->addTab(searchTab, [this]() -> brls::View* {
         return new SearchTab(httpClient, authService);
+    });
+
+    auto* settingsTab = new AutoSidebarItem();
+    settingsTab->setTabStyle(AutoTabBarStyle::ACCENT);
+    settingsTab->setSVGIcon(std::string(BRLS_RESOURCES) + "icon/icon-settings.svg");
+    settingsTab->setSVGActivateIcon(std::string(BRLS_RESOURCES) + "icon/icon-settings-selected.svg");
+    settingsTab->setLabel("main/activity/main/settings"_i18n);
+    settingsTab->setFontSize(18);
+    tabFrame->addTab(settingsTab, []() -> brls::View* {
+        return new SettingsTab();
     });
 }
 

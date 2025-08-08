@@ -27,8 +27,8 @@ void VideoCarousel::doRequest() {
     // Clean up previous carousel items
     carouselBox->clearViews();
 
-    
-    brls::async([this]() {
+    ASYNC_RETAIN
+    brls::async([ASYNC_TOKEN]() {
         // Configure le titre et récupère les données
         configureHeaderTitle();
         auto items = jellyseerr::getMedias(httpClient, serverUrl, type, 20);

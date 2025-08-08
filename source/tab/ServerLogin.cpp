@@ -136,9 +136,17 @@ bool ServerLogin::onSignin() {
             case jellyseerr::ConnectionServer::JELLYFIN:
                 loginSuccess = authService->loginWithJellyfin(username, password);
                 break;
-            case jellyseerr::ConnectionServer::PLEX:
-                loginSuccess = authService->loginWithPlex();
+            case jellyseerr::ConnectionServer::PLEX: {
+                //loginSuccess = authService->loginWithPlex();
+                //throw a message to the user that Plex login is not implemented yet
+                auto dialog = new brls::Dialog("main/tab/server_login/plex_not_implemented"_i18n);
+                dialog->addButton("hints/ok"_i18n, []{});
+                dialog->open();
+                brls::Application::unblockInputs();
+                this->buttonSignin->setState(brls::ButtonState::ENABLED);
+                return false;
                 break;
+            }
             default:
                 brls::Logger::error("ServerLogin: Unknown server type");
                 break;

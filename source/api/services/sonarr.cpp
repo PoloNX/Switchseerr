@@ -10,7 +10,6 @@ bool SonarrService::performRequest(const TvRequest &request)
     nlohmann::json jsonRequest = {
         {"mediaType", "tv"},
         {"mediaId", request.mediaId},
-        {"tvdbId", request.tvdbId},
         {"is4k", this->is4k_},
         {"rootFolder", request.rootFolder},
         {"serverId", id},
@@ -19,11 +18,11 @@ bool SonarrService::performRequest(const TvRequest &request)
         {"seasons", request.selectedSeasons}};
 
     std::string json = jsonRequest.dump();
-    brls::Logger::debug("RadarrService: Performing request with data: {}", json);
+    brls::Logger::debug("SonarrService: Performing request with data: {}", json);
 
     try
     {
-        std::string response = httpClient->post(url, json);
+        std::string response = httpClient->post(url, json);;
 
         nlohmann::json jsonResponse = nlohmann::json::parse(response);
         brls::Logger::debug("RadarrService: Response from request: {}", jsonResponse.dump(4));

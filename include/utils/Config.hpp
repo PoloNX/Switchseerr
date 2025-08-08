@@ -40,18 +40,21 @@ public:
     void addUser(const AppUser& user, const std::string& url);
     bool removeServer(const std::string& url);
     bool removeUser(const int& id);
-    const std::string getUserName() const { return this->user->name;} 
+    bool setLanguage(const std::string& lang) { language = lang; this->save(); return true; }
+
+    const std::string getUserName() const { return this->user->name; }
     const std::string getUrl() const { return this->server_url; }
     const std::vector<AppServer>& getServers() const { return this->servers; }
     const std::vector<AppUser> getUsers(const std::string& id) const;
+    const std::string getLanguage() const { return this->language; }
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(Config, user_id, users, servers, setting);
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(Config, users, servers, setting, language);
 
 private:
     UserIter user;
-    std::string user_id;
     std::string server_url;
     std::vector<AppUser> users;
     std::vector<AppServer> servers;
+    std::string language = "auto";
     nlohmann::json setting = {};
 };

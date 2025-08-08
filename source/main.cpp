@@ -17,18 +17,23 @@
 #include <memory>
 
 int main() {
-    if (!brls::Application::init()) {
-        brls::Logger::error("Failed to initialize Borealis application.");
-        return 1;
-    }
-
     brls::Logger::setLogLevel(brls::LogLevel::LOG_DEBUG);
 
     auto& conf = Config::instance();
     if(!conf.init()) {
         brls::Logger::error("Failed to initialize configuration.");
         return 1;
+    } 
+    brls::Logger::info("Current language: {}", conf.getLanguage());
+    brls::Platform::APP_LOCALE_DEFAULT = conf.getLanguage();
+
+    if (!brls::Application::init()) {
+        brls::Logger::error("Failed to initialize Borealis application.");
+        return 1;
     }
+
+    brls::loadTranslations();
+
 
     brls::Application::createWindow("Switchseerr");
     brls::Application::setGlobalQuit(false);

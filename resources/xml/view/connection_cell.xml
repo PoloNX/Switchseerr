@@ -17,6 +17,6 @@
         marginTop="10"
         marginBottom="10"
         marginLeft="5"
-        text="Server Name"/>  
+        text="@i18n/main/view/connection_cell/title"/>  
 
 </brls:Box>

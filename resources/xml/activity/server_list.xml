@@ -27,7 +27,7 @@
                 <brls:Header
                     width="auto"
                     height="auto"
-                    title="Servers"
+                    title="@i18n/main/activity/login/servers"
                     marginBottom="0px" />
 
                 <brls:Button
@@ -35,7 +35,7 @@
                     style="primary"
                     margin="15"
                     focusable="true"
-                    text="new server" />
+                    text="@i18n/main/activity/login/server_add" />
 
                 <brls:ScrollingFrame
                     grow="1">
@@ -56,18 +56,18 @@
 
                 <brls:Header
                     height="40"
-                    title="server detail" />
+                    title="@i18n/main/activity/login/server_detail" />
 
                 <brls:Box
                     width="100%"
                     axis="column">
 
                     <brls:DetailCell
-                        title="url"
+                        title="@i18n/main/activity/login/url"
                         id="selector/server/urls" />
 
                     <brls:DetailCell
-                        title="version"
+                        title="@i18n/main/activity/login/version"
                         focusable="false"
                         id="server/version" />
 
@@ -83,7 +83,7 @@
                         id="btn/server/signin"
                         style="primary"
                         grow="1.0"
-                        text="signin" />
+                        text="@i18n/main/activity/login/sign_in" />
                 </brls:Box>
 
                 <RecyclingGrid

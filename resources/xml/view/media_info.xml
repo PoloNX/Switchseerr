@@ -41,7 +41,7 @@
                     paddingTop="20">
 
                     <brls:Label
-                        text="Media Info"
+                        text="@i18n/main/view/media_info/title"
                         id="info/title"
                         fontSize="25"/>
 
@@ -68,7 +68,7 @@
                     marginBottom="10">
                     <brls:Button
                         id="info/back_button"
-                        text="Back"
+                        text="@i18n/hints/back"
                         margin="5"/>
 
                 </brls:Box>

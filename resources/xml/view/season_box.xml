@@ -8,21 +8,18 @@
 
     <brls:Label
         id="season/title"
-        text="Season Title"
         fontSize="20"
         marginLeft="20"
         marginRight="10"/>
 
     <brls:Label
         id="season/episodeCount"
-        text="10 Episodes"
         fontSize="12"
         marginLeft="10"
         marginRight="10"/>
 
     <brls:Label
         id="season/airDate"
-        text="Aired on 2023-01-01"
         fontSize="12"
         marginLeft="10"
         marginRight="10"/>

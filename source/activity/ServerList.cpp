@@ -114,6 +114,10 @@ ServerList::ServerList(std::shared_ptr<HttpClient> httpClient) : httpClient(http
     brls::Logger::debug("ServerList: create");
 }   
 
+ServerList::ServerList() : ServerList(std::make_shared<HttpClient>()) {
+    brls::Logger::debug("ServerList: create with default HttpClient");
+}
+
 void ServerList::onContentAvailable() {
     brls::Logger::debug("ServerList: content available");
 
