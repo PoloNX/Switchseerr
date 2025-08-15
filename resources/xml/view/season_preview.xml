@@ -42,7 +42,7 @@
                     marginTop="10"
                     marginBottom="10">
 
-                    <brls:label
+                    <brls:Label
                         id="season/title"
                         fontSize="25"/>
 

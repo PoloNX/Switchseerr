@@ -5,7 +5,11 @@
 
 constexpr std::chrono::milliseconds max_idle_time{60000}; // 60 seconds
 
+#ifdef __SWITCH__
+size_t ThreadPool::max_thread_num = 5;
+#else
 size_t ThreadPool::max_thread_num = std::thread::hardware_concurrency();
+#endif
 
 ThreadPool::ThreadPool() {
     brls::Logger::info("ThreadPool initialized with max threads: {}", max_thread_num);

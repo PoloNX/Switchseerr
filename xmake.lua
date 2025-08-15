@@ -15,15 +15,16 @@ if is_plat("cross") then
     add_repositories("switch-repo https://github.com/PoloNX/switch-repo.git")
     add_requires("switch-repo@borealis", {alias = "borealis"})
     add_requires("deko3d", "libcurl", "switch-repo@zlib", {alias = "zlib"}, "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "fmt")
+    add_defines('BRLS_RESOURCES="romfs:/"')
 else
     add_requires("libcurl", "fmt", "borealis")
     add_requires("xmake-repo@lunasvg", { alias = "lunasvg" })
     add_requires("xmake-repo@plutovg", { alias = "plutovg" })
+    add_defines('BRLS_RESOURCES="resources/"')
 end
 
 
 add_defines(
-    'BRLS_RESOURCES="resources/"',
     "YG_ENABLE_EVENTS",
     "NOMINMAX"
 )
@@ -46,7 +47,7 @@ target("Switchseerr")
         
         set_values("switch.name", "Switchseerr")
         set_values("switch.author", "PoloNX")
-        set_values("switch.version", "$(version)")
+        set_values("switch.version", "1.0.0")
         set_values("switch.romfs", "resources")
         add_packages("borealis", "deko3d", "zlib", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "libcurl", "fmt")
     else

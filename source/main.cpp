@@ -13,10 +13,22 @@
 #include "view/SvgImage.hpp"
 #include "tab/ServerLogin.hpp"
 
+#ifdef __SWITCH__
+#include <switch.h>
+#endif
+
 #include <borealis.hpp>
 #include <memory>
 
+void init();
+void exit();
+
+
 int main() {
+
+    init();
+
+
     brls::Logger::setLogLevel(brls::LogLevel::LOG_DEBUG);
 
     auto& conf = Config::instance();
@@ -87,6 +99,46 @@ int main() {
 
     ThreadPool::instance().stop();
 
+    exit();
+
+
     return 0;
 
+}
+
+void init() {
+#ifdef __SWITCH__
+    setsysInitialize();
+    socketInitializeDefault();
+    nxlinkStdio();
+    plInitialize(PlServiceType_User);
+    nsInitialize();
+    pmdmntInitialize();
+    pminfoInitialize();
+    splInitialize();
+    fsInitialize();
+    romfsInit();
+    setInitialize();
+    psmInitialize();
+    nifmInitialize(NifmServiceType_User);
+    lblInitialize();
+#endif
+}
+
+void exit() {
+#ifdef __SWITCH__
+    lblExit();
+    nifmExit();
+    psmExit();
+    setExit();
+    romfsExit();
+    splExit();
+    pminfoExit();
+    pmdmntExit();
+    nsExit();
+    setsysExit();
+    fsExit();
+    plExit();
+    socketExit();
+#endif
 }

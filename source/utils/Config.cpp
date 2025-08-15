@@ -59,7 +59,7 @@ std::string Config::configDir() {
 #elif __APPLE__
     return fmt::format("{}/Library/Application Support/{}", getenv("HOME"), "switchseerr");
 #elif __SWITCH__
-    return fmt::format("romfs:/config/switchseerr");
+    return fmt::format("sdmc:/config/switchseerr");
 #endif
 }
 
