@@ -22,11 +22,15 @@ RequestView::RequestView(std::shared_ptr<HttpClient> httpClient, MediaItem media
     }
     else
     {
-        content->setHeight((std::min)(700.0f, 450.0f + 100.0f * mediaItem.seasons.size() + 50));
+        content->setHeight((std::min)(700.0f, (this->authService->getAdvancedRequest() ? 400.0f : 150.0f) + 100.0f * mediaItem.seasons.size() + 50));
         seasonFrame->setHeight((std::min)(250.0f, 100.0f * mediaItem.seasons.size()));
         loadSeasons();
     }
 
+    if(!authService->getAdvancedRequest()) {
+        brls::Application::giveFocus(requestButton);
+        detailsBox->setVisibility(brls::Visibility::GONE);
+    }
     loadProfiles();
     loadImage();
 }
@@ -247,7 +251,7 @@ void RequestView::loadProfiles()
                 this->serverHeader->setVisibility(brls::Visibility::GONE);
                 this->qualityHeader->setVisibility(brls::Visibility::GONE);
                 this->qualityCell->setVisibility(brls::Visibility::GONE);
-                this->setHeight(250);
+                this->setHeight(this->authService->getAdvancedRequest() ? 250 : 200);
             });
         } 
         
@@ -259,7 +263,7 @@ void RequestView::loadProfiles()
                 loadServerProfiles();
                 loadQualityProfiles();
                 if(this->mediaItem.type == MediaType::Movie) {
-                    this->content->setHeight(450);
+                    this->content->setHeight(this->authService->getAdvancedRequest() ? 450 : 200);
                 }
                 this->requestButton->setStyle(&brls::BUTTONSTYLE_PRIMARY);
                 loadButtonActions();

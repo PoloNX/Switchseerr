@@ -66,6 +66,8 @@ public:
                 Config::instance().removeUser(u.id);
                 this->parent->onUser(u.server_url);
             });
+            dialog->addButton("hints/no"_i18n, []() {});
+            dialog->open();
             return true;
         });
 
@@ -165,6 +167,8 @@ void ServerList::willAppear(bool resetState) {
                     this->sidebarServers->removeView(item);
                 }
             });
+            dialog->addButton("hints/no"_i18n, []() {});
+            dialog->open();
             return true;
         });
 

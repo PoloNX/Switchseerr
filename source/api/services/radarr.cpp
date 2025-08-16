@@ -21,8 +21,7 @@ bool RadarrService::performRequest(const MovieRequest &request)
         {"is4k", this->is4k_},
         {"rootFolder", request.rootFolder},
         {"serverId", id},
-        {"profileId", request.profileId},
-        {"userId", request.userId}};
+        {"profileId", request.profileId}};
     
     std::string json = jsonRequest.dump();
     brls::Logger::debug("RadarrService: Performing request with data: {}", json);

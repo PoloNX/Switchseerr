@@ -43,6 +43,8 @@ private:
     BRLS_BIND(brls::Label, titleLabel, "request/title");
     BRLS_BIND(brls::Label, mediaLabel, "request/media");
 
+    // Details
+    BRLS_BIND(brls::Box, detailsBox, "request/details");
     BRLS_BIND(brls::Header, serverHeader, "request/server/header");
     BRLS_BIND(brls::DetailCell, serverCell, "request/server");
     BRLS_BIND(brls::Header, qualityHeader, "request/quality/header");

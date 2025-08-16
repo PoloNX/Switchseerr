@@ -14,7 +14,6 @@ bool SonarrService::performRequest(const TvRequest &request)
         {"rootFolder", request.rootFolder},
         {"serverId", id},
         {"profileId", request.profileId},
-        {"userId", request.userId},
         {"seasons", request.selectedSeasons}};
 
     std::string json = jsonRequest.dump();

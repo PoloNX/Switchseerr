@@ -121,7 +121,8 @@
                     axis="column"
                     width="auto"
                     height="auto"
-                    margin="20">
+                    margin="20"
+                    id="request/details">
 
                     <brls:Header
                         id="request/server/header"

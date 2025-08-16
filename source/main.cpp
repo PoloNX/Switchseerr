@@ -13,6 +13,8 @@
 #include "view/SvgImage.hpp"
 #include "tab/ServerLogin.hpp"
 
+#include <curl/curl.h>
+
 #ifdef __SWITCH__
 #include <switch.h>
 #endif
@@ -23,11 +25,8 @@
 void init();
 void exit();
 
-
 int main() {
-
     init();
-
 
     brls::Logger::setLogLevel(brls::LogLevel::LOG_DEBUG);
 
@@ -101,9 +100,7 @@ int main() {
 
     exit();
 
-
     return 0;
-
 }
 
 void init() {
@@ -123,6 +120,7 @@ void init() {
     nifmInitialize(NifmServiceType_User);
     lblInitialize();
 #endif
+    curl_global_init(CURL_GLOBAL_DEFAULT);
 }
 
 void exit() {
@@ -141,4 +139,5 @@ void exit() {
     plExit();
     socketExit();
 #endif
+    curl_global_cleanup();
 }
