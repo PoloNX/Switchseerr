@@ -29,6 +29,15 @@ add_defines(
     "NOMINMAX"
 )
 
+rule("install_resources")
+    local resourcesInstalled = false 
+    after_install(function(target)
+        if (not resourcesInstalled) then
+            os.vcp("resources", path.join(target:installdir(), "bin"))
+            resourcesInstalled = true
+        end
+    end)
+
 target("Switchseerr")
     set_kind("binary")
     add_files("source/***.cpp")
@@ -51,6 +60,17 @@ target("Switchseerr")
         set_values("switch.romfs", "resources")
         add_packages("borealis", "deko3d", "zlib", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "libcurl", "fmt")
     else
+        if is_plat("macos") then 
+            add_rules("xcode.application")
+            set_values("xcode.bundle_identifier", "com.polonx.switchseerr")
+            set_values("xcode.bundle_version", "1.0.0")
+            add_files("resources/Info.plist")
+        elseif is_plat("windows") then
+            -- Windows specific rules (icon)
+            add_files("source/resources.rc")
+        end
+
+        add_rules("install_resources")
         add_packages("libcurl", "nlohmann_json", "fmt", "borealis", "lunasvg", "plutovg")
     end
 
