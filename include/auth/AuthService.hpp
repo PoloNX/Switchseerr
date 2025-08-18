@@ -7,7 +7,7 @@
 #include "utils/Config.hpp"
 #include "http/HttpClient.hpp"
 
-enum class Permission {
+enum class JellyseerrPermission {
     NONE = 0,
     ADMIN = 2,
     MANAGE_SETTINGS = 4,
@@ -66,10 +66,10 @@ public:
     int getUserId() const { return currentUser.id; }
 
     bool getAdvancedRequest() const { return advancedRequest; }
-    std::vector<Permission> getUserPermissions() const { return userPermissions; }
+    std::vector<JellyseerrPermission> getUserPermissions() const { return userPermissions; }
 private:
     bool advancedRequest = false;
-    std::vector<Permission> userPermissions;
+    std::vector<JellyseerrPermission> userPermissions;
 
     std::shared_ptr<HttpClient> client;
     std::string serverUrl;

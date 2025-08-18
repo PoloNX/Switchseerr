@@ -18,6 +18,7 @@ struct QualityProfile {
     int id;
     std::string name;
     std::vector<RootFolder> rootFolders;
+    bool defaultProfile;
 };
 
 class BaseService {

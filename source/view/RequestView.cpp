@@ -153,7 +153,13 @@ void RequestView::loadButtonActions()
 
 void RequestView::loadQualityProfiles()
 {
-    this->selectedQualityProfile = this->selectedService->getQualityProfiles()[0];
+    for (auto profile : this->selectedService->getQualityProfiles()) {
+        brls::Logger::debug("RequestView: Quality profile found: {} (ID: {}) default : {}", profile.name, profile.id, profile.defaultProfile);
+        if (profile.defaultProfile) {
+            this->selectedQualityProfile = profile;
+            break;
+        }
+    }
 
     std::vector<std::string> profileNames;
     for (const auto &profile : selectedService->getQualityProfiles())
@@ -162,7 +168,9 @@ void RequestView::loadQualityProfiles()
     }
 
     this->qualityCell->setFocusable(true);
-    this->qualityCell->setText(profileNames.empty() ? "main/view/request/no_profiles"_i18n : profileNames[0]);
+    // Set the text of the quality cell to the names of the default profile selected before
+    int index = std::distance(profileNames.begin(), std::find(profileNames.begin(), profileNames.end(), this->selectedQualityProfile.name));
+    this->qualityCell->setText(profileNames.empty() ? "main/view/request/no_profiles"_i18n : profileNames[index]);
 
     if (this->selectedService->getQualityProfiles().empty())
         return;
@@ -256,8 +264,16 @@ void RequestView::loadProfiles()
         } 
         
         if(!availableServers.empty()) {
-            this->selectedQualityProfile = availableServers[0]->getQualityProfiles()[0]; // Default to the first profile
-            this->selectedService = availableServers[0];  
+            // Select one with the default tag (isDefault())
+            for (auto service : availableServers) {
+                if (service->isDefault()) {
+                    this->selectedService = service;
+                    break;
+                }
+            }
+
+
+
             brls::sync([ASYNC_TOKEN] {
                 ASYNC_RELEASE
                 loadServerProfiles();

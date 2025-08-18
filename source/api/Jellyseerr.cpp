@@ -302,6 +302,10 @@ namespace jellyseerr {
                 QualityProfile profile;
                 profile.id = item["id"].get<int>();
                 profile.name = item["name"].get<std::string>();
+                profile.defaultProfile = false;
+                if (profile.id == profilesData["server"]["activeProfileId"].get<int>()) {
+                    profile.defaultProfile = true;
+                }
 
                 if(item.contains("rootFolders") && item["rootFolders"].is_array()) {
                     for (const auto& folder : item["rootFolders"]) {
@@ -380,6 +384,10 @@ namespace jellyseerr {
                 QualityProfile profile;
                 profile.id = item["id"].get<int>();
                 profile.name = item["name"].get<std::string>();
+                profile.defaultProfile = false;
+                if (profile.id == profilesData["server"]["activeProfileId"].get<int>()) {
+                    profile.defaultProfile = true;
+                }
 
                 if(item.contains("rootFolders") && item["rootFolders"].is_array()) {
                     for (const auto& folder : item["rootFolders"]) {

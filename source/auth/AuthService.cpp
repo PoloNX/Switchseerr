@@ -240,39 +240,39 @@ void AuthService::extractPermissions(int permissionValue) {
 
     struct Perm {
         int value;
-        Permission perm;
+        JellyseerrPermission perm;
     };
 
     std::vector<Perm> allPerms = {
-        {2, Permission::ADMIN},
-        {4, Permission::MANAGE_SETTINGS},
-        {8, Permission::MANAGE_USERS},
-        {16, Permission::MANAGE_REQUESTS},
-        {32, Permission::REQUEST},
-        {64, Permission::VOTE},
-        {128, Permission::AUTO_APPROVE},
-        {256, Permission::AUTO_APPROVE_MOVIE},
-        {512, Permission::AUTO_APPROVE_TV},
-        {1024, Permission::REQUEST_4K},
-        {2048, Permission::REQUEST_4K_MOVIE},
-        {4096, Permission::REQUEST_4K_TV},
-        {8192, Permission::REQUEST_ADVANCED},
-        {16384, Permission::REQUEST_VIEW},
-        {32768, Permission::AUTO_APPROVE_4K},
-        {65536, Permission::AUTO_APPROVE_4K_MOVIE},
-        {131072, Permission::AUTO_APPROVE_4K_TV},
-        {262144, Permission::REQUEST_MOVIE},
-        {524288, Permission::REQUEST_TV},
-        {1048576, Permission::MANAGE_ISSUES},
-        {2097152, Permission::VIEW_ISSUES},
-        {4194304, Permission::CREATE_ISSUES},
-        {8388608, Permission::AUTO_REQUEST},
-        {16777216, Permission::AUTO_REQUEST_MOVIE},
-        {33554432, Permission::AUTO_REQUEST_TV},
-        {67108864, Permission::RECENT_VIEW},
-        {134217728, Permission::WATCHLIST_VIEW},
-        {268435456, Permission::MANAGE_BLACKLIST},
-        {1073741824, Permission::VIEW_BLACKLIST},
+        {2, JellyseerrPermission::ADMIN},
+        {4, JellyseerrPermission::MANAGE_SETTINGS},
+        {8, JellyseerrPermission::MANAGE_USERS},
+        {16, JellyseerrPermission::MANAGE_REQUESTS},
+        {32, JellyseerrPermission::REQUEST},
+        {64, JellyseerrPermission::VOTE},
+        {128, JellyseerrPermission::AUTO_APPROVE},
+        {256, JellyseerrPermission::AUTO_APPROVE_MOVIE},
+        {512, JellyseerrPermission::AUTO_APPROVE_TV},
+        {1024, JellyseerrPermission::REQUEST_4K},
+        {2048, JellyseerrPermission::REQUEST_4K_MOVIE},
+        {4096, JellyseerrPermission::REQUEST_4K_TV},
+        {8192, JellyseerrPermission::REQUEST_ADVANCED},
+        {16384, JellyseerrPermission::REQUEST_VIEW},
+        {32768, JellyseerrPermission::AUTO_APPROVE_4K},
+        {65536, JellyseerrPermission::AUTO_APPROVE_4K_MOVIE},
+        {131072, JellyseerrPermission::AUTO_APPROVE_4K_TV},
+        {262144, JellyseerrPermission::REQUEST_MOVIE},
+        {524288, JellyseerrPermission::REQUEST_TV},
+        {1048576, JellyseerrPermission::MANAGE_ISSUES},
+        {2097152, JellyseerrPermission::VIEW_ISSUES},
+        {4194304, JellyseerrPermission::CREATE_ISSUES},
+        {8388608, JellyseerrPermission::AUTO_REQUEST},
+        {16777216, JellyseerrPermission::AUTO_REQUEST_MOVIE},
+        {33554432, JellyseerrPermission::AUTO_REQUEST_TV},
+        {67108864, JellyseerrPermission::RECENT_VIEW},
+        {134217728, JellyseerrPermission::WATCHLIST_VIEW},
+        {268435456, JellyseerrPermission::MANAGE_BLACKLIST},
+        {1073741824, JellyseerrPermission::VIEW_BLACKLIST},
     };
 
     for (const auto& p : allPerms) {
@@ -282,7 +282,7 @@ void AuthService::extractPermissions(int permissionValue) {
         }
         else if (permissionValue & p.value) {
             userPermissions.push_back(p.perm);
-            if (p.perm == Permission::REQUEST_ADVANCED) {
+            if (p.perm == JellyseerrPermission::REQUEST_ADVANCED) {
                 advancedRequest = true;
             }
         }
@@ -298,7 +298,7 @@ void AuthService::extractPermissions(int permissionValue) {
     brls::Logger::debug("AuthService: advancedRequest {}", advancedRequest);
 
     if (userPermissions.empty()) {
-        userPermissions.push_back(Permission::NONE);
+        userPermissions.push_back(JellyseerrPermission::NONE);
     }
 }
 

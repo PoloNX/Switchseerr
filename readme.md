@@ -89,6 +89,7 @@ If you want to run it on your switch with nxlink you can use:
 ## Todo
 
 ### Platform Support
+- [x] **Nintendo Switch** - Add Switch platform support
 - [ ] **PlayStation 4** - Add PS4 platform support
 - [ ] **Apple TV** - Add Apple TV platform support  
 - [ ] **PlayStation Vita** - Add PSV platform support
