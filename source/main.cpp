@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <thread>
 
 #include "activity/ServerList.hpp"
 #include "http/HttpClient.hpp"
@@ -12,6 +13,10 @@
 #include "view/AutoTabFrame.hpp"
 #include "view/SvgImage.hpp"
 #include "tab/ServerLogin.hpp"
+
+#ifdef _WIN32
+#include "utils/WindowsIcon.hpp"
+#endif
 
 #include <curl/curl.h>
 
@@ -47,6 +52,15 @@ int main() {
 
 
     brls::Application::createWindow("Switchseerr");
+    
+#ifdef _WIN32
+    // Set the application icon for taskbar and window in a separate thread
+    std::thread iconThread([]() {
+        SetApplicationIcon();
+    });
+    iconThread.detach();
+#endif
+    
     brls::Application::setGlobalQuit(false);
     brls::Application::getPlatform()->getInputManager()->getKeyboardKeyStateChanged()->subscribe(
         [](brls::KeyState state) {

@@ -91,6 +91,7 @@ bool AuthService::loginWithJellyfin(const std::string& username, const std::stri
 bool AuthService::loginWithPlex() {
     brls::Logger::debug("AuthService: Attempting login with Plex token");
     // todo : implement Plex login logic
+    return false;
 }
 
 bool AuthService::loginWithLocal(const std::string& email, const std::string& password) {

@@ -1,1 +1,31 @@
-icon ICON "../resources/img/jellyseerr_icon.png"
+#include <winver.h>
+#include "../include/utils/resource.h"
+
+IDI_ICON ICON  "../resources/img/jellyseerr_icon.ico"
+
+1 VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+ FILEFLAGS 0x0L
+ FILEOS VOS__WINDOWS32
+ FILETYPE VFT_APP
+ FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904B0"
+        BEGIN
+            VALUE "FileDescription", "Switchseerr for Windows"
+            VALUE "LegalCopyright", "PoloNX (C) Copyright 2025"
+            VALUE "OriginalFilename", "Switchseerr.exe"
+            VALUE "ProductName", "Switchseerr"
+            VALUE "ProductVersion", "1.0.0.1"
+            VALUE "FileVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
