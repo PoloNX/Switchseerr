@@ -33,7 +33,11 @@ rule("install_resources")
     local resourcesInstalled = false 
     after_install(function(target)
         if (not resourcesInstalled) then
-            os.vcp("resources", path.join(target:installdir(), "bin"))
+            if is_plat("macosx") then 
+                os.vcp("resources", path.join(target:installdir(), "Contents/Resources"))
+            else
+                os.vcp("resources", path.join(target:installdir(), "bin"))
+            end
             resourcesInstalled = true
         end
     end)
@@ -60,11 +64,20 @@ target("Switchseerr")
         set_values("switch.romfs", "resources")
         add_packages("borealis", "deko3d", "zlib", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "libcurl", "fmt")
     else
-        if is_plat("macos") then 
+        if is_plat("macosx") then 
             add_rules("xcode.application")
             set_values("xcode.bundle_identifier", "com.polonx.switchseerr")
             set_values("xcode.bundle_version", "1.0.0")
             add_files("resources/Info.plist")
+            after_build(function(target)
+                local bundle_path = target:targetdir() .. "/Switchseerr.app"
+                local resources_path = bundle_path .. "/Contents/Resources"
+                local contents_path = bundle_path .. "/Contents"
+                os.mkdir(resources_path)
+                os.vcp("resources", resources_path)
+                os.vcp("resources/img/AppIcon.icns", resources_path)
+                os.vcp("resources/Info.plist", path.join(contents_path, "Info.plist"))
+            end)
         elseif is_plat("windows") then
             -- Windows specific rules (icon)
             add_files("source/resources.rc")
