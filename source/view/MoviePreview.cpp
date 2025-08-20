@@ -103,7 +103,7 @@ void MoviePreview::downloadPosterImage() {
     auto& threadPool = ThreadPool::instance();
     ASYNC_RETAIN
     threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
-        std::vector<unsigned char> imageBuffer = client->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w300_and_h450_face{}", mediaItem.posterPath));
+        std::vector<unsigned char> imageBuffer = client->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w780{}", mediaItem.posterPath));
         if(!imageBuffer.empty()) { 
             brls::sync([ASYNC_TOKEN, imageBuffer = std::move(imageBuffer)] {
                 ASYNC_RELEASE
@@ -138,7 +138,7 @@ void MoviePreview::downloadBackdropImage() {
 
     ASYNC_RETAIN
     threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
-        std::vector<unsigned char> imageBuffer = httpClient->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w1280_and_h720_face{}", mediaItem.backdropPath));
+        std::vector<unsigned char> imageBuffer = httpClient->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w1920_and_h1080_face{}", mediaItem.backdropPath));
         if(!imageBuffer.empty()) { 
             brls::sync([ASYNC_TOKEN, imageBuffer = std::move(imageBuffer)] {
                 ASYNC_RELEASE

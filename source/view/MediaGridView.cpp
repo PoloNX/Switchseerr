@@ -55,7 +55,7 @@ RecyclingGridItem* MediaGridData::cellForRow(RecyclingView* recycler, size_t ind
 
     threadPool.submit([this, cell, index](std::shared_ptr<HttpClient> client) {
         brls::Logger::verbose("MediaGridData: Downloading image for item: {}", items[index].title);
-        auto imageBuffer = client->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w300_and_h450_face{}", items[index].posterPath));
+        auto imageBuffer = client->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w780{}", items[index].posterPath));
         if (!imageBuffer.empty()) {
             brls::sync([cell, imageBuffer = std::move(imageBuffer), index, this]() {
                 try {

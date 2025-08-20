@@ -130,7 +130,7 @@ void VideoCarousel::loadVideoCardImage(VideoCardCell* videoCard, const MediaItem
         brls::Logger::verbose("VideoCarousel: Downloading image for item: {}", item.title);
 
         auto imageBuffer = client->downloadImageToBuffer(
-            fmt::format("https://image.tmdb.org/t/p/w300_and_h450_face{}", item.posterPath)
+            fmt::format("https://image.tmdb.org/t/p/w780{}", item.posterPath)
         );
 
         if (!imageBuffer.empty()) {
