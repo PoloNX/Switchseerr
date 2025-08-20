@@ -145,7 +145,7 @@ void TvPreview::downloadPosterImage() {
     auto& threadPool = ThreadPool::instance();
     ASYNC_RETAIN
     threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
-        std::vector<unsigned char> imageBuffer = client->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w780", mediaItem.posterPath));
+        std::vector<unsigned char> imageBuffer = client->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w780{}", mediaItem.posterPath));
         if(!imageBuffer.empty()) { 
             brls::sync([ASYNC_TOKEN, imageBuffer = std::move(imageBuffer)] {
                 ASYNC_RELEASE
