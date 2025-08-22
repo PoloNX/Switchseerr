@@ -67,7 +67,7 @@ MoviePreview::MoviePreview(std::shared_ptr<HttpClient> httpClient, std::shared_p
 void MoviePreview::willAppear(bool resetState) {
     brls::Logger::debug("MoviePreview: willAppear called");
 
-    if(mediaItem.status != MediaStatus::Available) {
+    if(mediaItem.status != MediaStatus::Available && mediaItem.status != MediaStatus::Pending && mediaItem.status != MediaStatus::Processing) {
         auto requestButton = new brls::Button();
         if (mediaItem.status != MediaStatus::PartiallyAvailable) {
             requestButton->setText("main/view/media_preview/request"_i18n);
