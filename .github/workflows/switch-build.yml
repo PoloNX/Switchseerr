@@ -39,29 +39,8 @@ jobs:
     - name: Update xmake repository
       run: xmake repo --update --root
 
-    # Fetch xmake dephash
-    - name: Retrieve dependencies hash
-      id: dep_hash
-      run: echo "hash=$(xmake l utils.ci.packageskey)" >> $GITHUB_OUTPUT
-
-    # Cache xmake dependencies
-    - name: Restore cached xmake dependencies
-      id: restore-depcache
-      uses: actions/cache/restore@v4
-      with:
-        path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
-        key: Switch-${{ matrix.arch }}-${{ matrix.confs.mode }}${{ matrix.confs.cache_key }}-${{ steps.dep_hash.outputs.hash }}-W${{ steps.cache_key.outputs.key }}
-      
     - name: Configure xmake and install dependencies
       run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} -p cross --ccache=n --yes --root
-
-    # Save dependencies
-    - name: Save cached xmake dependencies
-      if: ${{ !steps.restore-depcache.outputs.cache-hit }}
-      uses: actions/cache/save@v4
-      with:
-        path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
-        key: ${{ steps.restore-depcache.outputs.cache-primary-key }}
 
     - name: Build Switchseerr
       run: xmake --yes --root
