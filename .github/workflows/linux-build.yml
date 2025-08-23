@@ -1,0 +1,86 @@
+name: Linux Build
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        arch: [x86_64]
+        mode: [debug, release]
+
+    runs-on: ${{ matrix.os }}
+    if: ${{ !contains(github.event.head_commit.message, 'ci skip') }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Install system dependencies
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install mesa-common-dev
+
+    # Force xmake to a specific folder (for cache)
+    - name: Set xmake env
+      run: echo "XMAKE_GLOBALDIR=${{ runner.workspace }}/xmake-global" >> $GITHUB_ENV
+    
+    - name: Setup xmake
+      uses: xmake-io/github-action-setup-xmake@v1
+      with:
+        actions-cache-folder: .xmake-cache-W${{ steps.cache_key.outputs.key }}
+
+    # Update xmake repository (in order to have the file that will be cached)
+    - name: Update xmake repository
+      run: xmake repo --update
+
+    # Fetch xmake dephash
+    - name: Retrieve dependencies hash
+      id: dep_hash
+      run: echo "hash=$(xmake l utils.ci.packageskey)" >> $GITHUB_OUTPUT
+
+    # Cache xmake dependencies
+    - name: Restore cached xmake dependencies
+      id: restore-depcache
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
+        key: Linux-${{ matrix.arch }}-${{ matrix.confs.mode }}${{ matrix.confs.cache_key }}-${{ steps.dep_hash.outputs.hash }}-W${{ steps.cache_key.outputs.key }}
+      
+    - name: Configure xmake and install dependencies
+      run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --ccache=n --yes
+
+    # Save dependencies
+    - name: Save cached xmake dependencies
+      if: ${{ !steps.restore-depcache.outputs.cache-hit }}
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ env.XMAKE_GLOBALDIR }}/.xmake/packages
+        key: ${{ steps.restore-depcache.outputs.cache-primary-key }}
+
+    - name: Build Switchseerr
+      run: xmake --yes
+
+    - name: Install Switchseerr
+      run: xmake install -o out
+
+    - name: "Set PACKAGE_NAME variable"
+      run: echo "PACKAGE_NAME=linux_${{ matrix.arch }}_${{ matrix.mode }}.zip" >> $GITHUB_ENV
+      shell: bash
+
+    - name: Archive result
+      uses: ihiroky/archive-action@v1
+      with:
+        root_dir: out
+        file_path: ${{ env.PACKAGE_NAME }}
+        verbose: true
+    
+    - uses: actions/upload-artifact@v4
+      with:
+        name: Switchseerr-${{ matrix.arch }}-${{ matrix.mode }}
+        path: ${{ env.PACKAGE_NAME }}
+
