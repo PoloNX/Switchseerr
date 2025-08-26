@@ -34,7 +34,7 @@ add_defines(
 option("install")
     set_default(false)
     set_showmenu(true)
-    add_defines('BRLS_RESOURCES="/usr/share/switchseerr/"')
+    add_defines('BRLS_RESOURCES="/usr/share/switchseerr/resources/"')
 
 rule("install_resources")
     local resourcesInstalled = false 
