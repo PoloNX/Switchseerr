@@ -26,9 +26,8 @@ build() {
 }
 
 package() {
-    cd "$srcdir/$pkgname"  # Supprimé -$pkgver
+    cd "$srcdir/$pkgname"  
     
-    # Installation du binaire
     xmake install --installdir="$pkgdir/usr" --root
 
     install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
@@ -42,15 +41,11 @@ package() {
         cp -r resources/* "$pkgdir/usr/share/$pkgname/resources/"
     fi
 
-    # Fichier .desktop (optionnel)
     if [ -f "platform/linux/$pkgname.desktop" ]; then
         install -Dm644 "platform/linux/$pkgname.desktop" \
             "$pkgdir/usr/share/applications/$pkgname.desktop"
     fi
     
-    # Icône (optionnelle)
-    if [ -f "resources/img/jellyseerr_icon.png" ]; then
-        install -Dm644 "resources/img/jellyseerr_icon.png" \
-            "$pkgdir/usr/share/pixmaps/$pkgname.png"
-    fi
+    install -Dm644 "resources/img/jellyseerr_icon_128.png" \
+        "$pkgdir/usr/share/icons/hicolor/128x128/apps/switchseerr.png"
 }
