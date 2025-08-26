@@ -19,10 +19,14 @@ if is_plat("cross") then
     add_requires("deko3d", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "fmt")
 
 else
-    add_requires("libcurl", "fmt", "borealis")
+    if get_config("install") then
+        add_requires("borealis", {config = {resources_dir = "/usr/share/switchseerr"}})
+    else
+        add_requires("borealis")
+    end
+    add_requires("libcurl", "fmt")
     add_requires("xmake-repo@lunasvg", { alias = "lunasvg" })
     add_requires("xmake-repo@plutovg", { alias = "plutovg" })
-
 end
 
 
@@ -34,7 +38,8 @@ add_defines(
 option("install")
     set_default(false)
     set_showmenu(true)
-    add_defines('BRLS_RESOURCES="/usr/share/switchseerr/resources/"')
+
+
 
 rule("install_resources")
     local resourcesInstalled = false 
@@ -55,15 +60,15 @@ target("Switchseerr")
     add_includedirs("include")
     set_version("1.0.0")
 
-    set_options("install")
-
-    if not has_config("install") then 
-        if is_plat("switch") then 
+    if get_config("install") then
+        add_defines('BRLS_RESOURCES="/usr/share/switchseerr/resources/"')
+    else 
+        if is_plat("cross") then
             add_defines('BRLS_RESOURCES="romfs:/"')
-        else 
-            add_defines('BRLS_RESOURCES="resources/"')
-        end 
-    end
+        else
+            add_defines('BRLS_RESOURCES="./resources/"')    
+        end
+    end 
 
     add_configfiles("include/utils/Constants.hpp.in", {prefixdir = "include/utils"})
     add_includedirs("$(builddir)/include")
