@@ -41,7 +41,7 @@ int main() {
         return 1;
     } 
 
-    brls::Logger::info("Brls resources folder : {}", BRLS_ASSET(""));
+    brls::Logger::info("Brls resources folder : {}", BRLS_RESOURCES);
 
     brls::Logger::info("Current language: {}", conf.getLanguage());
     brls::Platform::APP_LOCALE_DEFAULT = conf.getLanguage();
