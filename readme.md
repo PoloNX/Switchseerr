@@ -35,10 +35,10 @@
 
 <details>
     <summary>More screenshots</summary>
-    <img src="https://raw.githubusercontent.com/PoloNX/Switchseerr/master/screenshots/1.png" alt="Screenshot 1">
-    <img src="https://raw.githubusercontent.com/PoloNX/Switchseerr/master/screenshots/2.png" alt="Screenshot 2">
-    <img src="https://raw.githubusercontent.com/PoloNX/Switchseerr/master/screenshots/3.png" alt="Screenshot 3">
-    <img src="https://raw.githubusercontent.com/PoloNX/Switchseerr/master/screenshots/4.png" alt="Screenshot 4">
+    <img src="https://raw.githubusercontent.com/PoloNX/Switchseerr/master/screenshots/2.png" alt="Screenshot 1">
+    <img src="https://raw.githubusercontent.com/PoloNX/Switchseerr/master/screenshots/3.png" alt="Screenshot 2">
+    <img src="https://raw.githubusercontent.com/PoloNX/Switchseerr/master/screenshots/4.png" alt="Screenshot 3">
+    <img src="https://raw.githubusercontent.com/PoloNX/Switchseerr/master/screenshots/5.png" alt="Screenshot 4">
 </details>
 
 ## How to build

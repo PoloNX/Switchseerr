@@ -1,4 +1,3 @@
-# Maintainer: Your Name <your.email@example.com>
 pkgname=switchseerr
 pkgver=1.0.0
 pkgrel=1
@@ -8,20 +7,18 @@ url="https://github.com/PoloNX/switchseerr"
 license=('MIT')
 depends=('curl' 'fmt')
 makedepends=('xmake' 'git')
-source=("$pkgname::git+https://github.com/PoloNX/switchseerr.git#branch=master")  # Changé pour main
+source=("$pkgname::git+https://github.com/PoloNX/switchseerr.git#branch=master")  
 sha256sums=('SKIP')
 
 build() {
-    cd "$srcdir/$pkgname"  # Supprimé -$pkgver
+    cd "$srcdir/$pkgname"  
     
     export CFLAGS="$CFLAGS -fPIC"
     export CXXFLAGS="$CXXFLAGS -fPIC"
     export LDFLAGS="$LDFLAGS -Wl,-z,relro,-z,now"
 
-    # Configuration xmake
     xmake config --mode=release --plat=linux --install=y --yes
     
-    # Compilation
     xmake build
 }
 
