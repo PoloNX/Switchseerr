@@ -3,36 +3,45 @@ pkgname=switchseerr
 pkgver=1.0.0
 pkgrel=1
 pkgdesc="A third-party client for Jellyseerr for multiple platforms"
-arch=('$CARCH')
-url="https://github.com/PoloNX/switchseerr"  # Remplacez par votre URL
-license=('MIT')  # Adaptez selon votre licence
+arch=('x86_64')
+url="https://github.com/PoloNX/switchseerr"
+license=('MIT')
 depends=('curl' 'fmt')
-makedepends=('xmake' 'git', 'lunasvg', 'plutovg')
-source=("$pkgname::git+https://github.com/PoloNX/switchseerr.git#tag=v$pkgver")
+makedepends=('xmake' 'git')
+source=("$pkgname::git+https://github.com/PoloNX/switchseerr.git#branch=master")  # Changé pour main
 sha256sums=('SKIP')
 
 build() {
-    cd "$srcdir/$pkgname-$pkgver"
+    cd "$srcdir/$pkgname"  # Supprimé -$pkgver
     
+    export CFLAGS="$CFLAGS -fPIC"
+    export CXXFLAGS="$CXXFLAGS -fPIC"
+    export LDFLAGS="$LDFLAGS -Wl,-z,relro,-z,now"
+
     # Configuration xmake
-    xmake config --mode=release --plat=linux --arch=x86_64 --yes
+    xmake config --mode=release --plat=linux --install=y --yes
     
     # Compilation
     xmake build
 }
 
 package() {
-    cd "$srcdir/$pkgname-$pkgver"
+    cd "$srcdir/$pkgname"  # Supprimé -$pkgver
     
     # Installation du binaire
-    xmake install --installdir="$pkgdir/usr"
-    
-    # Installation des ressources si nécessaire
-    if [ -d "resources" ]; then
-        install -dm755 "$pkgdir/usr/share/$pkgname"
-        cp -r resources/* "$pkgdir/usr/share/$pkgname/"
+    xmake install --installdir="$pkgdir/usr" --root
+
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+    if [ -d "$pkgdir/usr/bin/resources" ]; then
+        rm -rf "$pkgdir/usr/bin/resources"
     fi
-    
+
+    if [ -d "resources" ]; then
+        install -dm755 "$pkgdir/usr/share/$pkgname/resources/"
+        cp -r resources/* "$pkgdir/usr/share/$pkgname/resources/"
+    fi
+
     # Fichier .desktop (optionnel)
     if [ -f "platform/linux/$pkgname.desktop" ]; then
         install -Dm644 "platform/linux/$pkgname.desktop" \

@@ -2,7 +2,7 @@
 Name=Switchseerr
 Comment=Third-party client for Jellyseerr
 GenericName=Jellyseerr Client
-Exec=switchseerr
+Exec=Switchseerr
 Icon=switchseerr
 Terminal=false
 Type=Application
