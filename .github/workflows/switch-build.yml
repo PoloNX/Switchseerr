@@ -40,7 +40,7 @@ jobs:
       run: xmake repo --update --root
 
     - name: Configure xmake and install dependencies
-      run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} -p cross --ccache=n --yes --root -vD
+      run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --toolchain=devkita64 -p cross --yes --root -vD
 
     - name: Build Switchseerr
       run: xmake --yes --root

@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [macOS-latest]
-        arch: [x86_64, arm64]
+        arch: [arm64]
         mode: [debug, release]
 
     runs-on: ${{ matrix.os }}
@@ -46,7 +46,7 @@ jobs:
         key: macOS-${{ matrix.arch }}-${{ matrix.confs.mode }}${{ matrix.confs.cache_key }}-${{ steps.dep_hash.outputs.hash }}-W${{ steps.cache_key.outputs.key }}     
     
     - name: Configure xmake and install dependencies
-      run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --ccache=n --yes
+      run: xmake config --mode=${{ matrix.mode }} --ccache=n --yes
 
     # Save dependencies
     - name: Save cached xmake dependencies

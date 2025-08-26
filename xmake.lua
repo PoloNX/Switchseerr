@@ -14,7 +14,9 @@ add_repositories("zeromake-repo https://github.com/zeromake/xrepo.git")
 if is_plat("cross") then
     add_repositories("switch-repo https://github.com/PoloNX/switch-repo.git")
     add_requires("switch-repo@borealis", {alias = "borealis"})
-    add_requires("deko3d", "libcurl", "switch-repo@zlib", {alias = "zlib"}, "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "fmt")
+    add_requires("switch-repo@zlib", {alias = "zlib"})
+    add_requires("switch-repo@libcurl", {alias = "libcurl"})
+    add_requires("deko3d", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "fmt")
     add_defines('BRLS_RESOURCES="romfs:/"')
 else
     add_requires("libcurl", "fmt", "borealis")
