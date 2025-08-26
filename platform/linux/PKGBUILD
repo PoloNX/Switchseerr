@@ -1,0 +1,47 @@
+# Maintainer: Your Name <your.email@example.com>
+pkgname=switchseerr
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="a third-party client for Jellyseerr for multiple platforms"
+arch=('$CARCH')
+url="https://github.com/PoloNX/switchseerr"  # Remplacez par votre URL
+license=('MIT')  # Adaptez selon votre licence
+depends=('curl' 'fmt')
+makedepends=('xmake' 'git', 'lunasvg', 'plutovg')
+source=("$pkgname::git+https://github.com/PoloNX/switchseerr.git#tag=v$pkgver")
+sha256sums=('SKIP')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    
+    # Configuration xmake
+    xmake config --mode=release --plat=linux --arch=x86_64 --yes
+    
+    # Compilation
+    xmake build
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    
+    # Installation du binaire
+    xmake install --installdir="$pkgdir/usr"
+    
+    # Installation des ressources si nécessaire
+    if [ -d "resources" ]; then
+        install -dm755 "$pkgdir/usr/share/$pkgname"
+        cp -r resources/* "$pkgdir/usr/share/$pkgname/"
+    fi
+    
+    # Fichier .desktop (optionnel)
+    if [ -f "platform/linux/$pkgname.desktop" ]; then
+        install -Dm644 "platform/linux/$pkgname.desktop" \
+            "$pkgdir/usr/share/applications/$pkgname.desktop"
+    fi
+    
+    # Icône (optionnelle)
+    if [ -f "resources/img/jellyseerr_icon.png" ]; then
+        install -Dm644 "resources/img/jellyseerr_icon.png" \
+            "$pkgdir/usr/share/pixmaps/$pkgname.png"
+    fi
+}

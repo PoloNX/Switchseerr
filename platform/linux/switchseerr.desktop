@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Switchseerr
+Comment=Third-party client for Jellyseerr
+GenericName=Jellyseerr Client
+Exec=switchseerr
+Icon=switchseerr
+Terminal=false
+Type=Application
+Categories=Network;AudioVideo;
+StartupNotify=true
+Keywords=jellyseerr;media;requests;streaming;

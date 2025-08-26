@@ -22,7 +22,6 @@ else
     add_requires("libcurl", "fmt", "borealis")
     add_requires("xmake-repo@lunasvg", { alias = "lunasvg" })
     add_requires("xmake-repo@plutovg", { alias = "plutovg" })
-    add_defines('BRLS_RESOURCES="resources/"')
 end
 
 
@@ -30,6 +29,11 @@ add_defines(
     "YG_ENABLE_EVENTS",
     "NOMINMAX"
 )
+
+option("install")
+    set_default(false)
+    set_showmenu(true)
+    add_defines('BRLS_RESOURCES="/usr/share/switchseerr/"')
 
 rule("install_resources")
     local resourcesInstalled = false 
@@ -49,6 +53,8 @@ target("Switchseerr")
     add_files("source/***.cpp")
     add_includedirs("include")
     set_version("1.0.0")
+
+    set_options("install")
 
     add_configfiles("include/utils/Constants.hpp.in", {prefixdir = "include/utils"})
     add_includedirs("$(builddir)/include")
@@ -70,7 +76,7 @@ target("Switchseerr")
             add_rules("xcode.application")
             set_values("xcode.bundle_identifier", "com.polonx.switchseerr")
             set_values("xcode.bundle_version", "1.0.0")
-            add_files("resources/Info.plist")
+            add_files("platform/macos/Info.plist")
             after_build(function(target)
                 local bundle_path = target:targetdir() .. "/Switchseerr.app"
                 local resources_path = bundle_path .. "/Contents/Resources"
@@ -82,7 +88,7 @@ target("Switchseerr")
             end)
         elseif is_plat("windows") then
             -- Windows specific rules (icon)
-            add_files("source/resources.rc")
+            add_files("platform/windows/resources.rc")
         end
 
         add_rules("install_resources")
