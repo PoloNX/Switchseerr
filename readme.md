@@ -11,7 +11,7 @@
         <img src="https://img.shields.io/static/v1?label=version&message=1.0.0&labelColor=111111&color=06f&style=for-the-badge" alt="Version">
     </a>
     <a rel="BUILD" href="https://github.com/PoloNX/Switchseerr/actions">
-        <img src="https://img.shields.io/github/actions/workflow/status/PoloNX/Switchseerr/c-cpp.yml?branch=master &labelColor=111111&color=06f&style=for-the-badge" alt=Build>
+        <img src="https://img.shields.io/github/actions/workflow/status/PoloNX/Switchseerr/linux-build.yml?branch=master &labelColor=111111&color=06f&style=for-the-badge" alt=Build>
     </a>
 </p>
 
