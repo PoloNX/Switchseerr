@@ -40,6 +40,9 @@ int main() {
         brls::Logger::error("Failed to initialize configuration.");
         return 1;
     } 
+
+    brls::Logger::info("Brls resources folder : {}", BRLS_ASSET(""));
+
     brls::Logger::info("Current language: {}", conf.getLanguage());
     brls::Platform::APP_LOCALE_DEFAULT = conf.getLanguage();
 

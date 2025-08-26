@@ -2,7 +2,7 @@
 pkgname=switchseerr
 pkgver=1.0.0
 pkgrel=1
-pkgdesc="a third-party client for Jellyseerr for multiple platforms"
+pkgdesc="A third-party client for Jellyseerr for multiple platforms"
 arch=('$CARCH')
 url="https://github.com/PoloNX/switchseerr"  # Remplacez par votre URL
 license=('MIT')  # Adaptez selon votre licence

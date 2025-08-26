@@ -17,11 +17,12 @@ if is_plat("cross") then
     add_requires("switch-repo@zlib", {alias = "zlib"})
     add_requires("switch-repo@libcurl", {alias = "libcurl"})
     add_requires("deko3d", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "fmt")
-    add_defines('BRLS_RESOURCES="romfs:/"')
+
 else
     add_requires("libcurl", "fmt", "borealis")
     add_requires("xmake-repo@lunasvg", { alias = "lunasvg" })
     add_requires("xmake-repo@plutovg", { alias = "plutovg" })
+
 end
 
 
@@ -55,6 +56,14 @@ target("Switchseerr")
     set_version("1.0.0")
 
     set_options("install")
+
+    if not has_config("install") then 
+        if is_plat("switch") then 
+            add_defines('BRLS_RESOURCES="romfs:/"')
+        else 
+            add_defines('BRLS_RESOURCES="resources/"')
+        end 
+    end
 
     add_configfiles("include/utils/Constants.hpp.in", {prefixdir = "include/utils"})
     add_includedirs("$(builddir)/include")
