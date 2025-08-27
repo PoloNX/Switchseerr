@@ -35,9 +35,8 @@ jobs:
       with:
         actions-cache-folder: .xmake-cache-W${{ steps.cache_key.outputs.key }}
 
-    # Update xmake repository (in order to have the file that will be cached)
     - name: Update xmake repository
-      run: xmake repo --update --root
+      run: xmake repo --update --root && xmake repo -u --root && dkp-pacman -Rs --noconfirm switch-tinyxml2
 
     - name: Configure xmake and install dependencies
       run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --toolchain=devkita64 -p cross --yes --root -vD

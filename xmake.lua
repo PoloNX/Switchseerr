@@ -100,6 +100,7 @@ target("Switchseerr")
                 os.vcp("resources/img/AppIcon.icns", resources_path)
                 os.vcp("resources/Info.plist", path.join(contents_path, "Info.plist"))
             end)
+            add_frameworks("CoreWLAN", "SystemConfiguration")
         elseif is_plat("windows") then
             -- Windows specific rules (icon)
             add_files("platform/windows/resources.rc")
@@ -110,8 +111,4 @@ target("Switchseerr")
     end
 
     set_rundir("$(projectdir)")
-
-    if is_plat("macosx") then
-        add_frameworks("CoreWLAN")
-    end
 
