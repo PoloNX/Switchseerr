@@ -87,23 +87,42 @@ int main() {
     brls::Theme::getLightTheme().addColor("color/app", nvgRGB(2, 176, 183));
     brls::Theme::getDarkTheme().addColor("color/app", nvgRGB(51, 186, 227));
 
-    brls::Theme::getDarkTheme().addColor("color/background_start", nvgRGBA(45, 45, 45, 150));
+    brls::Theme::getDarkTheme().addColor("color/opposite", nvgRGB(255, 255, 255));
+    brls::Theme::getLightTheme().addColor("color/opposite", nvgRGB(0, 0, 0));
+
+    brls::Theme::getLightTheme().addColor("color/current", nvgRGB(255, 255, 255));
+    brls::Theme::getDarkTheme().addColor("color/current", nvgRGB(0, 0, 0));
+
+    brls::Theme::getDarkTheme().addColor("color/background_start", nvgRGBA(45, 45, 45, 0));
     brls::Theme::getDarkTheme().addColor("color/background_end", nvgRGBA(45, 45, 45, 255));
 
+    brls::Theme::getLightTheme().addColor("color/background_start", nvgRGBA(235, 235, 235, 0));
+    brls::Theme::getLightTheme().addColor("color/background_end", nvgRGBA(235, 235, 235, 255));
+
     brls::Theme::getDarkTheme().addColor("color/background", nvgRGBA(88, 84, 84, 255));
-    brls::Theme::getLightTheme().addColor("color/background",  nvgRGBA(88, 84, 84, 255));
+    brls::Theme::getLightTheme().addColor("color/background", nvgRGBA(220, 220, 220, 255));
 
     brls::Theme::getLightTheme().addColor("color/grey_1", nvgRGB(245, 246, 247));
     brls::Theme::getDarkTheme().addColor("color/grey_1", nvgRGB(51, 52, 53));
     brls::Theme::getLightTheme().addColor("color/grey_2", nvgRGB(245, 245, 245));
     brls::Theme::getDarkTheme().addColor("color/grey_2", nvgRGB(51, 53, 55));
-    brls::Theme::getLightTheme().addColor("color/grey_3", nvgRGBA(200, 200, 200, 16));
+    brls::Theme::getLightTheme().addColor("color/grey_3", nvgRGBA(200, 200, 200, 160));
     brls::Theme::getDarkTheme().addColor("color/grey_3", nvgRGBA(160, 160, 160, 160));
 
     brls::Theme::getLightTheme().addColor("font/grey", nvgRGB(148, 153, 160));
     brls::Theme::getDarkTheme().addColor("font/grey", nvgRGB(148, 153, 160));
 
-    brls::Application::getPlatform()->setThemeVariant(brls::ThemeVariant::DARK);
+    switch(conf.getTheme()) {
+        case Theme::Dark:
+            brls::Application::getPlatform()->setThemeVariant(brls::ThemeVariant::DARK);
+            break;
+        case Theme::Light:
+            brls::Application::getPlatform()->setThemeVariant(brls::ThemeVariant::LIGHT);
+            break;
+        default:
+            break;
+    }
+
 
     auto httpClient = std::make_shared<HttpClient>();
 

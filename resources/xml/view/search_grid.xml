@@ -11,6 +11,7 @@
         id="media/search"
         alignItems="center"
         margin="10"
+        backgroundColor="@theme/color/background"
         wireframe="false">
 
         <SVGImage
@@ -22,6 +23,7 @@
         <brls:Label
             id="media/search/input"
             marginTop="10"
+            textColor="@theme/color/opposite"
             marginBottom="10"
             fontSize="18" />
 

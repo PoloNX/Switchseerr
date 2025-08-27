@@ -63,6 +63,7 @@
                         id="preview/video/title"
                         fontSize="30"
                         marginTop="5"
+                        textColor="#FFFFFF"
                         marginBottom="5"/>
 
                     <!-- <brls:Box

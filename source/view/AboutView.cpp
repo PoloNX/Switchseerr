@@ -12,6 +12,7 @@ AboutView::AboutView()
         brls::Application::getPlatform()->openBrowser("https://github.com/PoloNX/Switchseerr");
         return true;
     });
+    this->ghRepoBox->addGestureRecognizer(new brls::TapGestureRecognizer(this->ghRepoBox));
 
     brls::Application::giveFocus(this->applet);
 }

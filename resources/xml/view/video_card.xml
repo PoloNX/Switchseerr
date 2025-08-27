@@ -3,6 +3,7 @@
     axis="column"
     height="auto"
     wireframe="false"
+    backgroundColor="@theme/color/grey_1"
     width="200">
     <brls:Box
         id="video/card/pic_box"
@@ -24,6 +25,8 @@
             positionBottom="0"
             positionType="absolute"
             background="vertical_linear" 
+            backgroundEndColor="@theme/color/background_end"
+            backgroundStartColor="@theme/color/background_start"
             paddingLeft="10"
             paddingRight="10"
             width="100%"

@@ -51,7 +51,7 @@
                         text="@i18n/main/view/about/developed_by"
                         fontSize="14"
                         marginLeft="10"
-                        textColor="@theme/color/background"/>
+                        textColor="@theme/color/app"/>
                 </brls:Box>
 
                 <brls:Box

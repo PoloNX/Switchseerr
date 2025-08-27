@@ -41,7 +41,8 @@
             "logout": "Logout",
             "language": "Language",
             "about": "About",
-            "header_general": "General"
+            "header_general": "General",
+            "theme": "Theme"
         }
     },
 

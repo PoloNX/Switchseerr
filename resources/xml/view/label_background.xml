@@ -24,6 +24,7 @@
             id="box">
             <brls:Label
                 id="label"
+                textColor="#FFFFFF"
                 fontSize="13"/>
         </brls:Box>
 

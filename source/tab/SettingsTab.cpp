@@ -46,6 +46,37 @@ SettingsTab::SettingsTab() {
         config.setLanguage(languages[selected]);
     });
 
+    Theme currentTheme = config.getTheme();
+    std::vector<std::string> themes = {"auto", "dark", "light"};
+    int themeSelected = 0;
+    // Convert currentTheme to string for comparison
+    std::string currentThemeStr;
+    switch (currentTheme) {
+        case Theme::Auto: currentThemeStr = "auto"; break;
+        case Theme::Dark: currentThemeStr = "dark"; break;
+        case Theme::Light: currentThemeStr = "light"; break;
+        default: currentThemeStr = "auto"; break;
+    }
+    brls::Logger::debug("SettingsTab: Current theme: {}", currentThemeStr);
+    for (size_t i = 0; i < themes.size(); i++) {
+        if (themes[i] == currentThemeStr) {
+            themeSelected = i;
+            break;
+        }
+    }
+
+    this->btnTheme->init("main/tab/settings/theme"_i18n, themes, themeSelected, [](int themeSelected){}, [themes](int themeSelected) {
+        Config& config = Config::instance();
+        Theme themeEnum = Theme::Auto;
+        if (themes[themeSelected] == "dark")
+            themeEnum = Theme::Dark;
+        else if (themes[themeSelected] == "light")
+            themeEnum = Theme::Light;
+        else
+            themeEnum = Theme::Auto;
+        config.setTheme(themeEnum);
+    });
+
     this->btnAbout->registerClickAction([this](brls::View *view) {
         brls::Logger::debug("SettingsTab: About action triggered");
         brls::Application::pushActivity(new brls::Activity( new AboutView()));

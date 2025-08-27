@@ -32,11 +32,18 @@
                 width="90%"
                 margin="5"/>
 
+            <brls:SelectorCell
+                id="settings/theme"
+                width="90%"
+                margin="5"/>
+
             <brls:DetailCell
                 id="settings/about"
                 width="90%"
                 title="@i18n/main/tab/settings/about"
                 margin="5"/>
+
+
         </brls:Box>
     </brls:Box>
 

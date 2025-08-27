@@ -12,11 +12,13 @@ SearchGridView::SearchGridView(std::shared_ptr<HttpClient> httpClient, std::shar
     recycler->estimatedRowSpace = 28;
 
     ThreadPool& threadPool = ThreadPool::instance();
-    
-    this->inputLabel->setText("main/view/media_grid/search"_i18n);
-    inputLabel->setTextColor(nvgRGBA(255, 255, 255, 255));
-    searchIcon->setImageFromSVGRes("icon/icon-search-white.svg");
 
+    this->inputLabel->setText("main/view/media_grid/search"_i18n);
+    if (brls::Application::getPlatform()->getThemeVariant() == brls::ThemeVariant::DARK) {
+        searchIcon->setImageFromSVGRes("icon/icon-search-white.svg");
+    } else {
+        searchIcon->setImageFromSVGRes("icon/icon-search-black.svg");
+    }
     searchBox->setFocusable(true);
     searchBox->addGestureRecognizer(new brls::TapGestureRecognizer(this->searchBox));
     searchBox->registerClickAction([this](brls::View* view) {
@@ -28,7 +30,6 @@ SearchGridView::SearchGridView(std::shared_ptr<HttpClient> httpClient, std::shar
             }, "main/view/media_grid/enter_query"_i18n, "", 64, this->currentSearchQuery, 0);
         return true;
     });
-    searchBox->setBackgroundColor(nvgRGBA(88, 84, 84, 255));
     searchBox->setCornerRadius(10);
     //searchBox->setWireframeEnabled(true);
 
