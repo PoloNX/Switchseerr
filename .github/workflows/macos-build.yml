@@ -13,7 +13,9 @@ jobs:
         mode: [debug, release]
 
     runs-on: ${{ matrix.os }}
-    if: ${{ !contains(github.event.head_commit.message, 'ci skip') }}
+
+    if: ${{ !contains(github.event.head_commit.message, 'ci skip') && (!contains(github.event.head_commit.message, 'ci linux') && !contains(github.event.head_commit.message, 'ci windows') && !contains(github.event.head_commit.message, 'ci switch'))) }}
+
 
     steps:
     - name: Checkout code
@@ -65,16 +67,9 @@ jobs:
     - name: "Set PACKAGE_NAME variable"
       run: echo "PACKAGE_NAME=macOS_${{ matrix.arch }}_${{ matrix.mode }}.zip" >> $GITHUB_ENV
       shell: bash
-
-    - name: Archive result
-      uses: ihiroky/archive-action@v1
-      with:
-        root_dir: Switchseerr.app
-        file_path: ${{ env.PACKAGE_NAME }}
-        verbose: true
     
     - uses: actions/upload-artifact@v4
       with:
         name: Switchseerr-${{ matrix.arch }}-${{ matrix.mode }}
-        path: ${{ env.PACKAGE_NAME }}
+        path: Switchseerr.app
 
