@@ -97,8 +97,8 @@ target("Switchseerr")
                 local contents_path = bundle_path .. "/Contents"
                 os.mkdir(resources_path)
                 os.vcp("resources", resources_path)
-                os.vcp("resources/img/AppIcon.icns", resources_path)
-                os.vcp("resources/Info.plist", path.join(contents_path, "Info.plist"))
+                os.vcp("platform/macos/AppIcon.icns", resources_path)
+                os.vcp("platform/macos/Info.plist", path.join(contents_path, "Info.plist"))
             end)
             add_frameworks("CoreWLAN", "SystemConfiguration")
         elseif is_plat("windows") then
