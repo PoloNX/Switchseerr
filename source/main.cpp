@@ -64,6 +64,7 @@ int main() {
     iconThread.detach();
 #endif
     
+#ifndef __APPLE__
     brls::Application::setGlobalQuit(false);
     brls::Application::getPlatform()->getInputManager()->getKeyboardKeyStateChanged()->subscribe(
         [](brls::KeyState state) {
@@ -76,6 +77,7 @@ int main() {
             }
         }
     );
+#endif
 
     brls::Application::registerXMLView("ConnectionCell", ConnectionCell::create);
     brls::Application::registerXMLView("SVGImage", SVGImage::create);

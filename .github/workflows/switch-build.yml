@@ -47,5 +47,5 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: Switchseerr-${{ matrix.arch }}-${{ matrix.mode }}
-        path: build/cross/aarch64/${{ matrix.mode }}/SimpleModDownloader.nro
+        path: build/cross/aarch64/${{ matrix.mode }}/Switchseerr.nro
 
