@@ -1,7 +1,7 @@
 #include <winver.h>
 #include "../include/utils/resource.h"
 
-IDI_ICON ICON  "../resources/img/jellyseerr_icon.ico"
+IDI_ICON ICON  "../platform/windows/icon.ico"
 
 1 VERSIONINFO
  FILEVERSION ${VERSION_MAJOR},${VERSION_MINOR},${VERSION_ALTER}

@@ -58,7 +58,10 @@ target("Switchseerr")
     set_kind("binary")
     add_files("source/***.cpp")
     add_includedirs("include")
-    set_version("1.0.0")
+
+    local version = "1.0.0"
+
+    set_version(version)
 
     if get_config("install") then
         add_defines('BRLS_RESOURCES="/usr/share/switchseerr/resources/"')
@@ -82,7 +85,7 @@ target("Switchseerr")
         
         set_values("switch.name", "Switchseerr")
         set_values("switch.author", "PoloNX")
-        set_values("switch.version", "$(target.version)")
+        set_values("switch.version", version)
         set_values("switch.romfs", "resources")
         set_values("switch.icon", "platform/switch/icon.jpg")
         add_packages("borealis", "deko3d", "zlib", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "libcurl", "fmt")
@@ -90,7 +93,7 @@ target("Switchseerr")
         if is_plat("macosx") then 
             add_rules("xcode.application")
             set_values("xcode.bundle_identifier", "com.polonx.switchseerr")
-            set_values("xcode.bundle_version", "$(target.version)")
+            set_values("xcode.bundle_version", version)
             add_configfiles("platform/macos/Info.plist", {prefixdir = "platform/macos"})
             after_build(function(target)
                 local bundle_path = target:targetdir() .. "/Switchseerr.app"
