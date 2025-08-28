@@ -45,9 +45,10 @@ SearchGridView::SearchGridView(std::shared_ptr<HttpClient> httpClient, std::shar
 }
 
 void SearchGridView::updateData() {
+    std::string cookieFilePath = this->httpClient->getCookieFilePath();
     ThreadPool& threadPool = ThreadPool::instance();
     ASYNC_RETAIN
-    threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
+    threadPool.submit([ASYNC_TOKEN, cookieFilePath](std::shared_ptr<HttpClient> client) {
         if (currentSearchQuery.empty()) {
             brls::Logger::debug("SearchGridView: No search query");
             brls::sync([ASYNC_TOKEN]() {
@@ -59,9 +60,12 @@ void SearchGridView::updateData() {
             });
             brls::Application::notify("main/view/media_grid/no_query"_i18n);
         } else {
+            if (!cookieFilePath.empty()) {
+                client->setCookieFile(cookieFilePath);
+            }
             brls::Logger::debug("SearchGridView: Updating data for query: {}", currentSearchQuery);
             data->setSearchQuery(currentSearchQuery);
-            data->loadData(currentPage);
+            data->loadData(currentPage, client);
             brls::sync([ASYNC_TOKEN]() {
                 ASYNC_RELEASE
                 brls::Logger::debug("SearchGridView: Data updated");

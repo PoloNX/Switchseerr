@@ -82,14 +82,15 @@ target("Switchseerr")
         
         set_values("switch.name", "Switchseerr")
         set_values("switch.author", "PoloNX")
-        set_values("switch.version", "$(VERSION)")
+        set_values("switch.version", "$(target.version)")
         set_values("switch.romfs", "resources")
+        set_values("switch.icon", "platform/switch/icon.jpg")
         add_packages("borealis", "deko3d", "zlib", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "libcurl", "fmt")
     else
         if is_plat("macosx") then 
             add_rules("xcode.application")
             set_values("xcode.bundle_identifier", "com.polonx.switchseerr")
-            set_values("xcode.bundle_version", "$(VERSION)")
+            set_values("xcode.bundle_version", "$(target.version)")
             add_configfiles("platform/macos/Info.plist", {prefixdir = "platform/macos"})
             after_build(function(target)
                 local bundle_path = target:targetdir() .. "/Switchseerr.app"

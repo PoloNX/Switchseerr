@@ -1,6 +1,7 @@
 #pragma once
 
 #include <borealis.hpp>
+#include <memory>
 
 #include "view/RecyclingGrid.hpp"
 #include "view/VideoCard.hpp"
@@ -17,7 +18,7 @@ public:
     size_t getItemCount() override;
     void onItemSelected(brls::Box* recycler, size_t index) override;
     void clearData() override;
-    bool loadData(int page = 1);
+    bool loadData(int page, std::shared_ptr<HttpClient> client);
     void setItems(std::vector<MediaItem>&& newItems);
     void setSearchQuery(const std::string& query) {
         this->searchQuery = query;

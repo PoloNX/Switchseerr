@@ -12,12 +12,12 @@ MediaGridData::MediaGridData(std::shared_ptr<HttpClient> httpClient, std::shared
     this->serverUrl = authService->getServerUrl();
 }
 
-bool MediaGridData::loadData(int page) {
+bool MediaGridData::loadData(int page, std::shared_ptr<HttpClient> client) {
     std::vector<MediaItem> medias = {};
     if (searchQuery.empty()) {
-        medias = jellyseerr::getMedias(this->httpClient, this->serverUrl, mediaType, page);
+        medias = jellyseerr::getMedias(client, this->serverUrl, mediaType, page);
     } else {
-        medias = jellyseerr::searchMedias(this->httpClient, this->serverUrl, escaped_string(this->searchQuery), page);
+        medias = jellyseerr::searchMedias(client, this->serverUrl, escaped_string(this->searchQuery), page);
     }
     if (!medias.empty()) {
         this->items = medias;
@@ -52,7 +52,7 @@ RecyclingGridItem* MediaGridData::cellForRow(RecyclingView* recycler, size_t ind
         return cell;
     } 
     auto& threadPool = ThreadPool::instance();
-
+    
     threadPool.submit([this, cell, index](std::shared_ptr<HttpClient> client) {
         brls::Logger::verbose("MediaGridData: Downloading image for item: {}", items[index].title);
         auto imageBuffer = client->downloadImageToBuffer(fmt::format("https://image.tmdb.org/t/p/w780{}", items[index].posterPath));
@@ -100,18 +100,39 @@ MediaGridView::MediaGridView(std::shared_ptr<HttpClient> httpClient, std::shared
     recycler->registerCell("Cell", VideoCardCell::create);
     recycler->estimatedRowSpace = 28;
 
-
+    std::string cookieFilePath = this->httpClient->getCookieFilePath();
     ThreadPool& threadPool = ThreadPool::instance();
-
     ASYNC_RETAIN
-    threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
-        data->loadData();
+    threadPool.submit([ASYNC_TOKEN, cookieFilePath](std::shared_ptr<HttpClient> client) {
+        if (!cookieFilePath.empty()) {
+            client->setCookieFile(cookieFilePath);
+        }
+        data->loadData(1, client);
         brls::sync([ASYNC_TOKEN]() {
             ASYNC_RELEASE
             brls::Logger::debug("MediaGridView::loadData completed");
             recycler->notifyDataChanged();
             recycler->reloadData();
         });
+    });
+
+    this->registerAction("hints/refresh"_i18n, brls::BUTTON_Y, [this](brls::View* view) {
+        std::string cookieFilePath = this->httpClient->getCookieFilePath();
+        ThreadPool& threadPool = ThreadPool::instance();
+        ASYNC_RETAIN
+        threadPool.submit([ASYNC_TOKEN, cookieFilePath](std::shared_ptr<HttpClient> client) {
+            if (!cookieFilePath.empty()) {
+                client->setCookieFile(cookieFilePath);
+            }
+            data->loadData(1, client);
+            brls::sync([ASYNC_TOKEN]() {
+                ASYNC_RELEASE
+                brls::Logger::debug("MediaGridView::loadData completed");
+                recycler->notifyDataChanged();
+                recycler->reloadData();
+            });
+        });
+        return true;
     });
 
     pageIndicator->setText(fmt::format("{} {}", "main/view/media_grid/page"_i18n ,currentPage));
@@ -130,10 +151,14 @@ void MediaGridView::onPreviousPage() {
     if (currentPage > 1) {
         currentPage--;
         brls::Logger::debug("MediaGridView: Loading previous page: {}", currentPage);
+        std::string cookieFilePath = this->httpClient->getCookieFilePath();
         ThreadPool& threadPool = ThreadPool::instance();
         ASYNC_RETAIN
-        threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
-            data->loadData(currentPage);
+        threadPool.submit([ASYNC_TOKEN, cookieFilePath](std::shared_ptr<HttpClient> client) {
+            if (!cookieFilePath.empty()) {
+                client->setCookieFile(cookieFilePath);
+            }
+            data->loadData(currentPage, client);
             brls::sync([ASYNC_TOKEN]() {
                 ASYNC_RELEASE
                 brls::Logger::debug("MediaGridView::loadData completed");
@@ -148,10 +173,14 @@ void MediaGridView::onPreviousPage() {
 void MediaGridView::onNextPage() {
     currentPage++;
     brls::Logger::debug("MediaGridView: Loading next page: {}", currentPage);
+    std::string cookieFilePath = this->httpClient->getCookieFilePath();
     ThreadPool& threadPool = ThreadPool::instance();
     ASYNC_RETAIN
-    threadPool.submit([ASYNC_TOKEN](std::shared_ptr<HttpClient> client) {
-        data->loadData(currentPage);
+    threadPool.submit([ASYNC_TOKEN, cookieFilePath](std::shared_ptr<HttpClient> client) {
+        if (!cookieFilePath.empty()) {
+            client->setCookieFile(cookieFilePath);
+        }
+        data->loadData(currentPage, client);
         brls::sync([ASYNC_TOKEN]() {
             ASYNC_RELEASE
             brls::Logger::debug("MediaGridView::loadData completed");
