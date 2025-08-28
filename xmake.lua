@@ -82,15 +82,15 @@ target("Switchseerr")
         
         set_values("switch.name", "Switchseerr")
         set_values("switch.author", "PoloNX")
-        set_values("switch.version", "1.0.0")
+        set_values("switch.version", "$(VERSION)")
         set_values("switch.romfs", "resources")
         add_packages("borealis", "deko3d", "zlib", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "libcurl", "fmt")
     else
         if is_plat("macosx") then 
             add_rules("xcode.application")
             set_values("xcode.bundle_identifier", "com.polonx.switchseerr")
-            set_values("xcode.bundle_version", "1.0.0")
-            add_files("platform/macos/Info.plist")
+            set_values("xcode.bundle_version", "$(VERSION)")
+            add_configfiles("platform/macos/Info.plist", {prefixdir = "platform/macos"})
             after_build(function(target)
                 local bundle_path = target:targetdir() .. "/Switchseerr.app"
                 local resources_path = bundle_path .. "/Contents/Resources"
@@ -98,12 +98,13 @@ target("Switchseerr")
                 os.mkdir(resources_path)
                 os.vcp("resources", resources_path)
                 os.vcp("platform/macos/AppIcon.icns", resources_path)
-                os.vcp("platform/macos/Info.plist", path.join(contents_path, "Info.plist"))
+                os.vcp("build/platform/macos/Info.plist", path.join(contents_path, "Info.plist"))
             end)
             add_frameworks("CoreWLAN", "SystemConfiguration")
         elseif is_plat("windows") then
             -- Windows specific rules (icon)
-            add_files("platform/windows/resources.rc")
+            add_configfiles("platform/windows/resources.rc", {prefixdir = "platform/windows"})
+            add_files("$(builddir)/platform/windows/resources.rc")
         end
 
         add_rules("install_resources")
