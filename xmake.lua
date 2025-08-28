@@ -19,6 +19,7 @@ if is_plat("cross") then
     add_requires("deko3d", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "fmt")
 
 else
+    -- Linux installation
     if get_config("install") then
         add_requires("borealis", {config = {resources_dir = "/usr/share/switchseerr"}})
     else
@@ -38,8 +39,6 @@ add_defines(
 option("install")
     set_default(false)
     set_showmenu(true)
-
-
 
 rule("install_resources")
     local resourcesInstalled = false 
