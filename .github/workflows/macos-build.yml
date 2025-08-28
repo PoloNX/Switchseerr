@@ -68,8 +68,10 @@ jobs:
       run: echo "PACKAGE_NAME=macOS_${{ matrix.arch }}_${{ matrix.mode }}.zip" >> $GITHUB_ENV
       shell: bash
     
+    - name: Archive .app bundle
+      run: zip -r $PACKAGE_NAME Switchseerr.app
+
     - uses: actions/upload-artifact@v4
       with:
         name: Switchseerr-${{ matrix.arch }}-${{ matrix.mode }}
-        path: Switchseerr.app
-
+        path: ${{ env.PACKAGE_NAME }}
