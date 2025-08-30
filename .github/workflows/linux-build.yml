@@ -81,6 +81,6 @@ jobs:
     
     - uses: actions/upload-artifact@v4
       with:
-        name: Switchseerr-${{ matrix.arch }}-${{ matrix.mode }}
+        name: Switchseerr-linux-${{ matrix.arch }}-${{ matrix.mode }}
         path: ${{ env.PACKAGE_NAME }}
 
