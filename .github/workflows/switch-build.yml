@@ -1,6 +1,7 @@
 name: Switch Build
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
 
@@ -13,7 +14,8 @@ jobs:
         mode: [debug, release]
 
     runs-on: ${{ matrix.os }}
-    if: ${{ !contains(github.event.head_commit.message, 'ci skip') && !contains(github.event.head_commit.message, 'ci linux') && !contains(github.event.head_commit.message, 'ci windows') && !contains(github.event.head_commit.message, 'ci macos') }}
+    # Simplified condition - only skip if explicitly told to
+    if: ${{ !contains(github.event.head_commit.message, 'ci skip') }}
 
     container: devkitpro/devkita64
 
@@ -21,32 +23,54 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    # Generate cache key first
+    - name: Generate cache key
+      id: cache_key
+      run: echo "key=$(date +%Y%m%d)-${{ github.sha }}" >> $GITHUB_OUTPUT
+
     # Install system dependencies
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get -y install gcc
+        sudo apt-get -y install gcc curl
 
     # Force xmake to a specific folder (for cache)
     - name: Set xmake env
       run: echo "XMAKE_GLOBALDIR=${{ runner.workspace }}/xmake-global" >> $GITHUB_ENV
-    
+
     - name: Setup xmake
       uses: xmake-io/github-action-setup-xmake@v1
       with:
-        actions-cache-folder: .xmake-cache-W${{ steps.cache_key.outputs.key }}
+        actions-cache-folder: .xmake-cache-${{ steps.cache_key.outputs.key }}
 
-    - name: Update xmake repository
-      run: xmake repo --update --root && xmake repo -u --root && dkp-pacman -Rs --noconfirm switch-tinyxml2
+    # Update repositories and install required packages
+    - name: Update repositories
+      run: |
+        xmake repo --update --root
+        xmake repo -u --root
+        # Don't remove packages, just ensure what you need is installed
+        dkp-pacman -S --noconfirm switch-tinyxml2
 
-    - name: Configure xmake and install dependencies
-      run: xmake config --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} --toolchain=devkita64 -p cross --yes --root -vD
+    # Configure with more specific options
+    - name: Configure xmake
+      run: |
+        xmake config \
+          --arch=${{ matrix.arch }} \
+          --mode=${{ matrix.mode }} \
+          --toolchain=devkita64 \
+          -p cross \
+          --yes \
+          --root \
+          -vD
+
+    # Try building dependencies separately first
+    - name: Install dependencies
+      run: xmake require --yes --root || true  # Continue even if some deps fail
 
     - name: Build Switchseerr
       run: xmake --yes --root
-    
+
     - uses: actions/upload-artifact@v4
       with:
         name: Switchseerr-switch-${{ matrix.arch }}-${{ matrix.mode }}
         path: build/cross/aarch64/${{ matrix.mode }}/Switchseerr.nro
-
