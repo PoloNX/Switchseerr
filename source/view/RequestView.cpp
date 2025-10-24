@@ -18,19 +18,27 @@ RequestView::RequestView(std::shared_ptr<HttpClient> httpClient, MediaItem media
 
     if (mediaItem.type == MediaType::Movie)
     {
-        seasonFrame->setVisibility(brls::Visibility::GONE);
+        seasonBox->setVisibility(brls::Visibility::GONE);
+        seasonBox->setFocusable(false);
+        brls::Application::giveFocus(requestButton);
     }
     else
     {
-        content->setHeight((std::min)(700.0f, (this->authService->getAdvancedRequest() ? 400.0f : 150.0f) + 100.0f * mediaItem.seasons.size() + 50));
-        seasonFrame->setHeight((std::min)(250.0f, 100.0f * mediaItem.seasons.size()));
+        content->setHeight((std::min)(700.0f, (this->authService->getAdvancedRequest() ? 400.0f : 150.0f) + 100.0f * mediaItem.seasons.size() + 70));
+        seasonFrame->setHeight((std::min)(210.0f, 100.0f * mediaItem.seasons.size() - 20));
         loadSeasons();
+        serverCell->setCustomNavigationRoute(
+            brls::FocusDirection::UP,
+            static_cast<brls::View*>(seasonContent.getView())
+        );
+        seasonHeader->setFocusable(false);
     }
 
     if(!authService->getAdvancedRequest()) {
         brls::Application::giveFocus(requestButton);
         detailsBox->setVisibility(brls::Visibility::GONE);
     }
+
     loadProfiles();
     loadImage();
 }
@@ -46,12 +54,16 @@ void RequestView::loadSeasons()
         return;
     }
 
+    bool first = true;
     for (const auto &season : mediaItem.seasons)
     {
         auto cell = new brls::BooleanCell();
         cell->setWidthPercentage(90.0f);
         brls::Logger::debug("RequestView: Adding season {} with ID {} to the view and with status : {}", season.seasonNumber, season.id, static_cast<int>(season.status));
-
+        if (first) {
+            brls::Application::giveFocus(cell);
+            first = false;
+        }
         if (season.status == MediaStatus::Available || season.status == MediaStatus::PartiallyAvailable || season.status == MediaStatus::Processing || season.status == MediaStatus::Pending)
         {
             cell->setOn(true);

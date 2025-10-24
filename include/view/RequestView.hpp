@@ -53,6 +53,7 @@ private:
     // For TV Shows only
     BRLS_BIND(brls::Header, seasonHeader, "request/seasons/header");
     BRLS_BIND(brls::Box, seasonContent, "request/seasons/content");
+    BRLS_BIND(brls::Box, seasonBox, "request/seasons/box");
     BRLS_BIND(brls::ScrollingFrame, seasonFrame, "request/seasons/frame");
     std::vector<int> selectedSeasons;
 

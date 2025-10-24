@@ -84,38 +84,47 @@
 
                 </brls:Box>
 
-                <!-- Seasons for Tv shows -->
-                <brls:ScrollingFrame
-                    id="request/seasons/frame"
+                <brls:Box
+                    id="request/seasons/box"
+                    axis="column"
+                    width="auto"
                     height="auto"
-                    width="100%"
+                    margin="20"
                     wireframe="false">
-                    <brls:Box
-                        id="request/seasons"
-                        axis="column"
-                        width="auto"
+                    <brls:Header
+                        id="request/seasons/header"
+                        title="Seasons"
+                        width="100%"
+                        focusable="false"
+                        marginBottom="5"/>
+                    <!-- Seasons for Tv shows -->
+                    <brls:ScrollingFrame
+                        id="request/seasons/frame"
                         height="auto"
-                        alignItems="center">
-
-                        <brls:Header
-                            id="request/seasons/header"
-                            title="Seasons"
-                            width="92%"/>
-
+                        width="100%"
+                        wireframe="false">
                         <brls:Box
-                            id="request/seasons/content"
+                            id="request/seasons"
                             axis="column"
                             width="auto"
                             height="auto"
-                            alignItems="center"
-                            justifyContent="center"
-                            wireframe="false">
+                            alignItems="center">
+
+                            <brls:Box
+                                id="request/seasons/content"
+                                axis="column"
+                                width="auto"
+                                height="auto"
+                                alignItems="center"
+                                justifyContent="center"
+                                wireframe="false">
+
+                            </brls:Box>
 
                         </brls:Box>
 
-                    </brls:Box>
-
-                </brls:ScrollingFrame>
+                    </brls:ScrollingFrame>
+                </brls:Box>
 
                 <brls:Box
                     axis="column"
