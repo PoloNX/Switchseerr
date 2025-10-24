@@ -16,8 +16,7 @@ if is_plat("cross") then
     add_requires("switch-repo@borealis", {alias = "borealis"})
     add_requires("switch-repo@zlib", {alias = "zlib"})
     add_requires("switch-repo@libcurl", {alias = "libcurl"})
-    add_requires("deko3d", "liblzma", "lz4", "libexpat", "libzstd", "lunasvg", "plutovg", "fmt")
-
+    add_requires("deko3d", "liblzma", "lz4", "libexpat", "libzstd", "plutovg 1.0.0", "lunasvg 3.2.1", "fmt")
 else
     -- Linux installation
     if get_config("install") then
