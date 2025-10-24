@@ -36,7 +36,7 @@ TvPreview::TvPreview(std::shared_ptr<HttpClient> httpClient, std::shared_ptr<Aut
     brls::Logger::debug("TvPreview: create for item ID: {}", mediaItem.id);
     this->inflateFromXMLRes("xml/view/tv_preview.xml");
 
-    this->registerAction("back", brls::BUTTON_B, [this, parentView](brls::View* view) {
+    this->registerAction("hints/back"_i18n, brls::BUTTON_B, [this, parentView](brls::View* view) {
         brls::Logger::debug("TvPreview: Back action triggered");
         this->dismiss();
         brls::Application::giveFocus(parentView);
