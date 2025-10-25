@@ -6,7 +6,7 @@
 constexpr std::chrono::milliseconds max_idle_time{60000}; // 60 seconds
 
 #ifdef __SWITCH__
-size_t ThreadPool::max_thread_num = 5;
+size_t ThreadPool::max_thread_num = 4;
 #else
 size_t ThreadPool::max_thread_num = (std::min)(int(std::thread::hardware_concurrency()), 5);
 #endif

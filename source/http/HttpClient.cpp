@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <cstring>
 #include <algorithm>
+#include <fstream>
 #include <filesystem>
 #include <iostream>
 #include <borealis/core/logger.hpp>
@@ -98,6 +99,7 @@ bool HttpClient::hasCookies() {
     }
 }
 
+// ...existing code...
 void HttpClient::initCookies() {
     if (!cookieFilePath.empty()) {
         brls::Logger::debug("HttpClient: Initializing cookies with file: {}", cookieFilePath);
@@ -106,11 +108,86 @@ void HttpClient::initCookies() {
         curl_easy_setopt(curl, CURLOPT_COOKIEJAR, cookieFilePath.c_str());
         // Activer explicitement le moteur de cookies
         curl_easy_setopt(curl, CURLOPT_COOKIESESSION, 0L);
+
+        // Fallback : lire le fichier de cookies et injecter un header "Cookie" si nécessaire.
+        try {
+            std::ifstream cookieFile(cookieFilePath);
+            // si l'ouverture échoue, essayer une conversion simple sdmc:/ -> /sdmc/
+            if (!cookieFile.is_open() && cookieFilePath.rfind("sdmc:", 0) == 0) {
+                std::string alt = cookieFilePath;
+                alt.replace(0, 5, "/sdmc");
+                cookieFile.open(alt);
+            }
+
+            if (cookieFile.is_open()) {
+                std::string line;
+                std::vector<std::string> cookiePairs;
+                const std::string httpOnlyPrefix = "#HttpOnly_";
+                while (std::getline(cookieFile, line)) {
+                    if (line.empty()) continue;
+
+                    // Handle "#HttpOnly_domain" entries: not a comment, remove the marker
+                    if (line.rfind(httpOnlyPrefix, 0) == 0) {
+                        line = line.substr(httpOnlyPrefix.size());
+                    } else if (line[0] == '#') {
+                        // Real comment line, skip
+                        continue;
+                    }
+
+                    // Netscape format: domain<TAB>flag<TAB>path<TAB>secure<TAB>expiration<TAB>name<TAB>value
+                    if (line.find('\t') != std::string::npos) {
+                        std::vector<std::string> parts;
+                        size_t start = 0;
+                        while (true) {
+                            size_t pos = line.find('\t', start);
+                            if (pos == std::string::npos) {
+                                parts.push_back(line.substr(start));
+                                break;
+                            }
+                            parts.push_back(line.substr(start, pos - start));
+                            start = pos + 1;
+                        }
+                        if (parts.size() >= 7) {
+                            std::string name = parts[parts.size() - 2];
+                            std::string value = parts[parts.size() - 1];
+                            cookiePairs.push_back(name + "=" + value);
+                        }
+                    } else {
+                        // fallback: try to find name=value tokens
+                        size_t eq = line.find('=');
+                        if (eq != std::string::npos) {
+                            size_t end = line.find(';', eq);
+                            std::string kv = (end == std::string::npos) ? line.substr(0) : line.substr(0, end);
+                            size_t first = kv.find_first_not_of(" \t");
+                            if (first != std::string::npos) kv = kv.substr(first);
+                            cookiePairs.push_back(kv);
+                        }
+                    }
+                }
+                cookieFile.close();
+
+                if (!cookiePairs.empty()) {
+                    std::string cookieHeader;
+                    for (size_t i = 0; i < cookiePairs.size(); ++i) {
+                        if (i) cookieHeader += "; ";
+                        cookieHeader += cookiePairs[i];
+                    }
+                    curl_easy_setopt(curl, CURLOPT_COOKIE, cookieHeader.c_str());
+                    brls::Logger::debug("HttpClient: Injected Cookie header from file: {}", cookieHeader);
+                } else {
+                    brls::Logger::debug("HttpClient: No cookie pairs parsed from file");
+                }
+            } else {
+                brls::Logger::debug("HttpClient: Could not open cookie file for manual parse: {}", cookieFilePath);
+            }
+        } catch (const std::exception& e) {
+            brls::Logger::warning("HttpClient: Exception while reading cookie file: {}", e.what());
+        }
     } else {
-        // Configuration par défaut pour les cookies en mémoire
         curl_easy_setopt(curl, CURLOPT_COOKIEFILE, "");
     }
 }
+// ...existing code...
 
 void HttpClient::initDefaultHeaders() {
     // Créer les headers par défaut
@@ -173,13 +250,13 @@ std::string HttpClient::get(const std::string& url, curl_slist* customHeaders, b
     curl_slist_free_all(finalHeaders);
 
     if (res != CURLE_OK) {
-       brls::Logger::error("CURL GET request failed: {}", std::string(curl_easy_strerror(res)));
+        brls::Logger::error("CURL GET request failed: {}", std::string(curl_easy_strerror(res)));
     } else {
         long response_code;
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
         if (response_code != 200) {
             brls::Logger::error("CURL GET request returned non-200 status code: {}", std::to_string(response_code));
-        }
+            brls::Logger::error("CURL GET request returned non-200 status code: {} - Response body: {}", std::to_string(response_code), response);        }
     }
 
     return response;

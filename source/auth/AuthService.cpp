@@ -174,7 +174,7 @@ bool AuthService::tryLoginFromCookies(const std::string& username) {
     try {
         // Tenter une requête qui nécessite une authentification
         std::string userInfoUrl = fmt::format("{}/api/v1/auth/me", serverUrl);
-        std::string response = client->get(userInfoUrl);
+        std::string response = client->get(userInfoUrl, nullptr, true);
         
         // Parser la réponse pour vérifier si l'authentification a réussi
         auto userData = nlohmann::json::parse(response);

@@ -165,18 +165,18 @@ void init() {
 
 void exit() {
 #ifdef __SWITCH__
-    // lblExit();
-    // nifmExit();
-    // psmExit();
-    // setExit();
-    // romfsExit();
-    // splExit();
-    // pminfoExit();
-    // pmdmntExit();
-    // nsExit();
-    // setsysExit();
-    // fsExit();
-    // plExit();
+    lblExit();
+    nifmExit();
+    psmExit();
+    setExit();
+    romfsExit();
+    splExit();
+    pminfoExit();
+    pmdmntExit();
+    nsExit();
+    setsysExit();
+    fsExit();
+    plExit();
     socketExit();
 #endif
     curl_global_cleanup();
