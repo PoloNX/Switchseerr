@@ -165,12 +165,18 @@ void RequestView::loadButtonActions()
 
 void RequestView::loadQualityProfiles()
 {
+    bool defaultFound = false;
     for (auto profile : this->selectedService->getQualityProfiles()) {
         brls::Logger::debug("RequestView: Quality profile found: {} (ID: {}) default : {}", profile.name, profile.id, profile.defaultProfile);
         if (profile.defaultProfile) {
             this->selectedQualityProfile = profile;
+            defaultFound = true;
             break;
         }
+    }
+
+    if (!defaultFound) {
+        this->selectedQualityProfile = this->selectedService->getQualityProfiles()[0];
     }
 
     std::vector<std::string> profileNames;
